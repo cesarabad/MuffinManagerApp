@@ -4,7 +4,13 @@
     },
     "layout" : {
         "header" : "Control de Stock",
-        "footer" : "@MDLH | Magdalenas de las Heras"
+        "footer" : "@MDLH | Magdalenas de las Heras",
+        "menu" : {
+            "home" : "Inicio",
+            "manageData" : "Modificar Datos",
+            "manageStock" : "Movimientos de Stock",
+            "manageUsers" : "Usuarios"
+        }
     },
     "login" : {
         "title" : "Iniciar sesión",
@@ -51,6 +57,9 @@
             "title" : "Impresión de Paquete",
             "description" : "Modificar o consultar los datos de la impresión del paquete."
         }
+    },
+    "auth" : {
+        "logout" : "Cerrar sesión"
     },
     "validation" : {
         "dni" : "El DNI no es válido",

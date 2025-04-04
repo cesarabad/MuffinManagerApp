@@ -2,21 +2,65 @@ import { createContext, useContext, ReactNode } from "react";
 import Cookies from "js-cookie";
 import { LoginRequest } from "../../models/auth/login-request.model";
 import { User } from "../../models/user.model";
+import { Permission } from "../../models/permisos.model"; // Asegurate de tener esto
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: () => boolean;
   login: (request: LoginRequest) => Promise<void>;
   logout: () => void;
+  hasPermission: (permission: Permission) => boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const UNAUTHORIZED = 1;
-export const FORBIDDEN = 2;
-export const AUTHORIZED = 3;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+
+  const saveUser = (user: User) => {
+    try {
+      const expirationDate = new Date(decodeToken(user.token).exp * 1000);
+      Cookies.set("user", JSON.stringify(user), {
+        expires: expirationDate,
+        secure: true,
+        sameSite: "Strict",
+      });
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
+  };
+
+  const decodeToken = (token: string) => {
+    try {
+      const payload = token.split(".")[1];
+      const decodedPayload = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      throw new Error("Invalid token format");
+    }
+  };
+
+  const isTokenExpired = (token: string): boolean => {
+    const decodedToken = decodeToken(token);
+    if (!decodedToken || !decodedToken.exp) {
+      return true;
+    }
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decodedToken.exp < currentTime;
+  };
+
+  const getUser = (): User | null => {
+    const userCookie = Cookies.get("user");
+    if (userCookie) {
+      const user: User = JSON.parse(userCookie);
+      if (isTokenExpired(user.token)) {
+        logout(); // Token expired
+        return null;
+      }
+      return user;
+    }
+    return null;
+  };
 
   const login = async (request: LoginRequest) => {
     try {
@@ -46,55 +90,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     Cookies.remove("user");
   };
 
-  const saveUser = (user: User) => {
-    try {
-      const expirationDate = new Date(decodeToken(user.token).exp * 1000);
-      Cookies.set("user", JSON.stringify(user), { expires: expirationDate, secure: true, sameSite: "Strict" });
-    } catch (error) {
-      console.error("Error saving user:", error);
-    }
-  };
-
-  const decodeToken = (token: string) => {
-    try {
-      const payload = token.split(".")[1];
-      const decodedPayload = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
-      return JSON.parse(decodedPayload);
-    } catch (error) {
-      throw new Error("Invalid token format");
-    }
-  };
-
-  const getUser = (): User | null => {
-    const userCookie = Cookies.get("user");
-    if (userCookie) {
-      const user: User = JSON.parse(userCookie);
-      if (isTokenExpired(user.token)) {
-        logout(); // Token expired, remove user
-        return null;
-      }
-      return user;
-    }
-    return null;
-  };
-
   const isAuthenticated = (): boolean => {
     return !!getUser();
-  }
+  };
 
-  
-  const isTokenExpired = (token: string): boolean => {
-    
-    const decodedToken = decodeToken(token);
-    if (!decodedToken || !decodedToken.exp) {
-      return true; // Token is invalid or doesn't have an expiration time
-    }
-    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-    return decodedToken.exp < currentTime;
+  const hasPermission = (permission: Permission): boolean => {
+    const user = getUser();
+    return user?.permissions.includes(permission) ?? false;
   };
 
   return (
-    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission }}>
       {children}
     </AuthContext.Provider>
   );
