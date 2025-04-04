@@ -1,0 +1,59 @@
+{
+    "app" : {
+        "loading" : "Cargando..."
+    },
+    "layout" : {
+        "header" : "Control de Stock",
+        "footer" : "@MDLH | Magdalenas de las Heras"
+    },
+    "login" : {
+        "title" : "Iniciar sesión",
+        "dniLabel": "DNI",
+        "passwordLabel": "Contraseña",
+        "submitButton": "Iniciar sesión",
+        "loading" : "Cargando...",
+        "unauthorizedRoute" : "Para acceder a esta ruta, debes iniciar sesión primero.",
+        "forbiddenRoute" : "No tienes permiso para acceder a esta ruta."
+    },
+    "home" : {
+        "title" : "MAGDALENAS DE LAS HERAS",
+        "cards" : {
+            "stock" : {
+                "title" : "Movimientos de Stock",
+                "description" : "Realiza o consulta movimientos de stock."
+            },
+            "data" : {
+                "title" : "Modificar Datos",
+                "description" : "Modifica o consulta los datos de los productos."
+            },
+            "users" : {
+                "title" : "Usuarios",
+                "description" : "Modifica o consulta los datos de los usuarios."
+            }
+        }
+    },
+    "manageData" : {
+        "pageTitle" : "Modificar Datos",
+        "pageDescription" : "Modificar o consultar los datos de los productos.",
+        "product" : {
+            "title" : "Producto",
+            "description" : "Modificar o consultar los datos de los productos."
+        },
+        "box" : {
+            "title" : "Caja",
+            "description" : "Modificar o consultar los datos de las cajas."
+        },
+        "muffinShape" : {
+            "title" : "Formas",
+            "description" : "Modificar o consultar los datos de las formas."
+        },
+        "packagePrint" : {
+            "title" : "Impresión de Paquete",
+            "description" : "Modificar o consultar los datos de la impresión del paquete."
+        }
+    },
+    "validation" : {
+        "dni" : "El DNI no es válido",
+        "password": "La contraseña debe tener al menos {{minimoContrasena}} caracteres"
+    }
+}
