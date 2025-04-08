@@ -1,8 +1,8 @@
 import { createContext, useContext, ReactNode } from "react";
 import Cookies from "js-cookie";
 import { LoginRequest } from "../../models/auth/login-request.model";
-import { User } from "../../models/user.model";
-import { Permission } from "../../models/permisos.model"; // Asegurate de tener esto
+import { User } from "../../models/auth/user.model";
+import { Permission } from "../../models/auth/permisos.model"; // Asegurate de tener esto
 
 interface AuthContextType {
   user: User | null;

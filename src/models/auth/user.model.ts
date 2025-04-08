@@ -1,4 +1,4 @@
-import { PermissionList } from "./index.model";
+import { PermissionList } from "../index.model";
 
 export interface User {
     id: number,

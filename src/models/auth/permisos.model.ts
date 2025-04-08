@@ -2,9 +2,9 @@ export enum Permission {
     ManageUsers = 'manage_users',
     ManageData = 'manage_data',
     ManageStock = 'manage_stock',
-    ManageProducts = 'product',
-    ManageBoxes = 'box',
-    ManageMuffinShapes = 'muffinShape',
-    ManagePackagePrints = 'packagePrint',
+    GetProducts = 'product',
+    GetBoxes = 'box',
+    GetMuffinShapes = 'get_muffin_shapes',
+    GetPackagePrints = 'packagePrint',
   }
 export type PermissionList = Permission[];

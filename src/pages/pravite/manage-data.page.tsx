@@ -9,42 +9,60 @@ import { useTranslation } from 'react-i18next';
 import PageContainer from '../../components/app/generic-page-container/PageContainer.component';
 import ActionCard from '../../components/app/generic-action-card/ActionCard.component';
 import { useAuth } from '../../contexts/auth/auth.context';
-import { Permission } from '../../models/permisos.model';
+import { Permission } from '../../models/auth/permisos.model';
+import { useNavigate } from 'react-router-dom';
+import { PrivateRoutes } from '../../models/routes';
 
 const { Title } = Typography;
 
 const ManageDataPage = () => {
   const { t } = useTranslation();
   const { hasPermission } = useAuth();
+  const navigate = useNavigate();
 
   const handleSelect = (key: string) => {
-    alert(`Seleccionado: ${key}`);
+    switch (key) {
+      case Permission.GetProducts:
+        //navigate(`/${Permission.GetProducts}`);
+        break;
+      case Permission.GetBoxes:
+        //navigate(`/${Permission.GetBoxes}`);
+        break;
+      case Permission.GetMuffinShapes:
+        navigate(`/private/${PrivateRoutes.MANAGE_MUFFIN_SHAPE}`);
+        break;
+      case Permission.GetPackagePrints:
+        //navigate(`/${Permission.GetPackagePrints}`);
+        break;
+      default:
+        break;
+    }
   };
 
   const options = [
     {
-      key: Permission.ManageProducts,
+      key: Permission.GetProducts,
       title: t('manageData.product.title'),
       description: t('manageData.product.description'),
       icon: faCubes,
       color: '#FF8A65',
     },
     {
-      key: Permission.ManageBoxes,
+      key: Permission.GetBoxes,
       title: t('manageData.box.title'),
       description: t('manageData.box.description'),
       icon: faBoxOpen,
       color: '#FFB74D',
     },
     {
-      key: Permission.ManageMuffinShapes,
+      key: Permission.GetMuffinShapes,
       title: t('manageData.muffinShape.title'),
       description: t('manageData.muffinShape.description'),
       icon: faShapes,
       color: '#BA68C8',
     },
     {
-      key: Permission.ManagePackagePrints,
+      key: Permission.GetPackagePrints,
       title: t('manageData.packagePrint.title'),
       description: t('manageData.packagePrint.description'),
       icon: faPrint,

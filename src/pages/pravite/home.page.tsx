@@ -6,7 +6,7 @@ import { PrivateRoutes } from '../../models/routes';
 import ActionCard from '../../components/app/generic-action-card/ActionCard.component';
 import PageContainer from '../../components/app/generic-page-container/PageContainer.component';
 import { useAuth } from '../../contexts/auth/auth.context';
-import { Permission } from '../../models/permisos.model';
+import { Permission } from '../../models/auth/permisos.model';
 
 const { Title } = Typography;
 

@@ -6,7 +6,7 @@ import LogoutButton from '../buttons/logout/LogoutButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../../contexts/auth/auth.context';
-import { Permission } from '../../../models/permisos.model';
+import { Permission } from '../../../models/auth/permisos.model';
 import { PrivateRoutes } from '../../../models/routes';
 
 const { Header, Content, Footer } = AntLayout;
@@ -86,6 +86,7 @@ const Layout = () => {
               </Menu.Item>)}
               
               <Menu.SubMenu
+                key="management"
                 title={<FontAwesomeIcon icon={faWrench} />}
                 popupClassName="submenu-dark"
               >
@@ -99,10 +100,12 @@ const Layout = () => {
               </Menu.SubMenu>
               
               <Menu.SubMenu
+                key="user"
                 title={<FontAwesomeIcon icon={faUser} />}
                 popupClassName="submenu-dark"
               >
-                <Menu.Item>
+                <Menu.Item
+                  key="logout">
                   <LogoutButton />
                 </Menu.Item>
               </Menu.SubMenu>
@@ -115,8 +118,9 @@ const Layout = () => {
       <Content
         style={{
           padding: '20px',
-          marginTop: '64px', // Esto da espacio para el header fijo
-          minHeight: 'calc(100vh - 128px)', // Asegura que el contenido no se solape con el footer
+          marginTop: '64px', 
+          minHeight: 'calc(100vh - 128px)', 
+          backgroundColor: '#FFF8E1', // Crema claro para el fondo de la página
         }}
       >
         <Outlet />
@@ -133,6 +137,7 @@ const Layout = () => {
           right: 0,
           textAlign: 'center',
           backgroundColor: '#f5f5f5',
+          zIndex: 1000,
         }}
       >
         {t("layout.footer")}

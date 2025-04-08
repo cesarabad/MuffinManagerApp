@@ -1,2 +1,2 @@
-export * from './permisos.model';
-export * from './user.model';
+export * from './auth/permisos.model';
+export * from './auth/user.model';
