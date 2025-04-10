@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { handleResponseError } from "../helpers/error-handler.helper";
 
 const API_URL = "http://localhost:8080";
 
@@ -22,11 +23,10 @@ export const httpCrudService = <T>(endpoint: string) => ({
       headers: getHeaders(),
     });
 
-    if (!response.ok) throw new Error(`GET failed: ${response.status}`);
+    if (!response.ok) await handleResponseError(response);
     return response.json();
   },
 
-  // POST
   post: async <TBody>(path: string, body: Partial<TBody>): Promise<T> => {
     const response = await fetch(`${API_URL}${endpoint}${path}`, {
       method: "POST",
@@ -34,7 +34,7 @@ export const httpCrudService = <T>(endpoint: string) => ({
       body: JSON.stringify(body),
     });
 
-    if (!response.ok) throw new Error(`POST failed: ${response.status}`);
+    if (!response.ok) await handleResponseError(response);
     return response.json();
   },
 

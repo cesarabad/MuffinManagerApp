@@ -26,7 +26,7 @@ const ManageDataPage = () => {
         //navigate(`/${Permission.GetProducts}`);
         break;
       case Permission.GetBoxes:
-        //navigate(`/${Permission.GetBoxes}`);
+        navigate(`/private/${PrivateRoutes.MANAGE_BOX}`);
         break;
       case Permission.GetMuffinShapes:
         navigate(`/private/${PrivateRoutes.MANAGE_MUFFIN_SHAPE}`);

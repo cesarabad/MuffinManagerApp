@@ -30,7 +30,7 @@ function Private() {
 
       <Route 
         path={PrivateRoutes.MANAGE_BOX} 
-        element={hasPermission(Permission.ManageData) && hasPermission(Permission.GetMuffinShapes) ? <BoxPage/> : <Navigate to={PrivateRoutes.HOME}/>}
+        element={hasPermission(Permission.ManageData) && hasPermission(Permission.GetBoxes) ? <BoxPage/> : <Navigate to={PrivateRoutes.HOME}/>}
       />
     </RoutesWithNotFound>
   );

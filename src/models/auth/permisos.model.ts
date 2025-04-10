@@ -3,7 +3,7 @@ export enum Permission {
     ManageData = 'manage_data',
     ManageStock = 'manage_stock',
     GetProducts = 'product',
-    GetBoxes = 'box',
+    GetBoxes = 'get_box',
     GetMuffinShapes = 'get_muffin_shapes',
     GetPackagePrints = 'packagePrint',
   }
