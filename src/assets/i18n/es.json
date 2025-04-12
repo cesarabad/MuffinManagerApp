@@ -74,7 +74,18 @@
         },
         "muffinShape" : {
             "title" : "Formas",
-            "description" : "Modificar o consultar los datos de las formas."
+            "description" : "Modificar o consultar los datos de las formas.",
+            "page" : {
+                "title" : "Gestión de Formas",
+                "reference" : {
+                    "label" : "Referencia",
+                    "placeholder" : "33"
+                },
+                "description" : {
+                    "label" : "Descripción",
+                    "placeholder" : "Largas"
+                }
+            }
         },
         "packagePrint" : {
             "title" : "Impresión de Paquete",
