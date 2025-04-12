@@ -47,7 +47,30 @@
         },
         "box" : {
             "title" : "Caja",
-            "description" : "Modificar o consultar los datos de las cajas."
+            "description" : "Modificar o consultar los datos de las cajas.",
+            "page" : {
+                "title" : "Gestión de Cajas",
+                "reference" : {
+                    "label" : "Referencia",
+                    "placeholder" : "ENV-000"
+                },
+                "description" : {
+                    "label" : "Descripción",
+                    "placeholder" : "Caja anónima Cx6"
+                },
+                "baseEur" : {
+                    "label" : "Base EUR",
+                    "placeholder" : "8"
+                },
+                "baseUsd" : {
+                    "label" : "Base USD",
+                    "placeholder" : "10"
+                },
+                "defaultHeight" : {
+                    "label" : "Altura por defecto",
+                    "placeholder" : "10"
+                }
+            }
         },
         "muffinShape" : {
             "title" : "Formas",
@@ -56,13 +79,43 @@
         "packagePrint" : {
             "title" : "Impresión de Paquete",
             "description" : "Modificar o consultar los datos de la impresión del paquete."
-        }
+        },
+        "edit" : "Actualizar",
+        "create" : "Crear",
+        "lastModifyDate" : "Última modificación",
+        "lastModifyUser" : "Último usuario"
     },
     "auth" : {
         "logout" : "Cerrar sesión"
     },
+    "button" : {
+        "add" : "Agregar",
+        "edit" : "Actualizar",
+        "clean" : "Limpiar"
+    },
     "validation" : {
         "dni" : "El DNI no es válido",
-        "password": "La contraseña debe tener al menos {{minimoContrasena}} caracteres"
+        "password": "La contraseña debe tener al menos {{minimoContrasena}} caracteres",
+        "required" : "Este campo es obligatorio",
+        "minLength" : "Este campo debe tener al menos {{min}} caracteres",
+        "maxLength" : "Este campo no puede tener más de {{max}} caracteres",
+        "pattern" : "El formato no es válido",
+        "email" : "El correo electrónico no es válido",
+        "number" : "El valor no es un número"
+    },
+    "success" : {
+        "update" : "Actualizado con éxito",
+        "create" : "Creado con éxito",
+        "delete" : "Eliminado con éxito"
+    },
+    "error" : {
+        "generic" : "Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.",
+        "fetchData" : "Error al cargar los datos.",
+        "form" : "Error, verifica que todos los campos cumplen sus requerimientos.",
+        "notFound" : "No se encontró resultados.",
+        "unauthorized" : "Necesitas autorización para acceder a este recurso.",
+        "forbidden" : "Ne tienes permiso para acceder a este recurso.",
+        "save" : "Error al guardar los datos.",
+        "delete" : "Error al eliminar los datos."
     }
 }

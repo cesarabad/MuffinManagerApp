@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { Card, Typography, message } from "antd";
+import { Card, Typography } from "antd";
 import { GenericForm } from "../generic-form/generic-form.component";
 import { GenericTable } from "../generic-table/generic-table.component";
 import { GenericDto } from "../../../models/generic-version-model/generic-version-dto.model";
 import { genericCrudServiceInterface } from "../../../services/manage-data/generic-crud.service";
 import PageContainer from "../generic-page-container/PageContainer.component";
+import 'antd/dist/reset.css'; // Asegúrate de tener esto o similar en tu entry point
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
+
 
 const { Title } = Typography;
 
@@ -26,6 +31,12 @@ export function CrudManagerPage<T extends GenericDto>({
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentItem, setCurrentItem] = useState<T | null>(null);
+  const { t } = useTranslation();
+  const handleWsMessage = () => {
+    fetchData();
+  };
+
+  useWebSocketListener(`/topic${service.getPath()}`, handleWsMessage);
 
   const fetchData = async () => {
     setLoading(true);
@@ -33,7 +44,7 @@ export function CrudManagerPage<T extends GenericDto>({
       const result = await service.getAll();
       setData(result);
     } catch {
-      message.error("Error al cargar datos");
+      toast.error(t("error.fetchData"));
     } finally {
       setLoading(false);
     }
@@ -44,28 +55,30 @@ export function CrudManagerPage<T extends GenericDto>({
   };
 
   const handleSubmit = async () => {
-    if (!currentItem?.reference) {
-      message.warning("Completa todos los campos");
+    if (!currentItem) {
       return;
     }
 
     try {
-      await service.insert(currentItem);
-      message.success(currentItem.id ? "Elemento actualizado" : "Elemento añadido");
+      if (currentItem.id) {
+        await service.update(currentItem);
+      } else {
+        await service.insert(currentItem);
+      }
+      
       fetchData();
       setCurrentItem(null);
     } catch {
-      message.error("Error al guardar");
+      toast.error(t("error.save"));
     }
   };
-
+  
   const handleDelete = async (item: T) => {
     try {
       await service.deleteById(item.id ?? -1);
-      message.success("Elemento eliminado");
       fetchData();
     } catch {
-      message.error("Error al eliminar");
+      toast.error(t("error.delete"));
     }
   };
 
@@ -77,7 +90,7 @@ export function CrudManagerPage<T extends GenericDto>({
     <PageContainer>
       <Title level={4}>{title}</Title>
 
-      <Card title={currentItem?.id ? "Editar" : "Nuevo"} style={{ marginBottom: 20 }}>
+      <Card title={currentItem?.id ? t('manageData.edit') : t('manageData.create')} style={{ marginBottom: 20 }}>
       <GenericForm<T>
             item={currentItem || createEmptyItem()}
             onChange={handleChange}

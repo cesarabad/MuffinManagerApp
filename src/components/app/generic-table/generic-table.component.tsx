@@ -19,7 +19,6 @@ export function GenericTable<T extends GenericDto>({
   extraColumns = [],
 }: GenericTableProps<T>) {
   const columns: ColumnsType<T> = [
-    { title: "Referencia", dataIndex: "reference", key: "reference" },
     ...(extraColumns ?? []),
     {
       title: "Acciones",

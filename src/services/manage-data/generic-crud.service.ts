@@ -1,6 +1,7 @@
 import { httpCrudService } from "../http-crud.service"
 
 export interface genericCrudServiceInterface<T> {
+    getPath: () => string;
     getAll: () => Promise<T[]>;
     getById: (id: number) => Promise<T>;
     insert: (model: T) => Promise<T>;
@@ -9,6 +10,8 @@ export interface genericCrudServiceInterface<T> {
 }
 
 export const genericCrudService = <T>(path: string): genericCrudServiceInterface<T> => ({
+    getPath: () => path,
+    
     getAll: async <T>() => {
         return await httpCrudService<T[]>(path).get("/getAll");
     },

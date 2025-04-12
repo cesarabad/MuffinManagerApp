@@ -4,6 +4,8 @@ import RoutesWithNotFound from "../../helpers/routes-with-not-found";
 import { lazy } from "react";
 import { useAuth } from "../../contexts/auth/auth.context";
 import { Permission } from "../../models/auth/permisos.model";
+import { useWebSocketListener } from "../../services/web-socket-listenner.service";
+import { toast } from "react-toastify";
 
 const HomePage = lazy(() => import("./home.page"));
 const ManageDataPage = lazy(() => import("./manage-data.page"));
@@ -12,6 +14,12 @@ const BoxPage = lazy(() => import("./manage-data/box-management/box-management.p
 
 function Private() {
   const { hasPermission } = useAuth();
+  const handleMessage = (message: string) => {
+      toast.info(message);
+    };
+  
+    useWebSocketListener(`/topic/global`, handleMessage);
+    
   return (
     <RoutesWithNotFound>
       <Route path="/" element={<Navigate to={PrivateRoutes.HOME}/>} />
