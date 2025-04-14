@@ -4,6 +4,7 @@ import {
   faCubes,
   faShapes,
   faPrint,
+  faTags, // Import the icon for brands
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import PageContainer from '../../components/app/generic-page-container/PageContainer.component';
@@ -32,7 +33,10 @@ const ManageDataPage = () => {
         navigate(`/private/${PrivateRoutes.MANAGE_MUFFIN_SHAPE}`);
         break;
       case Permission.GetPackagePrints:
-        //navigate(`/${Permission.GetPackagePrints}`);
+        navigate(`/private/${PrivateRoutes.MANAGE_PACKAGE_PRINT}`);
+        break;
+      case Permission.GetBrands:
+        navigate(`/private/${PrivateRoutes.MANAGE_BRANDS}`);
         break;
       default:
         break;
@@ -46,6 +50,13 @@ const ManageDataPage = () => {
       description: t('manageData.product.description'),
       icon: faCubes,
       color: '#FF8A65',
+    },
+    {
+      key: Permission.GetBrands,
+      title: t('manageData.brand.title'),
+      description: t('manageData.brand.description'),
+      icon: faTags,
+      color: '#FFD54F',
     },
     {
       key: Permission.GetBoxes,

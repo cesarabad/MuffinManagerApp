@@ -38,14 +38,7 @@ export function useWebSocketListener(
     connectWebSocket().then(client => {
       // Al conectarse, se establece la suscripción al tema (topic)
       subscription = client.subscribe(topic, (message) => {
-        try {
-          // Si el mensaje es un JSON, puedes hacer un parse
-          const parsedMessage = JSON.parse(message.body);
-          onMessageRef.current(parsedMessage);
-        } catch (e) {
-          // Si el mensaje no es JSON, solo se pasa como está
-          onMessageRef.current(message.body);
-        }
+        onMessageRef.current(message.body); // Pasamos el body directamente como string
       });
       setIsConnected(true); // Marcamos como conectado
     }).catch((error) => {

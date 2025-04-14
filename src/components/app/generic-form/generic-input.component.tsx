@@ -1,4 +1,5 @@
 import { Input, InputProps } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import { InputHTMLAttributes, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -38,12 +39,12 @@ export function GenericInput<T extends HTMLInputElement>({ ...props }: GenericIn
         setErrorMessage(null);
     };
 
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         validate(e.target.value);
         props.onBlur?.(e as React.FocusEvent<T>);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (props.type === 'number' &&
           (["e", "E", "+", "-"].includes(e.key) ||
           (e.key === "." && (props.value?.toString().includes(".") || props.value?.toString().length === 0 || props.inputMode === "numeric")))
@@ -56,9 +57,14 @@ export function GenericInput<T extends HTMLInputElement>({ ...props }: GenericIn
       
     return (
         <>
-            <p style={{ marginBottom: 0 }}>{`${props.label ? props.label : props.placeholder}:`}</p>
+          <p style={{ marginBottom: 0 }}>{`${props.label ? props.label : props.placeholder}:`}</p>
+          {props.type === 'textarea' ? (
+            <TextArea {...(props as Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'onResize'>)} onBlur={handleBlur} onKeyDown={handleKeyDown} />
+          ) : (
             <Input {...(props as InputProps)} onBlur={handleBlur} onKeyDown={handleKeyDown} />
-            {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
+          )}
+          {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
         </>
-    );
+      );
+      
 }

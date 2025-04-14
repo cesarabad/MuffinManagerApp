@@ -45,6 +45,14 @@
             "title" : "Producto",
             "description" : "Modificar o consultar los datos de los productos."
         },
+        "brand" : {
+            "title" : "Marca",
+            "description" : "Modificar o consultar los datos de las marcas.",
+            "page" : {
+                "title" : "Gestión de Marcas"
+                
+            }
+        },
         "box" : {
             "title" : "Caja",
             "description" : "Modificar o consultar los datos de las cajas.",
@@ -89,7 +97,18 @@
         },
         "packagePrint" : {
             "title" : "Impresión de Paquete",
-            "description" : "Modificar o consultar los datos de la impresión del paquete."
+            "description" : "Modificar o consultar los datos de la impresión del paquete.",
+            "page" : {
+                "title" : "Gestión de Impresión de Paquete",
+                "reference" : {
+                    "label" : "Referencia",
+                    "placeholder" : "FR"
+                },
+                "description" : {
+                    "label" : "Descripción",
+                    "placeholder" : "Impresión de paquete"
+                }
+            }
         },
         "edit" : "Actualizar",
         "create" : "Crear",
@@ -114,10 +133,29 @@
         "email" : "El correo electrónico no es válido",
         "number" : "El valor no es un número"
     },
-    "success" : {
-        "update" : "Actualizado con éxito",
-        "create" : "Creado con éxito",
-        "delete" : "Eliminado con éxito"
+    "ws" : {
+        "box" : {
+            "created" : "Una caja ha sido creada por {{user}}.",
+            "updated" : "Una caja ha sido actualizada por {{user}}.",
+            "deleted" : "Una caja ha sido eliminada por {{user}}."
+        },
+        "muffinShape" : {
+            "created" : "Una forma ha sido creada por {{user}}.",
+            "updated" : "Una forma ha sido actualizada por {{user}}.",
+            "deleted" : "Una forma ha sido eliminada por {{user}}."
+        },
+        "packagePrint" : {
+            "created" : "Una impresión de paquete ha sido creada por {{user}}.",
+            "updated" : "Una impresión de paquete ha sido actualizada por {{user}}.",
+            "deleted" : "Una impresión de paquete ha sido eliminada por {{user}}."
+        },
+        "brand" : {
+            "created" : "Una marca ha sido creada por {{user}}.",
+            "deleted" : "Una marca ha sido eliminada por {{user}}.",
+            "updated" : "Una marca ha sido actualizada por {{user}}.",
+            "updatedVersion" : "La version de una marca ha sido actualizada por {{user}}.",
+            "deletedVersion" : "La version de una marca ha sido eliminada por {{user}}."
+        }
     },
     "error" : {
         "generic" : "Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.",

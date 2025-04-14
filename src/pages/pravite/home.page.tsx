@@ -60,7 +60,7 @@ const HomePage = () => {
             title={t('home.cards.data.title')}
             description={t('home.cards.data.description')}
             onClick={() => handleCardClick('manageData')}
-            disabled={!hasPermission(Permission.ManageData)}
+            disabled={!(hasPermission(Permission.ManageData) || hasPermission(Permission.GetData))}
           />
         </Col>
 

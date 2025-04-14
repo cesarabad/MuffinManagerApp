@@ -9,6 +9,8 @@ import 'antd/dist/reset.css'; // Asegúrate de tener esto o similar en tu entry 
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
+import { useAuth } from "../../../contexts/auth/auth.context";
+import { Permission } from "../../../models/index.model";
 
 
 const { Title } = Typography;
@@ -32,6 +34,7 @@ export function CrudManagerPage<T extends GenericDto>({
   const [loading, setLoading] = useState(false);
   const [currentItem, setCurrentItem] = useState<T | null>(null);
   const { t } = useTranslation();
+  const { hasPermission } = useAuth();
   const handleWsMessage = () => {
     fetchData();
   };
@@ -85,22 +88,23 @@ export function CrudManagerPage<T extends GenericDto>({
   useEffect(() => {
     fetchData();
   }, []);
-
   return (
     <PageContainer>
       <Title level={4}>{title}</Title>
 
-      <Card title={currentItem?.id ? t('manageData.edit') : t('manageData.create')} style={{ marginBottom: 20 }}>
-      <GenericForm<T>
-            item={currentItem || createEmptyItem()}
-            onChange={handleChange}
-            onSubmit={handleSubmit}
-            onReset={() => setCurrentItem(null)}
-            >
-            {renderExtraFields?.(currentItem || createEmptyItem(), handleChange)}
-        </GenericForm>
+      {hasPermission(Permission.ManageData) && (
+        <Card title={currentItem?.id ? t('manageData.edit') : t('manageData.create')} style={{ marginBottom: 20 }}>
+          <GenericForm<T>
+        item={currentItem || createEmptyItem()}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        onReset={() => setCurrentItem(null)}
+          >
+        {renderExtraFields?.(currentItem || createEmptyItem(), handleChange)}
+          </GenericForm>
+        </Card>
+      )}
 
-      </Card>
 
       <GenericTable<T>
         data={data}
