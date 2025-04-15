@@ -49,8 +49,22 @@
             "title" : "Marca",
             "description" : "Modificar o consultar los datos de las marcas.",
             "page" : {
-                "title" : "Gestión de Marcas"
-                
+                "title" : "Gestión de Marcas",
+                "reference" : {
+                    "label" : "Referencia",
+                    "placeholder" : "10"
+                },
+                "name" : {
+                    "label" : "Nombre",
+                    "placeholder" : "De Las Heras"
+                },
+                "logo" : {
+                    "label" : "Logo"
+                },
+                "aliasVersion" : {
+                    "label" : "Alias versión",
+                    "placeholder" : "Logo DLH actualizado"
+                }
             }
         },
         "box" : {
@@ -110,18 +124,69 @@
                 }
             }
         },
+        "productData" : {
+            "title" : "Datos de productos",
+            "product" : {
+                "title" : "Producto",
+                "description" : "Modificar o consultar los datos de los productos."
+            },
+            "productItem" : {
+                "title" : "Item de producto",
+                "description" : "Modificar o consultar los datos de los paquetes de productos."
+            },
+            "baseProductItem" : {
+                "title" : "Producto base",
+                "description" : "Modificar o consultar los datos genéricos de los paquetes de productos."
+            }
+        },
         "edit" : "Actualizar",
         "create" : "Crear",
+        "aliasVersion" : "Versión",
+        "creationDate" : "Fecha de creación",
+        "endDate" : "Fecha de fin",
+        "obsolete" : "Obsoleto",
         "lastModifyDate" : "Última modificación",
-        "lastModifyUser" : "Último usuario"
+        "lastModifyUser" : "Último usuario",
+        "setObsolete" : "Marcar como obsoleto",
+        "removeObsolete" : "Desmarcar como obsoleto",
+        "modify" : "Modificar",
+        "askDelete" : "¿Estás seguro de que deseas eliminar este elemento?",
+        "table" : {
+            "selectVersion" : "Seleccionar versión",
+            "activesOption" : "Activos",
+            "obsoletesOption" : "Obsoletos"
+        },
+        "modal" : {
+            "actualVersion" : "Versión actual",
+            "newVersion" : "Nueva versión",
+            "allReference" : "Referencia completa",
+            "createNewVersion" : "Estás a punto de realizar actualizar {{dato}}.",
+            "createNewVersionDescription" : "¿Desea crear una nueva versión?",
+            "versionAliasTitle" : "Ingrese el alias de la nueva versión",
+            "versionAliasLabel" : "Alias:",
+            "setObsoleteTitle" : "Estás a punto de marcar como obsoleto {{dato}}.",
+            "removeObsoleteTitle" : "Estás a punto de desmarcar como obsoleto {{dato}}.",
+            "setObsoleteDescription" : "¿Desea realizar el cambio en la referencia entera?",
+            "updateReference": "Estas a punto de cambiar la referencia de {{dato}}.",
+            "updateCompleteReference": "¿Desea cambiar la referencia en todas las versiones de {{dato}}?",
+            "data" : {
+                "brand" : "una marca"
+            }
+        }
     },
     "auth" : {
         "logout" : "Cerrar sesión"
     },
     "button" : {
+        "yes" : "Sí",
+        "no" : "No",
+        "cancel" : "Cancelar",
         "add" : "Agregar",
         "edit" : "Actualizar",
-        "clean" : "Limpiar"
+        "clean" : "Limpiar",
+        "confirm" : "Confirmar",
+        "browse" : "Examinar",
+        "remove" : "Eliminar"
     },
     "validation" : {
         "dni" : "El DNI no es válido",
@@ -156,6 +221,10 @@
             "updatedVersion" : "La version de una marca ha sido actualizada por {{user}}.",
             "deletedVersion" : "La version de una marca ha sido eliminada por {{user}}."
         }
+    },
+    "boolean" : {
+        "true" : "Sí",
+        "false" : "No"
     },
     "error" : {
         "generic" : "Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.",

@@ -12,7 +12,7 @@ export interface genericCrudServiceInterface<T> {
 export const genericCrudService = <T>(path: string): genericCrudServiceInterface<T> => ({
     getPath: () => path,
     
-    getAll: async <T>() => {
+    getAll: async () => {
         return await httpCrudService<T[]>(path).get("/getAll");
     },
 

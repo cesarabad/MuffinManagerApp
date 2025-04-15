@@ -1,19 +1,16 @@
 import { UserSafeDto } from "../auth/user-safe-dto.model";
 
-export interface GenericVersionDetailedDto {
-    id?: number;
-    reference: string;
-    version: number;
-    startDate?: Date;
+export interface GenericVersionDto extends GenericDto{
+    version?: number;
+    aliasVersion?: string;
+    creationDate?: Date;
     endDate?: Date;
     obsolete?: boolean;
-    active?: boolean;
-    lastModifyUser?: UserSafeDto;
 }
 
 export interface GenericDto {
     id?: number;
-    reference: string;
+    reference?: string;
     lastModifyDate?: Date;
     lastModifyUser?: UserSafeDto;
 }

@@ -1,51 +1,34 @@
 import { httpCrudService } from "../http-crud.service"
-import { MuffinShapePaths } from "./api-paths.constants";
-export const genericCrudVersionService = <T>(path: string) => ({
-    getNotObsoletes: async <T>() => {
-        return await httpCrudService<T[]>(path).get(MuffinShapePaths.NOT_OBSOLETES);
-    },
+import { genericCrudService, genericCrudServiceInterface } from "./generic-crud.service";
 
-    getNotObsoletesDetailed: async () => {
-        return await httpCrudService<T[]>(path).get(MuffinShapePaths.NOT_OBSOLETES_DETAILED);
-    },
+export interface genericCrudVersionServiceInterface<T> extends genericCrudServiceInterface<T> {
+    getObsoletes: () => Promise<T[]>;
+    deleteByReference: (reference: string) => Promise<void>;
+    setObsoleteByReference: (reference: string, isObsolete: boolean) => Promise<void>;
+    setObsoleteById: (id: number, isObsolete: boolean) => Promise<void>;
+    changeReference: (oldReference: string, newReference: string) => Promise<void>;
+}
+
+export const genericCrudVersionService = <T>(path: string): genericCrudVersionServiceInterface<T> => ({
+    ...genericCrudService<T>(path),
 
     getObsoletes: async () => {
-        return await httpCrudService<T[]>(path).get(MuffinShapePaths.OBSOLETES);
-    },
-
-    getAllInactives: async () => {
-        return await httpCrudService<T[]>(path).get(MuffinShapePaths.ALL_INACTIVES);
-    },
-
-    insertOrUpdate: async (muffinShape: T) => {
-        return await httpCrudService<T>(path).post<T>(MuffinShapePaths.SAVE, muffinShape);
+        return await httpCrudService<T[]>(path).get("/getObsoletes");
     },
 
     deleteByReference: async (reference: string) => {
-        return await httpCrudService<T>(path).delete(`${MuffinShapePaths.DELETE_ALL}/${reference}`);
+        return await httpCrudService<T>(path).delete(`/delete/${reference}`);
     },
 
-    deleteByReferenceAndVersion: async (reference: string, version: number) => {
-        return await httpCrudService<T>(path).delete(`${MuffinShapePaths.DELETE}/${reference}?version=${version}`);
+    setObsoleteByReference: async (reference: string, isObsolete: boolean) => {
+        return await httpCrudService<void>(path).post(`/setObsolete/${reference}?obsolete=${isObsolete}`, {});
     },
 
-    setObsoleteByReference: async (reference: string, obsolete: boolean) => {
-        return await httpCrudService<boolean>(path).patch(`${MuffinShapePaths.SET_OBSOLETE}/all/${reference}?obsolete=${obsolete}`);
+    setObsoleteById: async (id: number, isObsolete: boolean) => {
+        return await httpCrudService<void>(path).post(`/setObsoleteById/${id}?obsolete=${isObsolete}`, {});
     },
 
-    setObsoleteByReferenceAndVersion: async (reference: string, version: number, obsolete: boolean) => {
-        return await httpCrudService<boolean>(path).patch(`/${MuffinShapePaths.SET_OBSOLETE}/${reference}?version=${version}&obsolete=${obsolete}`);
-    },
-
-    setActiveByReference : async (reference: string, active: boolean) => {
-        return await httpCrudService<boolean>(path).patch(`${MuffinShapePaths.SET_ACTIVE}/all/${reference}?isActive=${active}`);
-    },
-
-    setActiveByReferenceAndVersion : async (reference: string, version: number, active: boolean) => {
-        return await httpCrudService<boolean>(path).patch(`${MuffinShapePaths.SET_ACTIVE}/${reference}?version=${version}&isActive=${active}`);
-    },
-
-    changeReference: async (reference: string, newReference: string) => {
-        return await httpCrudService<T[]>(path).patch(`${MuffinShapePaths.CHANGE_REFERENCE}?oldReference=${reference}&newReference=${newReference}`);
+    changeReference: async (oldReference: string, newReference: string) => {
+        return await httpCrudService<void>(path).post(`/changeReference?oldReference=${oldReference}&newReference=${newReference}`, {  });
     }
 })

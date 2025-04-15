@@ -10,5 +10,7 @@ export const PrivateRoutes = {
     MANAGE_MUFFIN_SHAPE: `manage-data/muffin-shape`,
     MANAGE_BOX: `manage-data/box`,
     MANAGE_PACKAGE_PRINT: `manage-data/package-print`,
-    MANAGE_BRANDS: `manage-data/brands`,
+    MANAGE_BRANDS: `manage-data/brand`,
+    MANAGE_PRODUCTS_DATA: `manage-data/products-data`,
+    
 }

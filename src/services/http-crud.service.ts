@@ -24,10 +24,10 @@ export const httpCrudService = <T>(endpoint: string) => ({
     });
 
     if (!response.ok) await handleResponseError(response);
-    return response.json();
-  },
+    return response.body ? response.json() : Promise.resolve({} as T);
+    },
 
-  post: async <TBody>(path: string, body: Partial<TBody>): Promise<T> => {
+    post: async <TBody>(path: string, body: Partial<TBody>): Promise<T> => {
     const response = await fetch(`${API_URL}${endpoint}${path}`, {
       method: "POST",
       headers: getHeaders(),
@@ -35,8 +35,8 @@ export const httpCrudService = <T>(endpoint: string) => ({
     });
 
     if (!response.ok) await handleResponseError(response);
-    return response.json();
-  },
+    return response.headers.get("Content-Length") !== "0" ? response.json() : {} as T;
+    },
 
   // PUT
   put: async (path: string, body: Partial<T>): Promise<T> => {

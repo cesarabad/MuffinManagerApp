@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect, useRef } from "react";
 import { Button, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { GenericDto } from "../../../models/generic-version-model/generic-version-dto.model";
+import { GenericDto, GenericVersionDto } from "../../../models/generic-version-model/generic-version-dto.model";
 import { useTranslation } from "react-i18next";
 
 interface GenericFormProps<T extends GenericDto> {
@@ -9,6 +9,8 @@ interface GenericFormProps<T extends GenericDto> {
   onChange: (field: keyof T, value: string) => void;
   onSubmit: () => void;
   onReset: () => void;
+  onClickObsolete: () => void;
+  manageVersions?: boolean;
   children?: ReactNode; // Campos adicionales (como descripción, precios, etc.)
 }
 
@@ -16,6 +18,8 @@ export function GenericForm<T extends GenericDto>({
   item,
   onSubmit,
   onReset,
+  onClickObsolete: onClick,
+  manageVersions = false,
   children,
 }: GenericFormProps<T>) {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
@@ -54,7 +58,11 @@ export function GenericForm<T extends GenericDto>({
       
       {children}
       <Space>
-        <Button
+        
+        <Button onClick={onReset}>{t('button.clean')}</Button>
+      </Space>
+      <Space>
+      <Button
           type="primary"
           icon={<PlusOutlined />}
           onClick={onSubmit}
@@ -62,7 +70,10 @@ export function GenericForm<T extends GenericDto>({
         >
           {item?.id ? t('button.edit') : t('button.add')}
         </Button>
-        <Button onClick={onReset}>{t('button.clean')}</Button>
+      {manageVersions && (
+          <Button type="primary" danger disabled={!item?.id} onClick={onClick}>
+                {t((item as GenericVersionDto).obsolete ? 'manageData.removeObsolete' : 'manageData.setObsolete')}
+          </Button>)}
       </Space>
     </Space>
   );

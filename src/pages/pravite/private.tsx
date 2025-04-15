@@ -8,6 +8,8 @@ import { useWebSocketListener } from "../../services/web-socket-listenner.servic
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { WebSocketMessage } from "../../models/web-socket-message/web-socket-message.model";
+import BrandPage from "./manage-data/brand-management/brand-management.page";
+import ManageProductDataPage from "./manage-data/product-data-management/product-data-management.page";
 
 const HomePage = lazy(() => import("./home.page"));
 const ManageDataPage = lazy(() => import("./manage-data.page"));
@@ -21,7 +23,6 @@ function Private() {
 
   const handleMessage = (message: string) => {
     try {
-      console.log("Received WebSocket message:", message);
       const parsedMessage: WebSocketMessage = JSON.parse(message);
       toast.info(`${t(parsedMessage.dictionaryKey, { user: `${parsedMessage.user.name} ${parsedMessage.user.secondName}`})}`);
     } catch (error) {
@@ -55,6 +56,16 @@ function Private() {
       <Route 
         path={PrivateRoutes.MANAGE_PACKAGE_PRINT} 
         element={hasPermission(Permission.GetPackagePrints) ? <PackagePrintPage/> : <Navigate to={PrivateRoutes.HOME}/>}
+      />
+
+      <Route
+        path={PrivateRoutes.MANAGE_BRANDS}
+        element={hasPermission(Permission.GetBrands) ? <BrandPage /> : <Navigate to={PrivateRoutes.HOME} />}
+      />
+
+      <Route
+        path={PrivateRoutes.MANAGE_PRODUCTS_DATA}
+        element={hasPermission(Permission.GetProductsData) ? <ManageProductDataPage /> : <Navigate to={PrivateRoutes.HOME} />}
       />
     </RoutesWithNotFound>
   );

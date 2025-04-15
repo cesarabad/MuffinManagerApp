@@ -23,8 +23,8 @@ const ManageDataPage = () => {
 
   const handleSelect = (key: string) => {
     switch (key) {
-      case Permission.GetProducts:
-        //navigate(`/${Permission.GetProducts}`);
+      case Permission.GetProductsData:
+        navigate(`/private/${PrivateRoutes.MANAGE_PRODUCTS_DATA}`);
         break;
       case Permission.GetBoxes:
         navigate(`/private/${PrivateRoutes.MANAGE_BOX}`);
@@ -45,7 +45,7 @@ const ManageDataPage = () => {
 
   const options = [
     {
-      key: Permission.GetProducts,
+      key: Permission.GetProductsData,
       title: t('manageData.product.title'),
       description: t('manageData.product.description'),
       icon: faCubes,
