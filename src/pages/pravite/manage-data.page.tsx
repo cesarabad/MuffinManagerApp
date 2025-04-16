@@ -1,4 +1,4 @@
-import { Col, Row, Typography } from 'antd';
+import { Button, Col, Row, Typography } from 'antd';
 import {
   faBoxOpen,
   faCubes,
@@ -6,6 +6,7 @@ import {
   faPrint,
   faTags, // Import the icon for brands
 } from '@fortawesome/free-solid-svg-icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import PageContainer from '../../components/app/generic-page-container/PageContainer.component';
 import ActionCard from '../../components/app/generic-action-card/ActionCard.component';
@@ -42,7 +43,9 @@ const ManageDataPage = () => {
         break;
     }
   };
-
+  const handleBack = () => {
+    navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.HOME}`);
+  }
   const options = [
     {
       key: Permission.GetProductsData,
@@ -83,6 +86,14 @@ const ManageDataPage = () => {
 
   return (
     <PageContainer>
+      <Button
+        icon={<ArrowLeftOutlined />}
+        onClick={handleBack}
+        style={{ marginBottom: 16 }}
+        type="link"
+      >
+        {t("button.back")}
+      </Button>
       <Title level={2} style={{ textAlign: 'center', color: '#D27A7A' }}>
         {t('manageData.pageTitle')}
       </Title>

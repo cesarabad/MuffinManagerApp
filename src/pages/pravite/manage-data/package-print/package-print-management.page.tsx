@@ -3,13 +3,17 @@ import { CrudManagerPage } from "../../../../components/app/generic-crud-manager
 import { GenericInput } from "../../../../components/app/generic-form/generic-input.component";
 import { PackagePrintDto } from "../../../../models/package-print/package-print-dto.model";
 import { packagePrintService } from "../../../../services/manage-data/package-print.service";
+import { useNavigate } from "react-router-dom";
+import { PrivateRoutes } from "../../../../models/routes";
 
 export default function PackagePrintCrudPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <CrudManagerPage<PackagePrintDto>
       title={t('manageData.packagePrint.page.title')}
       service={packagePrintService}
+      handleBack={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_DATA}`)}
       createEmptyItem={() => ({ reference: "", description: "" })}
       extraColumns={[
         { title: t('manageData.packagePrint.page.reference.label'), dataIndex: "reference", key: "reference" },

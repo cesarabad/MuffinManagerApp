@@ -1,9 +1,10 @@
-import { Col, Row, Typography } from "antd";
+import { Col, Row, Typography, Button } from "antd";
 import {
-  faLayerGroup,   // Base Product Item
-  faPuzzlePiece,  // Product Item
-  faBox,          // Product
+  faLayerGroup,
+  faPuzzlePiece,
+  faBox,
 } from "@fortawesome/free-solid-svg-icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import PageContainer from "../../../../components/app/generic-page-container/PageContainer.component";
 import ActionCard from "../../../../components/app/generic-action-card/ActionCard.component";
@@ -22,17 +23,21 @@ const ManageProductDataPage = () => {
   const handleSelect = (key: string) => {
     switch (key) {
       case Permission.GetBaseProductItems:
-        //navigate(`/private/${PrivateRoutes.MANAGE_BASE_PRODUCT_ITEM}`);
+        navigate(`/private/${PrivateRoutes.MANAGE_BASE_PRODUCT_ITEM}`);
         break;
       case Permission.GetProductItems:
-        //navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT_ITEM}`);
+        // navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT_ITEM}`);
         break;
       case Permission.GetProducts:
-        //navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT}`);
+        // navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT}`);
         break;
       default:
         break;
     }
+  };
+
+  const handleBack = () => {
+    navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_DATA}`);
   };
 
   const options = [
@@ -61,6 +66,15 @@ const ManageProductDataPage = () => {
 
   return (
     <PageContainer>
+      <Button
+        icon={<ArrowLeftOutlined />}
+        onClick={handleBack}
+        style={{ marginBottom: 16 }}
+        type="link"
+      >
+        {t("button.back")}
+      </Button>
+
       <Title level={2} style={{ textAlign: "center", color: "#7A9AD2" }}>
         {t("manageData.productData.title")}
       </Title>

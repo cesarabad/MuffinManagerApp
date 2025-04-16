@@ -136,7 +136,29 @@
             },
             "baseProductItem" : {
                 "title" : "Producto base",
-                "description" : "Modificar o consultar los datos genéricos de los paquetes de productos."
+                "description" : "Modificar o consultar los datos genéricos de los paquetes de productos.",
+                "page" : {
+                    "title" : "Gestión de Productos Base",
+                    "reference" : {
+                        "label" : "Referencia",
+                        "placeholder" : "22XX01"
+                    },
+                    "muffinShape" : {
+                        "label" : "Forma"
+                    },
+                    "mainDescription" : {
+                        "label" : "Descripción",
+                        "placeholder" : "Brownies CHOCO-CHIPS 10UDS"
+                    },
+                    "unitsPerItem" :{
+                        "label" : "Unidades por paquete",
+                        "placeholder" : "10"
+                    },
+                    "weight" : {
+                        "label" : "Peso",
+                        "placeholder" : "200"
+                    }
+                }
             }
         },
         "edit" : "Actualizar",
@@ -186,7 +208,9 @@
         "clean" : "Limpiar",
         "confirm" : "Confirmar",
         "browse" : "Examinar",
-        "remove" : "Eliminar"
+        "remove" : "Eliminar",
+        "back" : "Volver",
+        "select" : "Seleccionar"
     },
     "validation" : {
         "dni" : "El DNI no es válido",
@@ -220,6 +244,13 @@
             "updated" : "Una marca ha sido actualizada por {{user}}.",
             "updatedVersion" : "La version de una marca ha sido actualizada por {{user}}.",
             "deletedVersion" : "La version de una marca ha sido eliminada por {{user}}."
+        },
+        "productData" : {
+            "baseProductItem" : {
+                "created" : "Un producto base ha sido creado por {{user}}.",
+                "updated" : "Un producto base ha sido actualizado por {{user}}.",
+                "deleted" : "Un producto base ha sido eliminado por {{user}}."
+            }
         }
     },
     "boolean" : {

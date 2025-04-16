@@ -4,15 +4,18 @@ import { GenericInput } from "../../../../components/app/generic-form/generic-in
 import { brandService } from "../../../../services/manage-data/brand.service";
 import { BrandDto } from "../../../../models/brand/brand-dto.model";
 import { GenericImageInput } from "../../../../components/app/generic-form/generic-image-input.component";
+import { useNavigate } from "react-router-dom";
+import { PrivateRoutes } from "../../../../models/routes";
 
 export default function BrandPage() {
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
 return (
     <CrudManagerPage<BrandDto>
         title={t('manageData.brand.page.title')}
         service={brandService}
         manageVersions={true}
+        handleBack={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_DATA}`)}
         createEmptyItem={() => ({ name: "", logoBase64: "" })}
         extraColumns={[
             { title: t('manageData.brand.page.reference.label'), dataIndex: "reference", key: "reference" },

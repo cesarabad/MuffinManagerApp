@@ -3,13 +3,17 @@ import { CrudManagerPage } from "../../../../components/app/generic-crud-manager
 import { MuffinShapeDto } from "../../../../models/muffin-shape/muffin-shape-dto.model";
 import { muffinShapeService } from "../../../../services/manage-data/muffin-shape.service";
 import { GenericInput } from "../../../../components/app/generic-form/generic-input.component";
+import { useNavigate } from "react-router-dom";
+import { PrivateRoutes } from "../../../../models/routes";
 
 export default function MuffinShapeCrudPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <CrudManagerPage<MuffinShapeDto>
       title={t('manageData.muffinShape.page.title')}
       service={muffinShapeService}
+      handleBack={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_DATA}`)}
       createEmptyItem={() => ({ reference: "", description: "" })}
       extraColumns={[
         { title: t('manageData.muffinShape.page.reference.label'), dataIndex: "reference", key: "reference" },

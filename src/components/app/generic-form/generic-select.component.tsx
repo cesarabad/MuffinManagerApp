@@ -25,7 +25,6 @@ export function GenericSelect<T>({
 }: GenericSelectProps<T>) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
-
   const handleChange = (val: string) => {
     if (required && !val) {
       setErrorMessage(t('validation.required'));
@@ -34,23 +33,26 @@ export function GenericSelect<T>({
     }
     onChange(val);
   };
-
   return (
     <div>
       <p style={{ marginBottom: 0 }}>
         {label}: {required && '*'}
       </p>
+      
       <Select
         {...rest}
-        value={value}
+        value={value ?? "-1"}
         onChange={handleChange}
-        options={data.map((item) => ({
-          value: item[valueField] as string,
-          label: item[labelField] as string,
-        }))}
+        options={[
+          { value: "-1", label: t('button.select') },
+          ...data.map((item) => ({
+            value: Number(item[valueField] ?? ""),
+            label: String(item[labelField] ?? ""),
+          })),
+        ]}
         style={{ width: '100%' }}
-      />
-      {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
+            />
+            {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, Typography, Modal, Input, Form, Button } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { GenericForm } from "../generic-form/generic-form.component";
 import { GenericTable } from "../generic-table/generic-table.component";
 import { GenericDto, GenericVersionDto } from "../../../models/generic-version-model/generic-version-dto.model";
@@ -21,6 +22,7 @@ interface CrudManagerPageProps<T extends GenericDto> {
   manageVersions?: boolean;
   createEmptyItem: () => T;
   extraColumns?: any[];
+  handleBack?: () => void;
   renderExtraFields?: (item: T, handleChange: (field: keyof T, value: string) => void) => React.ReactNode;
 }
 export const GET_ALL = "getAll";
@@ -31,6 +33,7 @@ export function CrudManagerPage<T extends GenericDto>({
   service,
   manageVersions = false,
   createEmptyItem,
+  handleBack,
   extraColumns,
   renderExtraFields,
 }: CrudManagerPageProps<T>) {
@@ -207,6 +210,14 @@ export function CrudManagerPage<T extends GenericDto>({
 
   return (
     <PageContainer>
+      <Button
+        icon={<ArrowLeftOutlined />}
+        onClick={handleBack}
+        style={{ marginBottom: 16 }}
+        type="link"
+      >
+        {t("button.back")}
+      </Button>
       <Title level={4}>{title}</Title>
 
       {hasPermission(Permission.ManageData) && (

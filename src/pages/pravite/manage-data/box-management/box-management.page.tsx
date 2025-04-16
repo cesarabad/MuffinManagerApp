@@ -3,15 +3,18 @@ import { CrudManagerPage } from "../../../../components/app/generic-crud-manager
 import { GenericInput } from "../../../../components/app/generic-form/generic-input.component";
 import { BoxDto } from "../../../../models/box/box-dto.model";
 import { boxService } from "../../../../services/manage-data/box.service";
+import { useNavigate } from "react-router-dom";
+import { PrivateRoutes } from "../../../../models/routes";
 
 export default function BoxPage() {
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   return (
     <CrudManagerPage<BoxDto>
       title={t('manageData.box.page.title')}
       service={boxService}
       createEmptyItem={() => ({ reference: "", description: "" })}
+      handleBack={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_DATA}`)}
       extraColumns={[
         { title: t('manageData.box.page.reference.label'), dataIndex: "reference", key: "reference" },
         { title: t('manageData.box.page.description.label'), dataIndex: "description", key: "description" },
