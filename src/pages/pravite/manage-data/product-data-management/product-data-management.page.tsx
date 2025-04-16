@@ -26,7 +26,7 @@ const ManageProductDataPage = () => {
         navigate(`/private/${PrivateRoutes.MANAGE_BASE_PRODUCT_ITEM}`);
         break;
       case Permission.GetProductItems:
-        // navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT_ITEM}`);
+        navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT_ITEM}`);
         break;
       case Permission.GetProducts:
         // navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT}`);

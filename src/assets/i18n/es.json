@@ -132,7 +132,32 @@
             },
             "productItem" : {
                 "title" : "Item de producto",
-                "description" : "Modificar o consultar los datos de los paquetes de productos."
+                "description" : "Modificar o consultar los datos de los paquetes de productos.",
+                "page" : {
+                    "title" : "Gestión de Items de Producto",
+                    "reference" : {
+                        "label" : "Referencia",
+                        "placeholder" : "221001"
+                    },
+                    "mainDescription" : {
+                        "label" : "Descripción",
+                        "placeholder" : "Brownies CHOCO-CHIPS 10UDS De Las Heras"
+                    },
+                    "baseProductItem" : {
+                        "label" : "Producto base"
+                    },
+                    "brand" : {
+                        "label" : "Marca"
+                    },
+                    "ean13" : {
+                        "label" : "EAN13",
+                        "placeholder" : "1234567890123"
+                    },
+                    "aliasVersion" : {
+                        "label" : "Alias versión",
+                        "placeholder" : "EAN13 actualizado"
+                    }
+                }
             },
             "baseProductItem" : {
                 "title" : "Producto base",
@@ -173,6 +198,8 @@
         "removeObsolete" : "Desmarcar como obsoleto",
         "modify" : "Modificar",
         "askDelete" : "¿Estás seguro de que deseas eliminar este elemento?",
+        "selectBrand" : "Seleccionar marca",
+        "selectBaseProductItem" : "Seleccionar producto base",
         "table" : {
             "selectVersion" : "Seleccionar versión",
             "activesOption" : "Activos",
@@ -250,6 +277,13 @@
                 "created" : "Un producto base ha sido creado por {{user}}.",
                 "updated" : "Un producto base ha sido actualizado por {{user}}.",
                 "deleted" : "Un producto base ha sido eliminado por {{user}}."
+            },
+            "productItem" : {
+                "created" : "Un item de producto ha sido creado por {{user}}.",
+                "updated" : "Un item de producto ha sido actualizado por {{user}}.",
+                "deleted" : "Un item de producto ha sido eliminado por {{user}}.",
+                "deletedVersion" :"La version de un item de producto ha sido eliminada por {{user}}.",
+                "updatedVersion" :"La version de un item de producto ha sido actualizada por {{user}}."
             }
         }
     },

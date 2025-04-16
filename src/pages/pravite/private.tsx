@@ -17,6 +17,7 @@ const MuffinShapePage = lazy(() => import("./manage-data/shape-management/shape-
 const BoxPage = lazy(() => import("./manage-data/box-management/box-management.page"));
 const PackagePrintPage = lazy(() => import("./manage-data/package-print/package-print-management.page"));
 const BaseProductItemPage = lazy(() => import("./manage-data/product-data-management/base-product-item/base-product-item-management.page"));
+const ProductItemPage = lazy(() => import("./manage-data/product-data-management/product-item/product-item-management.page"));
 
 function Private() {
   const { hasPermission } = useAuth();
@@ -72,6 +73,11 @@ function Private() {
       <Route
         path={PrivateRoutes.MANAGE_BASE_PRODUCT_ITEM}
         element={hasPermission(Permission.GetBaseProductItems) ? <BaseProductItemPage /> : <Navigate to={PrivateRoutes.HOME} />}
+      />
+
+      <Route
+        path={PrivateRoutes.MANAGE_PRODUCT_ITEM}
+        element={hasPermission(Permission.GetProductItems) ? <ProductItemPage /> : <Navigate to={PrivateRoutes.HOME} />}
       />
     </RoutesWithNotFound>
   );
