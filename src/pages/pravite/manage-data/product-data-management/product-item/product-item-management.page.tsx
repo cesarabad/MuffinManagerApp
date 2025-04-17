@@ -86,9 +86,8 @@ return (
                     return brand?.name || "";
                 }
             },
-            { title: t('manageData.productData.productItem.page.mainDescription.label'), dataIndex: "mainDescription", key: "mainDescription" },
-            { title : t('manageData.productData.productItem.page.ean13.label'), dataIndex: "ean13", key: "ean13" },
             { title: t('manageData.aliasVersion'), dataIndex: "aliasVersion", key: "aliasVersion" },
+            { title : t('manageData.productData.productItem.page.ean13.label'), dataIndex: "ean13", key: "ean13" },
             { title: t('manageData.obsolete'), dataIndex: "obsolete", key: "obsolete" },
             { title: t('manageData.creationDate') , dataIndex: "creationDate", key: "creationDate" },
             { title: t('manageData.endDate'), dataIndex: "endDate", key: "endDate" },
@@ -128,13 +127,7 @@ return (
                     required={true}
                 />
 
-                <GenericInput
-                    label={t('manageData.productData.productItem.page.mainDescription.label')}
-                    placeholder={t('manageData.productData.productItem.page.mainDescription.placeholder')}
-                    value={item.mainDescription || ""}
-                    onChange={(e) => handleChange("mainDescription", e.target.value)}
-                    maxLength={80}
-                />
+                
 
                 <GenericInput
                     label={t('manageData.productData.productItem.page.ean13.label')}

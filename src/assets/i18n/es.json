@@ -147,7 +147,7 @@
                         "placeholder" : "12345678901234"
                     },
                     "aliasVersion" : {
-                        "label" : "Alias versión",
+                        "label" : "Versión",
                         "placeholder" : "EAN14 actualizado"
                     },
                     "box" : {
@@ -198,7 +198,7 @@
                     },
                     "mainDescription" : {
                         "label" : "Descripción",
-                        "placeholder" : "Brownies CHOCO-CHIPS 10UDS"
+                        "placeholder" : "CHOCO-CHIPS"
                     },
                     "unitsPerItem" :{
                         "label" : "Unidades por paquete",
@@ -224,7 +224,9 @@
         "modify" : "Modificar",
         "askDelete" : "¿Estás seguro de que deseas eliminar este elemento?",
         "selectBrand" : "Seleccionar marca",
+        "selectBox" : "Seleccionar caja",
         "selectBaseProductItem" : "Seleccionar producto base",
+        "selectProductItem" : "Seleccionar item de producto",
         "clearSelection" : "Quitar selección",
         "table" : {
             "selectVersion" : "Seleccionar versión",
