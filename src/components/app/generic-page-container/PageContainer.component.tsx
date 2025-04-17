@@ -10,10 +10,10 @@ const PageContainer = ({ children }: PageContainerProps) => {
     <div
       style={{
         padding: '20px',
-        backgroundColor: '#F8E1C5', // Crema suave
+        backgroundColor: '#F8E1C5',
         borderRadius: '12px',
         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-        maxWidth: '100%',
+        maxWidth: '1400px',
         margin: '0 auto 50px',
         fontFamily: '"Roboto", sans-serif',
       }}

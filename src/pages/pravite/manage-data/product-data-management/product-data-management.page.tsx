@@ -29,7 +29,7 @@ const ManageProductDataPage = () => {
         navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT_ITEM}`);
         break;
       case Permission.GetProducts:
-        // navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT}`);
+        navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT}`);
         break;
       default:
         break;

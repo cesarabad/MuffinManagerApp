@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { CrudManagerPage } from "../../../../../components/app/generic-crud-manager-page/generic-crud-manager-page.component";
 import { GenericInput } from "../../../../../components/app/generic-form/generic-input.component";
 import { BaseProductItemDto } from "../../../../../models/product-data/base-product-item/base-product-item-dto.model";
-import { baseProductItemService } from "../../../../../services/manage-data/product-tada/base-product-item.service"; 
+import { baseProductItemService } from "../../../../../services/manage-data/product-data/base-product-item.service"; 
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes } from "../../../../../models/routes";
 import { GenericSelect } from "../../../../../components/app/generic-form/generic-select.component";

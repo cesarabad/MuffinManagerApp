@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Modal, Table, Input, Button, Space, Image } from "antd";
 import { BrandDto } from "../../../models/brand/brand-dto.model";
-import { brandService } from "../../../services/manage-data/brand.service";
 import { useTranslation } from "react-i18next";
 import { PlusOutlined } from "@ant-design/icons";
-import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
 
 interface BrandSelectModalInputProps {
   label?: string;
-  value?: number; // ID de la marca seleccionada
+  value?: number;
+  brandList: BrandDto[];
   onChange: (value: number | undefined) => void;
   required?: boolean;
 }
@@ -16,52 +15,15 @@ interface BrandSelectModalInputProps {
 export function BrandSelectModalInput({
     label,
     value,
+    brandList,
     onChange,
     required = false,
   }: BrandSelectModalInputProps) {
     const { t } = useTranslation();
     const [visible, setVisible] = useState(false);
-    const [brandList, setBrandList] = useState<BrandDto[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [selectedBrand, setSelectedBrand] = useState<BrandDto | undefined>(undefined);
-    const fetchBrands = async () => {
-      setLoading(true);
-      try {
-        await brandService.getAll().then((brands) => {
-            setSelectedBrand(brands.find((b) => b.id === value));
-            setBrandList(brands);
-        });
-      } catch (err) {
-        console.error("Error loading brands:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    useEffect(() => {
-        fetchBrands();
-    },[])
-    
-    useWebSocketListener(`/topic${brandService.getPath()}`, fetchBrands);
-  
-    useEffect(() => {
-        if (value === undefined || brandList.length === 0) {
-          setSelectedBrand(undefined);
-          return;
-        }
-      
-        const current = brandList.find((b) => b.id === value);
-        if (current) {
-            setSelectedBrand(current);
-        }
-        
-    }, [value, brandList]);
-      
-      
   
     const handleSelect = (record: BrandDto) => {
       onChange(record.id);
-      setSelectedBrand(record);
       setVisible(false);
     };
   
@@ -86,7 +48,7 @@ export function BrandSelectModalInput({
         dataIndex: "logoBase64",
         key: "logo",
         render: (logoBase64: string) => (
-          <Image width={50} src={`data:image/png;base64,${logoBase64}`} alt="logo" />
+          <Image width={50} src={`data:image/png;base64,${logoBase64}`} alt="logo" preview={false}/>
         ),
       },
     ];
@@ -97,7 +59,7 @@ export function BrandSelectModalInput({
           {`${label}:`}
         </p>
   
-        {!selectedBrand ? (
+        {brandList.find(b => b.id == value) == undefined ? (
             <Button
                 icon={<PlusOutlined />}
                 onClick={() => setVisible(true)}
@@ -124,14 +86,14 @@ export function BrandSelectModalInput({
                 <Space style={{ display: "flex", alignItems: "center" }}>
                   <Input
                     readOnly
-                    value={selectedBrand.name ?? undefined}
+                    value={brandList.find(b => b.id == value)?.name ?? undefined}
                     onClick={() => setVisible(true)}
                     style={{ cursor: "pointer", flex: 1 }}
                     required={required}
                   />
-                  {selectedBrand.logoBase64 ? (
+                  {brandList.find(b => b.id == value)?.logoBase64 ? (
                     <Image
-                      src={`data:image/png;base64,${selectedBrand.logoBase64}`}
+                      src={`data:image/png;base64,${brandList.find(b => b.id == value)?.logoBase64}`}
                       alt="logo"
                       height={40}
                       preview={false}
@@ -143,11 +105,10 @@ export function BrandSelectModalInput({
                     danger
                     onClick={() => {
                         onChange(-1);
-                        setSelectedBrand(undefined);
                     }}
                     style={{ alignSelf: "flex-start", marginTop: 8 }}
                     >
-                    {t("manageData.clearSelection") || "Quitar selección"}
+                    {t("manageData.clearSelection")}
                 </Button>
 
             </Space>
@@ -163,7 +124,6 @@ export function BrandSelectModalInput({
           width={800}
         >
           <Table
-            loading={loading}
             columns={columns}
             dataSource={brandList}
             rowKey="id"

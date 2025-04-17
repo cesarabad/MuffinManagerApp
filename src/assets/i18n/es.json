@@ -128,7 +128,32 @@
             "title" : "Datos de productos",
             "product" : {
                 "title" : "Producto",
-                "description" : "Modificar o consultar los datos de los productos."
+                "description" : "Modificar o consultar los datos de los productos.",
+                "page" : {
+                    "title" : "Gestión de Productos",
+                    "reference" : {
+                        "label" : "Referencia",
+                        "placeholder" : "221001"
+                    },
+                    "productItem" : {
+                        "label" : "Item de producto"
+                    },
+                    "itemsPerProduct" : {
+                        "label" : "Items por producto",
+                        "placeholder" : "16"
+                    },
+                    "ean14" : {
+                        "label" : "EAN14",
+                        "placeholder" : "12345678901234"
+                    },
+                    "aliasVersion" : {
+                        "label" : "Alias versión",
+                        "placeholder" : "EAN14 actualizado"
+                    },
+                    "box" : {
+                        "label" : "Caja"
+                    }
+                }
             },
             "productItem" : {
                 "title" : "Item de producto",
@@ -200,6 +225,7 @@
         "askDelete" : "¿Estás seguro de que deseas eliminar este elemento?",
         "selectBrand" : "Seleccionar marca",
         "selectBaseProductItem" : "Seleccionar producto base",
+        "clearSelection" : "Quitar selección",
         "table" : {
             "selectVersion" : "Seleccionar versión",
             "activesOption" : "Activos",
@@ -284,6 +310,13 @@
                 "deleted" : "Un item de producto ha sido eliminado por {{user}}.",
                 "deletedVersion" :"La version de un item de producto ha sido eliminada por {{user}}.",
                 "updatedVersion" :"La version de un item de producto ha sido actualizada por {{user}}."
+            },
+            "product" : {
+                "deletedVersion" :"La version de un producto ha sido eliminada por {{user}}.",
+                "created" : "Un producto ha sido creado por {{user}}.",
+                "updatedVersion" : "La version de un producto ha sido actualizada por {{user}}.",
+                "deleted" : "Un producto ha sido eliminado por {{user}}.",
+                "updated" : "Un producto ha sido actualizado por {{user}}."
             }
         }
     },
