@@ -71,7 +71,15 @@ export function ProductItemSelectModalInput({
         <Space direction="vertical" style={{ display: "flex" }}>
           <Input.TextArea
             readOnly
-            value={productItemList.find((p) => p.id == value)?.productItemInfo}
+            value={
+              productItemList.find((p) => p.id == value)
+          ? `${productItemList.find((p) => p.id == value)!.productItemInfo || ""}${
+              productItemList.find((p) => p.id == value)!.aliasVersion
+                ? ` (${productItemList.find((p) => p.id == value)!.aliasVersion})`
+                : ""
+            }`
+          : ""
+            }
             onClick={() => setVisible(true)}
             style={{ cursor: "pointer" }}
             required={required}

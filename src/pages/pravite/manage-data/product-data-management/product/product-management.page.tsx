@@ -64,6 +64,7 @@ return (
                 },
                 width: 200,
             },
+            { title: t('manageData.aliasVersion'), dataIndex: "aliasVersion", key: "aliasVersion" },
             { title: t('manageData.productData.product.page.itemsPerProduct.label'), dataIndex: ["itemsPerProduct"], key: "itemsPerProduct" },
             { title : t('manageData.productData.product.page.ean14.label'), dataIndex: "ean14", key: "ean14" },
             { title: t('manageData.productData.product.page.box.label'), dataIndex: "boxId", key: "boxId",
@@ -72,8 +73,6 @@ return (
                 },
                 width: 150,
             },
-
-            { title: t('manageData.aliasVersion'), dataIndex: "aliasVersion", key: "aliasVersion" },
             { title: t('manageData.obsolete'), dataIndex: "obsolete", key: "obsolete" },
             { title: t('manageData.creationDate') , dataIndex: "creationDate", key: "creationDate" },
             { title: t('manageData.endDate'), dataIndex: "endDate", key: "endDate" },

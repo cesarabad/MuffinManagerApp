@@ -19,6 +19,7 @@ const PackagePrintPage = lazy(() => import("./manage-data/package-print/package-
 const BaseProductItemPage = lazy(() => import("./manage-data/product-data-management/base-product-item/base-product-item-management.page"));
 const ProductItemPage = lazy(() => import("./manage-data/product-data-management/product-item/product-item-management.page"));
 const ProductPage = lazy(() => import("./manage-data/product-data-management/product/product-management.page"));
+const StockPage = lazy(() => import("./stock/stock.page"));
 
 function Private() {
   const { hasPermission } = useAuth();
@@ -84,6 +85,11 @@ function Private() {
       <Route
         path={PrivateRoutes.MANAGE_PRODUCT}
         element={hasPermission(Permission.GetProducts) ? <ProductPage /> : <Navigate to={PrivateRoutes.HOME} />}
+      />
+
+      <Route
+        path={PrivateRoutes.STOCK}
+        element={<StockPage />}
       />
 
     </RoutesWithNotFound>
