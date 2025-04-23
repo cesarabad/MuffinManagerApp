@@ -8,7 +8,8 @@ const StyledStockCard = styled(Card)`
   border-radius: 4px;
   border: 2px solid #d4c9a8;
   background-color: #fffdf7;
-  height: 100%;
+  margin: 0 auto;
+
   
   .ant-card-body {
     padding: 12px;
@@ -106,6 +107,101 @@ const StyledStockCard = styled(Card)`
       }
     }
   }
+
+    .reserves-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+      }
+
+      div {
+        width: 100%;
+      }
+    }
+  }
+
+  @media (min-width: 1000px) and (max-width: 1280px) {
+    .stock-reserves {
+      flex-direction: column !important;
+      align-items: stretch;
+      gap: 8px;
+
+      button {
+        width: 100%;
+      }
+
+      div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        width: 100%;
+      }
+    }
+
+    width: 100%;
+    .ant-card-body {
+      padding: 8px;
+    }
+
+    .stock-batch {
+      font-size: 14px;
+    }
+
+    .print-button {
+      height: 28px;
+      font-size: 12px;
+    }
+
+    .stock-value {
+      font-size: 13px;
+      padding: 4px 6px;
+    }
+
+    .stock-reserves {
+      font-size: 12px;
+    }
+
+    .stock-observations {
+      font-size: 12px;
+      padding: 4px 6px;
+    }
+
+    .stock-action-buttons {
+      flex-direction: column;
+      gap: 6px;
+
+      .action-button {
+        height: 30px;
+        font-size: 13px;
+      }
+    }
+
+    .reserves-wrapper {
+      flex-direction: column;
+      gap: 6px;
+
+      button {
+        width: 100%;
+        font-size: 13px;
+        height: 30px;
+      }
+
+      div {
+        width: 100%;
+      }
+    }
+    
+  }
+
+
 `;
 
 interface ProductStockRowProps {
@@ -116,18 +212,24 @@ export function ProductStockRow({ productStock }: ProductStockRowProps) {
   return (
     <StyledStockCard className="product-stock-card">
       <div>
-        <Text className="stock-batch">{productStock.batch}</Text>
-        
-        {productStock.packagePrint && (
-          <Button 
-            className="print-button" 
-            onClick={() => alert(`Imprimir etiqueta: ${productStock.packagePrint.reference} - ${productStock.packagePrint.description}`)}
-          >
-            {productStock.packagePrint.reference}
-          </Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Text className="stock-batch">{productStock.batch}</Text>
+          
+          {productStock.packagePrint && (
+            <Button 
+              className="print-button" 
+              onClick={() => alert(`Imprimir etiqueta: ${productStock.packagePrint.reference} - ${productStock.packagePrint.description}`)}
+            >
+              {productStock.packagePrint.reference}
+            </Button>
+          )}
+        </div>
+        {productStock.observations && (
+          <div className="stock-observations">
+            {productStock.observations}
+          </div>
         )}
-        
-        <div className="stock-value">
+        <div className="stock-value" style={{ width: '100%', textAlign: 'center' }}>
           Stock: <Badge 
             count={productStock.stock > 100 ? productStock.stock : productStock.stock} 
             overflowCount={100000} 
@@ -139,26 +241,29 @@ export function ProductStockRow({ productStock }: ProductStockRowProps) {
         </div>
         
         {productStock.reserves.length > 0 && (
-          <Text className="stock-reserves">
-            Reservado: {productStock.reserves.map(reserve => `${reserve.units} cajas para ${reserve.destination}`).join(" - ")}
-          </Text>
-        )}
-        
-        {productStock.observations && (
-          <div className="stock-observations">
-            {productStock.observations}
+          <div className="stock-reserves" style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+            <Button 
+              className="action-button reserves-button" 
+              onClick={() => alert('Consultar reservas')}
+              style={{ height: '30px' }}
+            >
+              Reservas
+            </Button>
+            
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+              {productStock.reserves.map((reserve, index) => (
+                <Badge 
+                  key={index}
+                  count={`${reserve.destination}: ${reserve.units}c`} 
+                  style={{ backgroundColor: '#faad14', fontSize: '13px' }}
+                />
+              ))}
+            </div>
           </div>
         )}
 
         <div className="stock-action-buttons">
-          {productStock.reserves.length > 0 && (
-            <Button 
-              className="action-button reserves-button" 
-              onClick={() => alert('Consultar reservas')}
-            >
-              Reservas
-            </Button>
-          )}
+          
           <Button 
             className="action-button adjust-button" 
             onClick={() => alert('Ajustar stock')}

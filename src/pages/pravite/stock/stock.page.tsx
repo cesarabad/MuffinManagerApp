@@ -17,7 +17,7 @@ const StyledHeader = styled(Header)`
   padding: 0 24px;
   box-shadow: 0 2px 8px rgba(92, 77, 46, 0.3);
   position: sticky;
-  top: 0;
+  top: 70px; /* Aquí movemos el header 20px hacia abajo desde la parte superior */
   z-index: 100;
   display: flex;
   align-items: center;
@@ -25,27 +25,24 @@ const StyledHeader = styled(Header)`
   height: auto;
   padding: 12px 24px;
   border-bottom: 2px solid #bcaa78;
-  
+  overflow-x: auto;
+
   .header-space {
     width: 100%;
     display: flex;
-    justify-content: flex-start;
     flex-wrap: wrap;
     gap: 12px;
-    
+
     @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: stretch;
-      
+      flex-direction: row;
+      justify-content: flex-start;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+
       .ant-space-item {
-        width: 100%;
-        
-        .ant-space {
-          width: 100%;
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-          gap: 8px;
-        }
+        flex: 1 0 140px;
+        max-width: 100%;
       }
     }
   }
@@ -53,11 +50,15 @@ const StyledHeader = styled(Header)`
 
 const StyledContent = styled(Content)`
   padding: 24px;
+  padding-top: 100px; /* Ajustamos el padding superior para que no se superponga con el header */
   
   @media (max-width: 768px) {
     padding: 16px 8px;
+    padding-top: 80px; /* Ajustamos para pantallas pequeñas */
   }
 `;
+
+
 
 const StyledButton = styled(Button)`
   &.primary-button {

@@ -29,21 +29,18 @@ export interface ProductContent {
     stockDetails: ProductStockResponseDto[];
   }
   
-  // Forma de muffin por marca
   export interface MuffinShapeContent {
     muffinShape: string;
     products: ProductContent[];
   }
   
-  // Marca con su info, logo, alias y formas de muffin
   export interface BrandContent {
     brandName: string;
     brandAliasVersion: string | null;
     brandLogoBase64: string | null;
-    muffinShapes: MuffinShapeContent[]; // ← estaba incorrecto como `muffinShape`
+    muffinShapes: MuffinShapeContent[];
   }
   
-  // La respuesta general del endpoint: array de marcas
   export type StockResponse = BrandContent[];
 
   
