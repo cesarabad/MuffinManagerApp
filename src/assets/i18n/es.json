@@ -251,6 +251,18 @@
             }
         }
     },
+    "stock" : {
+        "label" : "Stock",
+        "boxLabel" : "Caja",
+        "versionLabel" : "Versión",
+        "boxUnit" : "UDS/caja",
+        "unit" : "cajas",
+        "unitLetter" : "c",
+        "reserves" : "Reservas",
+        "adjust" : "Ajustar",
+        "historic" : "Histórico",
+        "totalStock" : "Stock total"
+    },
     "auth" : {
         "logout" : "Cerrar sesión"
     },

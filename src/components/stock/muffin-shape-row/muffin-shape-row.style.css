@@ -1,0 +1,50 @@
+.muffin-shape-card {
+    margin-bottom: 16px;
+    border-radius: 8px;
+    width: 90%;
+    margin: 10px auto 30px;
+  }
+  
+  .muffin-shape-card .ant-card-head {
+    border-radius: 6px 6px 0 0;
+  }
+  
+  .muffin-shape-card .ant-card-head .ant-card-head-title {
+    padding: 12px 0;
+  }
+  
+  .muffin-shape-card .ant-card-head-title h2.ant-typography {
+    margin-bottom: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .muffin-shape-card .ant-card-body {
+    padding: 16px;
+    width: 100%;
+  }
+  
+  .muffin-shape-title-wrapper {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .muffin-shape-title-wrapper h2.ant-typography {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+  }
+  
+  @media (max-width: 868px) {
+    .muffin-shape-card {
+      width: 100%;
+    }
+  
+    .muffin-shape-card .ant-card-head-title h2.ant-typography,
+    .muffin-shape-title-wrapper h2.ant-typography {
+      font-size: 18px;
+    }
+  }
+  

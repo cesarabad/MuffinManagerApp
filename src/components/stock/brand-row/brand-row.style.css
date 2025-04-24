@@ -1,0 +1,65 @@
+.brand-card {
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid #d4c9a8;
+    width: 85%;
+    margin: 0 auto 60px;
+  }
+  
+  .brand-card .ant-card-head {
+    color: white;
+  }
+  
+  .brand-card .ant-card-head-title {
+    padding: 16px 0;
+  }
+  
+  .brand-card .ant-card-head-title h1.ant-typography {
+    margin-bottom: 0;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+  }
+  
+  .brand-card .ant-card-extra {
+    display: flex;
+    align-items: center;
+  }
+  
+  .brand-card .ant-card-extra img {
+    max-height: 80px;
+    max-width: 150px;
+  }
+  
+  .brand-title-wrapper {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .brand-title-wrapper h2.ant-typography {
+    margin: 0;
+    font-size: 28px;
+  }
+  
+  @media (max-width: 868px) {
+    .brand-card {
+      width: 100%;
+    }
+  
+    .brand-card .ant-card-head {
+      flex-direction: column;
+    }
+  
+    .brand-card .ant-card-head-title {
+      text-align: center;
+    }
+  
+    .brand-card .ant-card-head-title h1.ant-typography {
+      font-size: 20px;
+    }
+  
+    .brand-title-wrapper h2.ant-typography {
+      font-size: 20px;
+    }
+  }
+  

@@ -1,0 +1,251 @@
+:root {
+    --badge-green: #52c41a;
+    --badge-red: #f5222d;
+    --badge-orange: #faad14;
+  }
+  
+  .product-stock-card {
+    border-radius: 4px;
+    border: 2px solid #d4c9a8;
+    background-color: #fffdf7;
+    margin: 0 auto;
+  }
+  
+  .product-stock-card .ant-card-body {
+    padding: 12px;
+  }
+  
+  .stock-batch {
+    font-size: 16px;
+    font-weight: 600;
+    color: #5c4d2e;
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .print-button {
+    background-color: #f5ecd5;
+    border-color: #d4c9a8;
+    color: #5c4d2e;
+    font-weight: 600;
+    height: 32px;
+    margin-bottom: 8px;
+  }
+  
+  .print-button:hover {
+    background-color: #e9e1c3;
+    border-color: #bcaa78;
+    color: #3c3012;
+  }
+  
+  .stock-value {
+    background-color: #f3edd8;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-block;
+    color: #5c4d2e;
+    border: 1px solid #d4c9a8;
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .stock-observations {
+    font-style: italic;
+    color: #8c8c8c;
+    font-size: 13px;
+    margin-bottom: 12px;
+    padding: 4px 8px;
+    background-color: #faf7ed;
+    border-radius: 4px;
+    border: 1px dashed #d4c9a8;
+  }
+  
+  .stock-reserves {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  
+  .stock-action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .action-button {
+    flex: 1;
+    height: 32px;
+    font-weight: 500;
+    border-width: 1px;
+  }
+  
+  .adjust-button {
+    background-color: #8e7840;
+    border-color: #5c4d2e;
+    color: white;
+  }
+  
+  .adjust-button:hover {
+    background-color: #5c4d2e;
+  }
+  
+  .reserves-button {
+    background-color: #d4c9a8;
+    border-color: #bcaa78;
+    color: #5c4d2e;
+  }
+  
+  .reserves-button:hover {
+    background-color: #e9e1c3;
+  }
+  
+  .history-button {
+    background-color: #f5ecd5;
+    border-color: #d4c9a8;
+    color: #5c4d2e;
+  }
+  
+  .history-button:hover {
+    background-color: #e9e1c3;
+  }
+  
+  .reserves-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  
+  .stock-badge {
+    font-size: 14px;
+    --bg-color: var(--badge-green);
+  }
+  
+  .stock-badge.zero {
+    --bg-color: var(--badge-red);
+  }
+  
+  .stock-reserve-badge {
+    margin: 2px 5px;
+    font-size: 13px;
+    --bg-color: var(--badge-orange);
+  }
+  
+  .stock-badge .ant-badge-count,
+  .stock-reserve-badge .ant-badge-count {
+    background-color: var(--bg-color) !important;
+  }
+  
+  .batch-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  @media (max-width: 480px) {
+    .reserves-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .reserves-wrapper button,
+    .reserves-wrapper div {
+      width: 100%;
+    }
+  }
+  
+  @media (min-width: 1000px) and (max-width: 1280px) {
+    .stock-reserves {
+      flex-direction: column !important;
+      align-items: stretch;
+      gap: 8px;
+    }
+  
+    .stock-reserves button {
+      width: 100%;
+    }
+  
+    .stock-reserves div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      width: 100%;
+    }
+  
+    .product-stock-card {
+      width: 100%;
+    }
+  
+    .product-stock-card .ant-card-body {
+      padding: 8px;
+    }
+  
+    .stock-batch {
+      font-size: 14px;
+    }
+  
+    .print-button {
+      height: 28px;
+      font-size: 12px;
+    }
+  
+    .stock-value {
+      font-size: 13px;
+      padding: 4px 6px;
+    }
+  
+    .stock-reserves {
+      font-size: 12px;
+    }
+  
+    .stock-observations {
+      font-size: 12px;
+      padding: 4px 6px;
+    }
+  
+    .stock-action-buttons {
+      flex-direction: column;
+      gap: 6px;
+    }
+  
+    .stock-action-buttons .action-button {
+      height: 30px;
+      font-size: 13px;
+    }
+  
+    .reserves-wrapper {
+      flex-direction: column;
+      gap: 6px;
+    }
+  
+    .reserves-wrapper button {
+      width: 100%;
+      font-size: 13px;
+      height: 30px;
+    }
+  
+    .reserves-wrapper div {
+      width: 100%;
+    }
+  }
+  .stock-badge {
+    font-size: 14px;
+    --bg-color: var(--badge-green);
+  }
+  
+  .stock-badge.zero {
+    --bg-color: var(--badge-red);
+  }
+  
+  .stock-reserve-badge {
+    font-size: 13px;
+    --bg-color: var(--badge-orange);
+  }
+  
+  .stock-badge .ant-badge-count,
+  .stock-reserve-badge .ant-badge-count {
+    background-color: var(--bg-color) !important;
+  }
+  
