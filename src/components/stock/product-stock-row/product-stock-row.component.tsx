@@ -2,6 +2,8 @@ import { Card, Button, Typography, Badge } from 'antd';
 import { ProductStockResponseDto } from "../../../models/stock/product-stock/product-stock-dto.model";
 import './product-stock-row.style.css';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import StockHistoryModal from '../movement-stock/movement-stock-history-modal.component';
 
 const { Text } = Typography;
 
@@ -12,6 +14,11 @@ interface ProductStockRowProps {
 export function ProductStockRow({ productStock }: ProductStockRowProps) {
   const stockBadgeClass = productStock.stock > 0 ? 'stock-badge' : 'stock-badge zero';
     const { t } = useTranslation();
+    const [historicModalVisible, setHistoricModalVisible] = useState(false);
+
+    const openHistoricModal = () => setHistoricModalVisible(true);
+    const closeHistoricModal = () => setHistoricModalVisible(false);
+
   return (
     <Card className="product-stock-card">
       <div>
@@ -74,12 +81,17 @@ export function ProductStockRow({ productStock }: ProductStockRowProps) {
           </Button>
           <Button
             className="action-button history-button"
-            onClick={() => alert('Ver histórico')}
+            onClick={() => openHistoricModal()}
           >
             {t('stock.historic')}
           </Button>
         </div>
       </div>
+      <StockHistoryModal
+        visible={historicModalVisible}
+        onClose={closeHistoricModal}
+        productStockId={productStock.id}
+      />
     </Card>
   );
 }

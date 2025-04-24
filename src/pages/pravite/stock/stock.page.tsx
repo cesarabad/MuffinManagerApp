@@ -4,11 +4,18 @@ import { StockResponse } from '../../../models/stock/product-stock/product-stock
 import BrandRow from '../../../components/stock/brand-row/brand-row.component';
 import { Button, Layout, message, Space } from 'antd';
 import './stock-page.style.css';
+import StockHistoryModal from '../../../components/stock/movement-stock/movement-stock-history-modal.component';
+import { useTranslation } from 'react-i18next';
 
 const { Header, Content } = Layout;
 
 const StockPage = () => {
   const [brands, setBrands] = useState<StockResponse>();
+  const { t } = useTranslation();
+  const [historicModalVisible, setHistoricModalVisible] = useState(false);
+
+  const openHistoricModal = () => setHistoricModalVisible(true);
+  const closeHistoricModal = () => setHistoricModalVisible(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,16 +42,16 @@ const StockPage = () => {
               onClick={() => showAlert('Realizar movimiento')}
               className="primary-button"
             >
-              Realizar movimiento
+              {t('stock.realizeMovement')}
             </Button>
             <Button onClick={() => showAlert('Hacer recuento')} className="secondary-button">
-              Hacer recuento
+              {t('stock.stockCount')}
             </Button>
             <Button onClick={() => showAlert('Consultar reservas')} className="secondary-button">
-              Consultar reservas
+              {t('stock.checkReserves')}
             </Button>
-            <Button onClick={() => showAlert('Histórico')} className="secondary-button">
-              Histórico
+            <Button onClick={() => openHistoricModal()} className="secondary-button">
+              {t('stock.historic')}
             </Button>
           </Space>
         </Space>
@@ -54,6 +61,10 @@ const StockPage = () => {
           <BrandRow brand={brand} key={index} />
         ))}
       </Content>
+      <StockHistoryModal
+        visible={historicModalVisible}
+        onClose={closeHistoricModal}
+      />
     </Layout>
   );
 };

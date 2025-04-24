@@ -1,4 +1,5 @@
 export interface ProductLightDto {
+    id: number;
     reference: string;
     description: string;
     boxReference: string;

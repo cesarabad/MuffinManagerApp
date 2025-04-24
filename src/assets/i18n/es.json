@@ -261,7 +261,10 @@
         "reserves" : "Reservas",
         "adjust" : "Ajustar",
         "historic" : "Histórico",
-        "totalStock" : "Stock total"
+        "totalStock" : "Stock total",
+        "realizeMovement" : "Realizar movimiento",
+        "stockCount": "Hacer recuento",
+        "checkReserves": "Consultar reservas"
     },
     "auth" : {
         "logout" : "Cerrar sesión"

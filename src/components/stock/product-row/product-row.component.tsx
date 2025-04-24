@@ -3,6 +3,8 @@ import ProductStockRow from '../product-stock-row/product-stock-row.component';
 import { ProductContent } from '../../../models/stock/product-stock/product-stock-dto.model';
 import './product-row.style.css';
 import { useTranslation } from 'react-i18next';
+import StockHistoryModal from '../movement-stock/movement-stock-history-modal.component';
+import { useState } from 'react';
 
 const { Title, Text } = Typography;
 
@@ -13,6 +15,10 @@ interface ProductRowProps {
 export function ProductRow({ product }: ProductRowProps) {
   const totalStock = product.stockDetails.reduce((sum, item) => sum + item.stock, 0);
   const { t } = useTranslation();
+  const [historicModalVisible, setHistoricModalVisible] = useState(false);
+
+  const openHistoricModal = () => setHistoricModalVisible(true);
+  const closeHistoricModal = () => setHistoricModalVisible(false);
   return (
     <Card
       title={
@@ -28,7 +34,7 @@ export function ProductRow({ product }: ProductRowProps) {
           <div className="mobile-button">
             <Button
               type="primary"
-              onClick={() => alert('Ver histórico')}
+              onClick={() => openHistoricModal()}
               className="primary-button"
             >
               {t('stock.historic')}
@@ -38,7 +44,7 @@ export function ProductRow({ product }: ProductRowProps) {
       }
       className="product-card"
       extra={
-        <Button type="primary" onClick={() => alert('Ver histórico')} className="primary-button pc-button">
+        <Button type="primary" onClick={() => openHistoricModal()} className="primary-button pc-button">
           {t('stock.historic')}
         </Button>
       }
@@ -80,6 +86,11 @@ export function ProductRow({ product }: ProductRowProps) {
           </Row>
         </Col>
       </Row>
+      <StockHistoryModal
+        visible={historicModalVisible}
+        onClose={closeHistoricModal}
+        productId={product.product.id}
+      />
     </Card>
   );
 }
