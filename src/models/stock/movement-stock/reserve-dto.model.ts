@@ -24,7 +24,7 @@ export interface MovementStock {
   units: number;
   destination: string;
   creationDate: Date;
-  endDate: string | null;
+  endDate?: string | null;
   observations: string | null;
   status: MovementStatus;
 }

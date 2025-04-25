@@ -253,9 +253,17 @@
     },
     "stock" : {
         "label" : "Stock",
+        "productLabel" : "Producto",
         "boxLabel" : "Caja",
+        "batchLabel" : "Lote",
         "versionLabel" : "Versión",
+        "responsibleLabel" : "Responsable",
         "boxUnit" : "UDS/caja",
+        "unitsLabel" : "Unidades",
+        "destinationLabel" : "Destino",
+        "observationsLabel" : "Observaciones",
+        "creationDateLabel" : "Fecha de creación",
+        "endDateLabel" : "Fecha de fin",
         "unit" : "cajas",
         "unitLetter" : "c",
         "reserves" : "Reservas",
@@ -264,7 +272,27 @@
         "totalStock" : "Stock total",
         "realizeMovement" : "Realizar movimiento",
         "stockCount": "Hacer recuento",
-        "checkReserves": "Consultar reservas"
+        "checkReserves": "Consultar reservas",
+        "historicLabel": "Histórico de movimientos de stock",
+        "noEndDate" : "No finalizado",
+        "type" : {
+            "name" : "Tipo",
+            "entry" : "Entrada",
+            "assigned" : "Salida",
+            "adjustment" : "Ajuste",
+            "reserve" : "Reserva"
+        },
+        "status" : {
+            "name" : "Estado",
+            "inprogress" : "En progreso",
+            "completed" : "Completado",
+            "canceled" : "Cancelado"
+        },
+        "actions" : {
+            "name" : "Acciones",
+            "endReserve" : "Completar reserva",
+            "undoMovement" : "Deshacer movimiento"
+        }
     },
     "auth" : {
         "logout" : "Cerrar sesión"

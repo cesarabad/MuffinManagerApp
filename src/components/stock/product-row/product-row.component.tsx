@@ -80,7 +80,7 @@ export function ProductRow({ product }: ProductRowProps) {
           <Row gutter={[12, 12]}>
             {product.stockDetails.map((productStock) => (
               <Col xs={24} md={12} lg={8} xl={6} key={productStock.id}>
-                <ProductStockRow productStock={productStock} />
+                <ProductStockRow productStock={productStock} productDescription={product.product.description} productReference={product.product.reference} />
               </Col>
             ))}
           </Row>
@@ -90,6 +90,13 @@ export function ProductRow({ product }: ProductRowProps) {
         visible={historicModalVisible}
         onClose={closeHistoricModal}
         productId={product.product.id}
+        description={
+          <>
+            {product.product.reference}
+            <br />
+            {product.product.description}
+          </>
+        }
       />
     </Card>
   );

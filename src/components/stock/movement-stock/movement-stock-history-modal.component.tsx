@@ -1,24 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { Modal, Table, Button, message } from "antd";
+import React, { ReactNode, useEffect, useState } from "react";
+import { Modal, Table, Button } from "antd";
 import { movementStockService } from "../../../services/stock/movement-stock.service";
 import { MovementStatus, MovementStock, MovementType } from "../../../models/stock/movement-stock/reserve-dto.model";
 import "./movement-stock-history-modal.style.scss";
+import { useTranslation } from "react-i18next";
 
 interface StockHistoryModalProps {
   visible: boolean;
   onClose: () => void;
   productId?: number;
   productStockId?: number;
+  description?: ReactNode;
 }
 
-const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose, productId, productStockId }) => {
+const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose, productId, productStockId, description }) => {
   const [data, setData] = useState<MovementStock[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
+  const [pageSize, setPageSize] = useState<number>(5);
+  const [compactMode, setCompactMode] = useState<boolean>(false);
+
+  const calculatePageSize = (isCompact: boolean) => {
+    const availableHeight = window.innerHeight;
+    const estimatedRowHeight = isCompact ? 17 : 70;
+    const headerHeight = 300;
+    const usableHeight = availableHeight - headerHeight;
+    return Math.max(1, Math.floor(usableHeight / estimatedRowHeight));
+  };
+
+  
+  useEffect(() => {
+    const handleResize = () => {
+      const calculated = calculatePageSize(compactMode);
+      setPageSize(calculated);
+
+      if ((calculated < 3 || window.innerWidth < 800) && !compactMode) {
+        setCompactMode(true);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const recalculated = calculatePageSize(compactMode);
+    setPageSize(recalculated);
+  }, [compactMode, window.innerWidth]);
 
   useEffect(() => {
     if (visible) {
+      document.body.classList.add("modal-open");
+
+      setTimeout(() => {
+        const calculated = calculatePageSize(compactMode);
+        setPageSize(calculated);
+      }, 0);
+
       fetchData();
+    } else {
+      document.body.classList.remove("modal-open");
     }
+
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
   }, [visible]);
 
   const fetchData = async () => {
@@ -34,7 +84,7 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
       }
       setData(result);
     } catch (error) {
-      message.error("Error fetching data");
+      console.error("Error fetching stock history:", error);
     } finally {
       setLoading(false);
     }
@@ -43,94 +93,136 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
   const handleUndoMovement = async (movementStockId: number) => {
     try {
       await movementStockService.undoMovement(movementStockId);
-      message.success("Movement undone");
-      fetchData(); // Refresh data after undo
+      fetchData();
     } catch (error) {
-      message.error("Error undoing movement");
+      console.error("Error undoing movement:", error);
     }
   };
 
   const handleEndReserve = async (movementStockId: number) => {
     try {
       await movementStockService.endReserve(movementStockId);
-      message.success("Reserve ended");
-      fetchData(); // Refresh data after ending reserve
+      fetchData();
     } catch (error) {
-      message.error("Error ending reserve");
-    }
+      console.error("Error ending reserve:", error);}
   };
 
   const columns = [
+    ...(!productId && !productStockId
+      ? [
+          {
+            title: t('stock.productLabel'),
+            dataIndex: "productReference",
+            key: "productReference",
+          },
+        ]
+      : []),
+    ...(productStockId
+      ? []
+      : [
+          {
+            title: t('stock.batchLabel'),
+            dataIndex: "batch",
+            key: "batch",
+          },
+        ]),
     {
-        title: "ID",
-        dataIndex: "id",
-        key: "id",
+      title: t('stock.type.name'),
+      dataIndex: "type",
+      key: "type",
+      render: (type: MovementType) => t(`stock.type.${type.toLowerCase()}`),
     },
     {
-      title: "Batch",
-      dataIndex: "batch",
-      key: "batch",
-    },
-    {
-      title: "Product",
-      dataIndex: "productReference",
-      key: "productReference",
-    },
-    {
-      title: "Units",
+      title: t('stock.unitsLabel'),
       dataIndex: "units",
       key: "units",
     },
     {
-      title: "Destination",
+      title: t('stock.destinationLabel'),
       dataIndex: "destination",
       key: "destination",
     },
     {
-        title: "Status",
-        dataIndex: "status",
-        key: "status",
+      title: t('stock.status.name'),
+      dataIndex: "status",
+      key: "status",
+      render: (status: MovementStatus) => t(`stock.status.${status.toLowerCase()}`),
     },
     {
-      title: "Date",
+      title: t('stock.observationsLabel'),
+      dataIndex: "observations",
+      key: "observations",
+      width: compactMode ? 500 : 300,
+    },
+    {
+      title: t('stock.responsibleLabel'),
+      dataIndex: ["responsible", "id"],
+      key: "responsible",
+      render: (_: unknown, record: MovementStock) => `${record.responsible?.name || ""} ${record.responsible?.secondName || ""}`.trim(),
+    },
+    {
+      title: t('stock.creationDateLabel'),
       dataIndex: "creationDate",
       key: "creationDate",
       render: (text: string) => new Date(text).toLocaleString(),
     },
     {
-      title: "Actions",
+      title: t('stock.endDateLabel'),
+      dataIndex: "endDate",
+      key: "endDate",
+      render: (text: string) => (text ? new Date(text).toLocaleString() : t('stock.noEndDate')),
+    },
+    {
+      title: t('stock.actions.name'),
       key: "actions",
+      fixed: "right" as "right",
       render: (_: any, record: MovementStock) => (
-        <div>
+        <div style={{ width: compactMode ? (window.innerWidth > 800 ? (window.innerWidth * 0.3 ).toString() + "px" : (window.innerWidth * 0.35).toString() + "px") : undefined }}>
           {record.type === MovementType.Reserve && record.status === MovementStatus.InProgress && (
             <Button onClick={() => handleEndReserve(record.id)} type="primary" style={{ marginRight: 8 }}>
-              End Reserve
+              {t('stock.actions.endReserve')}
             </Button>
           )}
-          {record.status !== MovementStatus.Canceled && (<Button onClick={() => handleUndoMovement(record.id)} type="default">
-            Undo Movement
-          </Button>)}
+          <Button 
+            onClick={() => handleUndoMovement(record.id)} 
+            type="default" 
+            style={{ whiteSpace: "normal", wordBreak: "break-word", maxWidth: 150, padding: 3 }}
+          >
+            {t('stock.actions.undoMovement')}
+          </Button>
         </div>
-      ),
+      )
     },
   ];
 
   return (
     <Modal
-      title="Stock Movement History"
+      className={compactMode ? "compact-mode" : ""}
+      title={
+        <>
+          {t('stock.historicLabel')}
+          {description && (
+            <>
+              <br />
+              {description}
+            </>
+          )}
+        </>
+      }
       open={visible}
       onCancel={onClose}
       footer={null}
-      width={800}
+      width={"95%"}
       destroyOnClose
     >
       <Table
+        rowKey="id"
         columns={columns}
         dataSource={data}
-        rowKey="id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
-        scroll={{ x: true }}
+        pagination={{ pageSize }}
+        scroll={{ x: "max-content" }}
+        rowClassName={(record: MovementStock) => `movement-type-${record.type.toLowerCase()}`}
       />
     </Modal>
   );

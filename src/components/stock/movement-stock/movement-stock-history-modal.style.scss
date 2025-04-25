@@ -1,18 +1,104 @@
+body.modal-open {
+  overflow: hidden !important;
+}
+.movement-type-entry {
+  background-color: #e6f7e6 !important; // verde claro
+}
+
+.movement-type-assigned {
+  background-color: #fdecea !important; // rojo claro
+}
+
+.movement-type-adjustment {
+  background-color: #e6f0ff !important; // azul claro
+}
+
+.movement-type-reserve {
+  background-color: #fff4e6 !important; // naranja claro
+}
+
 .ant-modal {
-    max-width: 90%;
-  }
-  
+  max-width: 90%;
+  width: 90%;
+  top: 50% !important;
+  transform: translateY(-50%);
+  padding: 0;
+  height: 90vh !important;
+}
+
+.ant-modal-content {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ant-table-container {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.ant-table {
+  margin-top: 16px;
+}
+
+.ant-btn-primary {
+  background-color: #4b9ef0;
+  border-color: #4b9ef0;
+}
+
+.ant-btn-primary:hover {
+  background-color: #2a78b7;
+  border-color: #2a78b7;
+}
+
+.compact-mode {
+  font-size: 12px;
+
   .ant-table {
-    margin-top: 16px;
+    font-size: 12px;
+    margin-top: 0;
   }
-  
-  .ant-btn-primary {
-    background-color: #4b9ef0;
-    border-color: #4b9ef0;
+
+  .ant-btn {
+    font-size: 12px;
+    padding: 2px 6px;
+    height: auto;
+    margin: 2px;
   }
-  
-  .ant-btn-primary:hover {
-    background-color: #2a78b7;
-    border-color: #2a78b7;
+
+  .ant-modal {
+    padding: 0;
   }
-  
+
+  .ant-modal-header {
+    padding: 4px 8px;
+  }
+
+  .ant-modal-title {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .ant-modal-body {
+    padding: 0px;
+  }
+
+  .ant-table-cell {
+    padding: 4px !important;
+  }
+
+  .ant-modal-content {
+    margin: 0;
+  }
+
+  .ant-pagination {
+    font-size: 14px;
+  }
+
+  .ant-pagination-item {
+    padding: 0px;
+  }
+}

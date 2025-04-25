@@ -9,9 +9,11 @@ const { Text } = Typography;
 
 interface ProductStockRowProps {
   productStock: ProductStockResponseDto;
+  productReference?: string;
+  productDescription?: string;
 }
 
-export function ProductStockRow({ productStock }: ProductStockRowProps) {
+export function ProductStockRow({ productStock, productDescription, productReference }: ProductStockRowProps) {
   const stockBadgeClass = productStock.stock > 0 ? 'stock-badge' : 'stock-badge zero';
     const { t } = useTranslation();
     const [historicModalVisible, setHistoricModalVisible] = useState(false);
@@ -91,6 +93,13 @@ export function ProductStockRow({ productStock }: ProductStockRowProps) {
         visible={historicModalVisible}
         onClose={closeHistoricModal}
         productStockId={productStock.id}
+        description={
+          <>
+            {productReference} - {productStock.batch}
+            <br />
+            {productDescription}
+          </>
+        }
       />
     </Card>
   );

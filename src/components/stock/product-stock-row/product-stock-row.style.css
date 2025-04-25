@@ -156,7 +156,7 @@
     }
   }
   
-  @media (min-width: 1000px) and (max-width: 1280px) {
+  @media (min-width: 800px) and (max-width: 1280px) {
     .stock-reserves {
       flex-direction: column !important;
       align-items: stretch;
