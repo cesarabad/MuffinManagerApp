@@ -13,5 +13,9 @@ export const productStockService = {
 
     insert: async (model: ProductStockRequestDto) => {
         return await httpCrudService<ProductStockResponseDto>(PATH).post<ProductStockRequestDto>("/insert", model);
+    },
+
+    updateLastCheckDate: async (productStockId: number) => {
+        return await httpCrudService<void>(PATH).post(`/updateLastCheckDate/${productStockId}`, {});
     }
 }
