@@ -1,9 +1,11 @@
-import { Card, Button, Typography, Badge } from 'antd';
+import { Card, Button, Typography, Badge, Modal } from 'antd';
 import { ProductStockResponseDto } from "../../../models/stock/product-stock/product-stock-dto.model";
 import './product-stock-row.style.css';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import StockHistoryModal from '../movement-stock/movement-stock-history-modal.component';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 const { Text } = Typography;
 
@@ -15,11 +17,23 @@ interface ProductStockRowProps {
 
 export function ProductStockRow({ productStock, productDescription, productReference }: ProductStockRowProps) {
   const stockBadgeClass = productStock.stock > 0 ? 'stock-badge' : 'stock-badge zero';
-    const { t } = useTranslation();
-    const [historicModalVisible, setHistoricModalVisible] = useState(false);
+  const { t } = useTranslation();
+  const [historicModalVisible, setHistoricModalVisible] = useState(false);
+  const [labelModalVisible, setLabelModalVisible] = useState(false);
+  const [labelContent, setLabelContent] = useState<{ reference: string; description: string } | null>(null);
 
-    const openHistoricModal = () => setHistoricModalVisible(true);
-    const closeHistoricModal = () => setHistoricModalVisible(false);
+  const openHistoricModal = () => setHistoricModalVisible(true);
+  const closeHistoricModal = () => setHistoricModalVisible(false);
+
+  const openLabelModal = (reference: string, description: string) => {
+    setLabelContent({ reference, description });
+    setLabelModalVisible(true);
+  };
+
+  const closeLabelModal = () => {
+    setLabelModalVisible(false);
+    setLabelContent(null);
+  };
 
   return (
     <Card className="product-stock-card">
@@ -31,7 +45,10 @@ export function ProductStockRow({ productStock, productDescription, productRefer
             <Button
               className="print-button"
               onClick={() =>
-                alert(`Imprimir etiqueta: ${productStock.packagePrint.reference} - ${productStock.packagePrint.description}`)
+                openLabelModal(
+                  productStock.packagePrint.reference,
+                  productStock.packagePrint.description
+                )
               }
             >
               {productStock.packagePrint.reference}
@@ -89,6 +106,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           </Button>
         </div>
       </div>
+
       <StockHistoryModal
         visible={historicModalVisible}
         onClose={closeHistoricModal}
@@ -101,6 +119,29 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           </>
         }
       />
+
+      <Modal
+        title={t('stock.packagePrintLabel')}
+        open={labelModalVisible}
+        onCancel={closeLabelModal}
+        footer={[
+          <Button key="back" onClick={closeLabelModal} icon={<i className="fas fa-arrow-left" />}>
+            {t('button.back')}
+          </Button>
+        ]}
+      >
+        {labelContent && (
+          <div>
+            <p>
+              <strong>{t('stock.packagePrintReferenceLabel')}:</strong> {labelContent.reference}
+            </p>
+            <p>
+              <strong>{t('stock.packagePrintDescriptionLabel')}:</strong> {labelContent.description}
+            </p>
+          </div>
+        )}
+      </Modal>
+
     </Card>
   );
 }
