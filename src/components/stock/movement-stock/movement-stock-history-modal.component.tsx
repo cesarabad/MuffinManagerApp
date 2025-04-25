@@ -179,12 +179,12 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
       render: (_: any, record: MovementStock) => (
         <div style={{ width: compactMode ? (window.innerWidth > 800 ? (window.innerWidth * 0.3 ).toString() + "px" : (window.innerWidth * 0.35).toString() + "px") : undefined }}>
           {record.type === MovementType.Reserve && record.status === MovementStatus.InProgress && (
-            <Button onClick={() => handleEndReserve(record.id)} type="primary" style={{ marginRight: 8 }}>
+            <Button onClick={() => handleEndReserve(record.id!)} type="primary" style={{ marginRight: 8 }}>
               {t('stock.actions.endReserve')}
             </Button>
           )}
           <Button 
-            onClick={() => handleUndoMovement(record.id)} 
+            onClick={() => handleUndoMovement(record.id!)} 
             type="default" 
             style={{ whiteSpace: "normal", wordBreak: "break-word", maxWidth: 150, padding: 3 }}
           >

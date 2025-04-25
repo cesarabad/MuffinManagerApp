@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import StockHistoryModal from '../movement-stock/movement-stock-history-modal.component';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import StockAdjustmentModal from '../movement-stock/adjustment-modal/adjustment-modal.component';
 
 
 const { Text } = Typography;
@@ -21,6 +22,8 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const [historicModalVisible, setHistoricModalVisible] = useState(false);
   const [labelModalVisible, setLabelModalVisible] = useState(false);
   const [labelContent, setLabelContent] = useState<{ reference: string; description: string } | null>(null);
+  const [adjustModalVisible, setAdjustModalVisible] = useState(false);
+
 
   const openHistoricModal = () => setHistoricModalVisible(true);
   const closeHistoricModal = () => setHistoricModalVisible(false);
@@ -92,12 +95,13 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         )}
 
         <div className="stock-action-buttons">
-          <Button
-            className="action-button adjust-button"
-            onClick={() => alert('Ajustar stock')}
-          >
-            {t('stock.adjust')}
-          </Button>
+        <Button
+          className="action-button adjust-button"
+          onClick={() => setAdjustModalVisible(true)}
+        >
+          {t('stock.adjust')}
+        </Button>
+
           <Button
             className="action-button history-button"
             onClick={() => openHistoricModal()}
@@ -141,6 +145,12 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           </div>
         )}
       </Modal>
+      <StockAdjustmentModal
+        visible={adjustModalVisible}
+        onClose={() => setAdjustModalVisible(false)}
+        productStock={productStock}
+        description={`${productReference} | ${productStock.batch} - ${productDescription}`}
+      />
 
     </Card>
   );

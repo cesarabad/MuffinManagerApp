@@ -273,6 +273,7 @@
         "adjust" : "Ajustar",
         "historic" : "Histórico",
         "totalStock" : "Stock total",
+        "totalUnits" : "Cajas totales",
         "realizeMovement" : "Realizar movimiento",
         "stockCount": "Hacer recuento",
         "checkReserves": "Consultar reservas",
@@ -294,7 +295,16 @@
         "actions" : {
             "name" : "Acciones",
             "endReserve" : "Completar reserva",
-            "undoMovement" : "Deshacer movimiento"
+            "undoMovement" : "Deshacer movimiento",
+            "adjustment" : {
+                "modalTitle" : "Ajuste de stock",
+                "importantModalNote" : "¡Debes colocar la cantidad total de cajas, sin restar las reservadas!",
+                "unitsLabel" : "Unidades",
+                "unitsPlaceholder" : "Cantidad de cajas",
+                "observationsLabel" : "Observaciones",
+                "observationsPlaceholder" : "Observaciones",
+                "currentReserves" : "Reservas actuales"
+            }
         }
     },
     "auth" : {

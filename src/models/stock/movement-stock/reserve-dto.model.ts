@@ -14,19 +14,19 @@ export enum MovementStatus {
 }
 
 export interface MovementStock {
-  id: number;
+  id?: number;
   productStockId: number;
-  productReference: string;
-  batch: string;
-  packagePrintDescription: string;
+  productReference?: string;
+  batch?: string;
+  packagePrintDescription?: string;
   type: MovementType;
-  responsible: UserSafeDto;
+  responsible?: UserSafeDto;
   units: number;
-  destination: string;
-  creationDate: Date;
+  destination?: string;
+  creationDate?: Date;
   endDate?: string | null;
-  observations: string | null;
-  status: MovementStatus;
+  observations?: string | null;
+  status?: MovementStatus;
 }
 
 export interface ActiveReserveDto {
