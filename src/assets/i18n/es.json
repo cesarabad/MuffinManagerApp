@@ -295,7 +295,9 @@
         "actions" : {
             "name" : "Acciones",
             "endReserve" : "Completar reserva",
+            "askEndReserve" : "¿Estás seguro de que deseas completar la reserva?",
             "undoMovement" : "Deshacer movimiento",
+            "askUndoMovement" : "¿Estás seguro de que deseas deshacer el movimiento?",
             "adjustment" : {
                 "modalTitle" : "Ajuste de stock",
                 "importantModalNote" : "¡Debes colocar la cantidad total de cajas, sin restar las reservadas!",

@@ -20,6 +20,10 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
   const { t } = useTranslation();
   const [pageSize, setPageSize] = useState<number>(5);
   const [compactMode, setCompactMode] = useState<boolean>(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmTitle, setConfirmTitle] = useState("");
+  const [confirmContent, setConfirmContent] = useState("");
+  const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => {});
 
   const calculatePageSize = (isCompact: boolean) => {
     const availableHeight = window.innerHeight;
@@ -98,7 +102,14 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
   }, [visible]);
 
   
-
+  const openConfirmModal = (action: () => void, title: string, content: string) => {
+    setOnConfirmAction(() => action);
+    setConfirmTitle(title);
+    setConfirmContent(content);
+    setConfirmVisible(true);
+  };
+  
+  
   
 
   const handleUndoMovement = async (movementStockId: number) => {
@@ -190,13 +201,25 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
       render: (_: any, record: MovementStock) => (
         <div style={{ width: compactMode ? (window.innerWidth > 800 ? (window.innerWidth * 0.3 ).toString() + "px" : (window.innerWidth * 0.35).toString() + "px") : undefined }}>
           {record.type === MovementType.Reserve && record.status === MovementStatus.InProgress && (
-            <Button onClick={() => handleEndReserve(record.id!)} type="primary" style={{ marginRight: 8 }}>
-              {t('stock.actions.endReserve')}
-            </Button>
+            <Button 
+            onClick={() => openConfirmModal(
+              () => handleEndReserve(record.id!),
+              `${t('stock.actions.endReserve')}`,
+              `${t('stock.actions.askEndReserve')}`
+            )}
+            type="primary"
+            style={{ marginRight: 8 }}
+          >
+            {t('stock.actions.endReserve')}
+          </Button>
           )}
           {record.status !== MovementStatus.Canceled && (<Button 
-            onClick={() => handleUndoMovement(record.id!)} 
-            type="default" 
+            onClick={() => openConfirmModal(
+              () => handleUndoMovement(record.id!),
+              `${t('stock.actions.undoMovement')}`,
+              `${t('stock.actions.askUndoMovement')}`
+            )}
+            type="default"
             style={{ whiteSpace: "normal", wordBreak: "break-word", maxWidth: 150, padding: 3 }}
           >
             {t('stock.actions.undoMovement')}
@@ -206,7 +229,7 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
     },
   ];
 
-  return (
+  return (<>
     <Modal
       className={compactMode ? "compact-mode" : ""}
       title={
@@ -236,6 +259,20 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
         rowClassName={(record: MovementStock) => `movement-type-${record.type.toLowerCase()}`}
       />
     </Modal>
+    <Modal
+    open={confirmVisible}
+    title={confirmTitle}
+    onOk={() => {
+      onConfirmAction();
+      setConfirmVisible(false);
+    }}
+    onCancel={() => setConfirmVisible(false)}
+    okText={t('button.confirm')}
+    cancelText={t('button.cancel')}
+  >
+    <p>{confirmContent}</p>
+  </Modal>
+</>  
   );
 };
 
