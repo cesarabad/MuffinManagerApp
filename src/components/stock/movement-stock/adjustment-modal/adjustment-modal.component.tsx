@@ -63,7 +63,7 @@ const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
         <Popover
           key={index}
           content={reserve.observations}
-          title={t('stock.actions.adjustment.observationsLabel')}
+          title={badgeContent}
           trigger="click"
         >
           <div className={badgeClass}>{badgeContent}</div>

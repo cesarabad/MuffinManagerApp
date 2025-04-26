@@ -1,4 +1,4 @@
-import { Card, Button, Typography, Badge, Modal } from 'antd';
+import { Card, Button, Typography, Badge, Modal, Popover } from 'antd';
 import { ProductStockResponseDto } from "../../../models/stock/product-stock/product-stock-dto.model";
 import './product-stock-row.style.css';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +6,6 @@ import { useState } from 'react';
 import StockHistoryModal from '../movement-stock/movement-stock-history-modal.component';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import StockAdjustmentModal from '../movement-stock/adjustment-modal/adjustment-modal.component';
-
 
 const { Text } = Typography;
 
@@ -23,7 +22,6 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const [labelModalVisible, setLabelModalVisible] = useState(false);
   const [labelContent, setLabelContent] = useState<{ reference: string; description: string } | null>(null);
   const [adjustModalVisible, setAdjustModalVisible] = useState(false);
-
 
   const openHistoricModal = () => setHistoricModalVisible(true);
   const closeHistoricModal = () => setHistoricModalVisible(false);
@@ -83,24 +81,41 @@ export function ProductStockRow({ productStock, productDescription, productRefer
             </Button>
 
             <div>
-              {productStock.reserves.map((reserve, index) => (
-                <Badge
-                  key={index}
-                  count={`${reserve.destination}: ${reserve.units}${t('stock.unitLetter')}`}
-                  className="stock-reserve-badge"
-                />
-              ))}
+              {productStock.reserves.map((reserve, index) => {
+                const hasObservation = reserve.observations !== null && reserve.observations.trim() !== '';
+                const badgeClass = hasObservation ? 'stock-reserve-badge with-observations' : 'stock-reserve-badge';
+
+                const badgeContent = (
+                  <Badge
+                    key={index}
+                    count={`${reserve.destination}: ${reserve.units} ${t('stock.unit')}`}
+                    className={badgeClass}
+                  />
+                );
+
+                return hasObservation ? (
+                  <Popover
+                    key={index}
+                    content={<div>{reserve.observations}</div>}
+                    title={`${reserve.destination}: ${reserve.units} ${t('stock.unit')}`}
+                  >
+                    {badgeContent}
+                  </Popover>
+                ) : (
+                  badgeContent
+                );
+              })}
             </div>
           </div>
         )}
 
         <div className="stock-action-buttons">
-        <Button
-          className="action-button adjust-button"
-          onClick={() => setAdjustModalVisible(true)}
-        >
-          {t('stock.adjust')}
-        </Button>
+          <Button
+            className="action-button adjust-button"
+            onClick={() => setAdjustModalVisible(true)}
+          >
+            {t('stock.adjust')}
+          </Button>
 
           <Button
             className="action-button history-button"
@@ -145,13 +160,13 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           </div>
         )}
       </Modal>
+
       <StockAdjustmentModal
         visible={adjustModalVisible}
         onClose={() => setAdjustModalVisible(false)}
         productStock={productStock}
         description={`${productReference} | ${productStock.batch} - ${productDescription}`}
       />
-
     </Card>
   );
 }

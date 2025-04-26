@@ -1,7 +1,8 @@
 :root {
     --badge-green: #52c41a;
     --badge-red: #f5222d;
-    --badge-orange: #faad14;
+    --badge-orange: #ffaa00;
+    --badge-observation: #7b5200;
   }
   
   .product-stock-card {
@@ -248,4 +249,6 @@
   .stock-reserve-badge .ant-badge-count {
     background-color: var(--bg-color) !important;
   }
-  
+  .stock-reserve-badge.with-observations {
+    --bg-color: var(--badge-observation);
+  }
