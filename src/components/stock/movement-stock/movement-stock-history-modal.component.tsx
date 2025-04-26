@@ -4,6 +4,7 @@ import { movementStockService } from "../../../services/stock/movement-stock.ser
 import { MovementStatus, MovementStock, MovementType } from "../../../models/stock/movement-stock/reserve-dto.model";
 import "./movement-stock-history-modal.style.scss";
 import { useTranslation } from "react-i18next";
+import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
 
 interface StockHistoryModalProps {
   visible: boolean;
@@ -27,7 +28,28 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
     const usableHeight = availableHeight - headerHeight;
     return Math.max(1, Math.floor(usableHeight / estimatedRowHeight));
   };
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      let result: MovementStock[];
+      if (productId) {
+        result = await movementStockService.getHistoricByProductId(productId);
+      } else if (productStockId) {
+        result = await movementStockService.getHistoricByProductStockId(productStockId);
+      } else {
+        result = await movementStockService.getHistoric();
+      }
+      setData(result);
+    } catch (error) {
+      console.error("Error fetching stock history:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useWebSocketListener(`/topic${movementStockService.getPath()}`, async () => {
+    if (visible) await fetchData();
+  });
   
   useEffect(() => {
     const handleResize = () => {
@@ -52,16 +74,20 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
     setPageSize(recalculated);
   }, [compactMode, window.innerWidth]);
 
+
+  
+
   useEffect(() => {
     if (visible) {
       document.body.classList.add("modal-open");
-
+      
       setTimeout(() => {
         const calculated = calculatePageSize(compactMode);
         setPageSize(calculated);
       }, 0);
 
       fetchData();
+      
     } else {
       document.body.classList.remove("modal-open");
     }
@@ -71,24 +97,9 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
     };
   }, [visible]);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      let result: MovementStock[];
-      if (productId) {
-        result = await movementStockService.getHistoricByProductId(productId);
-      } else if (productStockId) {
-        result = await movementStockService.getHistoricByProductStockId(productStockId);
-      } else {
-        result = await movementStockService.getHistoric();
-      }
-      setData(result);
-    } catch (error) {
-      console.error("Error fetching stock history:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
+
+  
 
   const handleUndoMovement = async (movementStockId: number) => {
     try {
@@ -183,13 +194,13 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
               {t('stock.actions.endReserve')}
             </Button>
           )}
-          <Button 
+          {record.status !== MovementStatus.Canceled && (<Button 
             onClick={() => handleUndoMovement(record.id!)} 
             type="default" 
             style={{ whiteSpace: "normal", wordBreak: "break-word", maxWidth: 150, padding: 3 }}
           >
             {t('stock.actions.undoMovement')}
-          </Button>
+          </Button>)}
         </div>
       )
     },

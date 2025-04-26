@@ -376,6 +376,28 @@
                 "deleted" : "Un producto ha sido eliminado por {{user}}.",
                 "updated" : "Un producto ha sido actualizado por {{user}}."
             }
+        },
+        "stock" : {
+            "productStock" : {
+                "created" : "Un producto de stock ha sido creado por {{user}}.",
+                "updated" : "Un producto de stock ha sido actualizado por {{user}}.",
+                "deleted" : "Un producto de stock ha sido eliminado por {{user}}."
+            },
+            "movementStock" : {
+                "created" : {
+                    "entry" : "Una entrada de stock ha sido realizada por {{user}}.",
+                    "assigned" : "Una salida de stock ha sido realizada por {{user}}.",
+                    "adjustment" : "Un ajuste de stock ha sido realizado por {{user}}.",
+                    "reserve" : "Una reserva de stock ha sido realizada por {{user}}."
+                },
+                "undoMovement" : {
+                    "entry" : "Una entrada de stock ha sido deshecha por {{user}}.",
+                    "assigned" : "Una salida de stock ha sido deshecha por {{user}}.",
+                    "adjustment" : "Un ajuste de stock ha sido deshecho por {{user}}.",
+                    "reserve" : "Una reserva de stock ha sido deshecha por {{user}}."
+                },
+                "endReserve" : "Una reserva de stock ha sido completada por {{user}}."
+            }
         }
     },
     "boolean" : {

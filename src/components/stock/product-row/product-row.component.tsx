@@ -61,7 +61,7 @@ export function ProductRow({ product }: ProductRowProps) {
           </Text>
           <br />
           <div className="stock-summary">
-            {t('stock.totalStock')}:{' '}
+            {t('stock.totalUnits')}:{' '}
             <Badge
               count={totalStock}
               showZero

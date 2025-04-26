@@ -3,6 +3,9 @@ import { httpCrudService } from "../http-crud.service";
 const PATH = "/stock/product-stock"
 
 export const productStockService = {
+
+    getPath: () => PATH,
+    
     getGroupedBy: async () => {
         return await httpCrudService<StockResponse>(PATH).get("/getGroupedBy");
     },
