@@ -6,6 +6,9 @@ import { useState } from 'react';
 import StockHistoryModal from '../movement-stock/movement-stock-history-modal.component';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import StockAdjustmentModal from '../movement-stock/adjustment-modal/adjustment-modal.component';
+import { movementStockService } from '../../../services/stock/movement-stock.service';
+import CreateReserveModal from '../movement-stock/reserve-modal/create-reserve-modal.component';
+import { MovementType } from '../../../models/stock/movement-stock/reserve-dto.model';
 
 const { Text } = Typography;
 
@@ -22,6 +25,14 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const [labelModalVisible, setLabelModalVisible] = useState(false);
   const [labelContent, setLabelContent] = useState<{ reference: string; description: string } | null>(null);
   const [adjustModalVisible, setAdjustModalVisible] = useState(false);
+  const [reservesModalVisible, setReservesModalVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmTitle, setConfirmTitle] = useState('');
+  const [confirmContent, setConfirmContent] = useState('');
+  const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => {});
+  const [editingReserveId, setEditingReserveId] = useState<number | null>(null);  
+  const [editedReserve, setEditedReserve] = useState<any>(null);
+  const [createReserveModalVisible, setCreateReserveModalVisible] = useState(false);
 
   const openHistoricModal = () => setHistoricModalVisible(true);
   const closeHistoricModal = () => setHistoricModalVisible(false);
@@ -34,6 +45,28 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const closeLabelModal = () => {
     setLabelModalVisible(false);
     setLabelContent(null);
+  };
+
+  const openConfirmModal = (action: () => void, title: string, content: string) => {
+    setOnConfirmAction(() => action);
+    setConfirmTitle(title);
+    setConfirmContent(content);
+    setConfirmVisible(true);
+  };
+  const handleUndoMovement = async (movementStockId: number) => {
+    try {
+      await movementStockService.undoMovement(movementStockId);
+    } catch (error) {
+      console.error("Error undoing movement:", error);
+    }
+  };
+  
+  const handleEndReserve = async (movementStockId: number) => {
+    try {
+      await movementStockService.endReserve(movementStockId);
+    } catch (error) {
+      console.error("Error ending reserve:", error);
+    }
   };
 
   return (
@@ -64,50 +97,50 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         <div className="stock-value">
           {t('stock.label')}:{' '}
           <Badge
-            count={productStock.stock}
+            count={productStock.stock == 0 ? '00' : productStock.stock}
             overflowCount={100000}
             className={stockBadgeClass}
           />{' '}
           {t('stock.unit')}
         </div>
 
-        {productStock.reserves.length > 0 && (
-          <div className="stock-reserves reserves-wrapper">
-            <Button
-              className="action-button reserves-button"
-              onClick={() => alert('Consultar reservas')}
-            >
-              {t('stock.reserves')}
-            </Button>
+      
+        <div className="stock-reserves reserves-wrapper">
+          <Button
+            className="action-button reserves-button"
+            onClick={() => setReservesModalVisible(true)}
+          >
+            {t('stock.reserves')}
+          </Button>
 
-            <div>
-              {productStock.reserves.map((reserve, index) => {
-                const hasObservation = reserve.observations !== null && reserve.observations.trim() !== '';
-                const badgeClass = hasObservation ? 'stock-reserve-badge with-observations' : 'stock-reserve-badge';
+          <div>
+            {productStock.reserves.map((reserve, index) => {
+              const hasObservation = reserve.observations !== null && reserve.observations.trim() !== '';
+              const badgeClass = hasObservation ? 'stock-reserve-badge with-observations' : 'stock-reserve-badge';
 
-                const badgeContent = (
-                  <Badge
-                    key={index}
-                    count={`${reserve.destination}: ${reserve.units} ${t('stock.unit')}`}
-                    className={badgeClass}
-                  />
-                );
+              const badgeContent = (
+                <Badge
+                  key={index}
+                  count={`${reserve.destination}: ${reserve.units} ${t('stock.unit')}`}
+                  className={badgeClass}
+                />
+              );
 
-                return hasObservation ? (
-                  <Popover
-                    key={index}
-                    content={<div>{reserve.observations}</div>}
-                    title={`${reserve.destination}: ${reserve.units} ${t('stock.unit')}`}
-                  >
-                    {badgeContent}
-                  </Popover>
-                ) : (
-                  badgeContent
-                );
-              })}
-            </div>
+              return hasObservation ? (
+                <Popover
+                  key={index}
+                  content={<div>{reserve.observations}</div>}
+                  title={`${reserve.destination}: ${reserve.units} ${t('stock.unit')}`}
+                >
+                  {badgeContent}
+                </Popover>
+              ) : (
+                badgeContent
+              );
+            })}
           </div>
-        )}
+        </div>
+       
 
         <div className="stock-action-buttons">
           <Button
@@ -167,6 +200,229 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         productStock={productStock}
         description={`${productReference} | ${productStock.batch} - ${productDescription}`}
       />
+      <Modal
+        open={confirmVisible}
+        title={confirmTitle}
+        onOk={() => {
+          onConfirmAction();
+          setConfirmVisible(false);
+        }}
+        onCancel={() => setConfirmVisible(false)}
+        okText={t('button.confirm')}
+        cancelText={t('button.cancel')}
+      >
+        <p>{confirmContent}</p>
+      </Modal>
+      <Modal
+        open={reservesModalVisible}
+        title={t('stock.actions.reserves.currentReserves')}
+        onCancel={() => { setReservesModalVisible(false); setEditingReserveId(null); setEditedReserve(null); }}
+        footer={[
+          <Button
+            key="close"
+            type="primary"
+            onClick={() => { setReservesModalVisible(false); setEditingReserveId(null); setEditedReserve(null); }}
+            icon={<i className="fas fa-arrow-left" />}
+          >
+            {t('button.back')}
+          </Button>
+        ]}
+        bodyStyle={{
+          maxHeight: 'calc(100vh - 200px)',
+          overflowY: 'auto',
+          paddingRight: '12px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px'
+        }}
+      >
+        <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'flex-start' }}>
+          <Button
+            type="primary"
+            icon={<i className="fas fa-plus" />}
+            onClick={() => setCreateReserveModalVisible(true)}
+            style={{
+              backgroundColor: '#1976D2',
+              borderColor: '#1976D2',
+              color: 'white',
+              fontWeight: 'bold',
+              borderRadius: '8px',
+              padding: '8px 16px',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            {t('stock.actions.reserves.addReserve')}
+          </Button>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {productStock.reserves.map((reserve) => {
+            const isEditing = editingReserveId === reserve.id;
+
+            return (
+              <Card
+                key={reserve.id}
+                style={{
+                  backgroundColor: '#faf7ed',
+                  borderColor: '#d4c9a8',
+                  position: 'relative',
+                  paddingTop: '24px'
+                }}
+              >
+                
+                {!isEditing && (
+                  <Button
+                    icon={<i className="fas fa-edit" />}
+                    style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      border: 'none',
+                      boxShadow: 'none'
+                    }}
+                    onClick={() => {
+                      setEditingReserveId(reserve.id);
+                      setEditedReserve({
+                        destination: reserve.destination,
+                        units: reserve.units,
+                        observations: reserve.observations ?? ''
+                      });
+                    }}
+                  />
+                )}
+
+                
+                {isEditing ? (
+                  <>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div>
+                        <strong>{t('stock.actions.reserves.destinationLabel')}:</strong><br />
+                        <input
+                          type="text"
+                          value={editedReserve.destination}
+                          onChange={(e) =>
+                            setEditedReserve({ ...editedReserve, destination: e.target.value })
+                          }
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+
+                      <div>
+                        <strong>{t('stock.actions.reserves.unitsLabel')}:</strong><br />
+                        <input
+                          type="number"
+                          value={editedReserve.units}
+                          onChange={(e) =>
+                            setEditedReserve({ ...editedReserve, units: Number(e.target.value) })
+                          }
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+
+                      <div>
+                        <strong>{t('stock.actions.reserves.observationsLabel')}:</strong><br />
+                        <input
+                          type="text"
+                          value={editedReserve.observations}
+                          onChange={(e) =>
+                            setEditedReserve({ ...editedReserve, observations: e.target.value })
+                          }
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                      <Button
+                        type="primary"
+                        icon={<i className="fas fa-save" />}
+                        onClick={async () => {
+                          
+                          await movementStockService.update({
+                            id: reserve.id,
+                            type: MovementType.Reserve,
+                            units: editedReserve.units,
+                            destination: editedReserve.destination,
+                            observations: editedReserve.observations
+                          })
+                          setEditingReserveId(null);
+                          setEditedReserve(null);
+                        }}
+                      >
+                        {t('button.confirm')}
+                      </Button>
+
+                      <Button
+                        danger
+                        icon={<i className="fas fa-times" />}
+                        onClick={() => {
+                          setEditingReserveId(null);
+                          setEditedReserve(null);
+                        }}
+                      >
+                        {t('button.cancel')}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p><strong>{t('stock.actions.reserves.destinationLabel')}:</strong> {reserve.destination}</p>
+                    <p><strong>{t('stock.actions.reserves.unitsLabel')}:</strong> {reserve.units}</p>
+                    <p><strong>{t('stock.actions.reserves.responsibleLabel')}:</strong> {reserve.responsible?.name}</p>
+                    <p><strong>{t('stock.actions.reserves.creationDateLabel')}:</strong> {new Date(reserve.creationDate).toLocaleDateString()}</p>
+                    {reserve.observations && (
+                      <p><strong>{t('stock.actions.reserves.observationsLabel')}:</strong> {reserve.observations}</p>
+                    )}
+
+                    {/* Botones normales */}
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '8px',
+                      marginTop: '8px',
+                      justifyContent: 'flex-start'
+                    }}>
+                      <Button
+                        danger
+                        type="primary"
+                        icon={<i className="fas fa-undo" />}
+                        onClick={() => openConfirmModal(
+                          () => handleUndoMovement(reserve.id),
+                          t('stock.actions.undoMovement'),
+                          t('stock.actions.askUndoMovement')
+                        )}
+                      >
+                        {t('stock.actions.undoMovement')}
+                      </Button>
+
+                      <Button
+                        type="primary"
+                        icon={<i className="fas fa-check-circle" />}
+                        onClick={() => openConfirmModal(
+                          () => handleEndReserve(reserve.id),
+                          t('stock.actions.endReserve'),
+                          t('stock.actions.askEndReserve')
+                        )}
+                      >
+                        {t('stock.actions.endReserve')}
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </Card>
+            );
+          })}
+        </div>
+      </Modal>
+      <CreateReserveModal
+        visible={createReserveModalVisible}
+        onClose={() => setCreateReserveModalVisible(false)}
+        productStockId={productStock.id}
+        description={`${productReference} | ${productStock.batch} - ${productDescription}`}
+      />
+
     </Card>
   );
 }

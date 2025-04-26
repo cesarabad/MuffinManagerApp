@@ -28,6 +28,10 @@ export const movementStockService = {
 
     endReserve: async (movementStockId: number) => {
         return await httpCrudService<MovementStock>(PATH).post(`/endReserve/${movementStockId}`, {});
+    },
+
+    update: async (model: MovementStock) => {
+        return await httpCrudService<MovementStock>(PATH).post("/update", model);
     }
 
 }

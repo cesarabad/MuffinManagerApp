@@ -130,7 +130,7 @@ const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
       </div>
 
       <div className="form-group">
-        <Text strong>{t('stock.actions.adjustment.unitsLabel')}</Text>
+        <Text strong>{t('stock.unitsLabel')}</Text>
         <Input
             type="number"
             value={units}
@@ -138,7 +138,7 @@ const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
             const val = e.target.value;
             if (/^\d*$/.test(val)) setUnits(val);
             }}
-            placeholder={t('stock.actions.adjustment.unitsPlaceholder')}
+            placeholder={t('stock.unitsPlaceholder')}
         />
       </div>
 

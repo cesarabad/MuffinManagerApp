@@ -278,6 +278,7 @@
         "stockCount": "Hacer recuento",
         "checkReserves": "Consultar reservas",
         "historicLabel": "Histórico de movimientos de stock",
+        "unitsPlaceholder" : "Cantidad de cajas",
         "noEndDate" : "No finalizado",
         "type" : {
             "name" : "Tipo",
@@ -301,11 +302,22 @@
             "adjustment" : {
                 "modalTitle" : "Ajuste de stock",
                 "importantModalNote" : "¡Debes colocar la cantidad total de cajas, sin restar las reservadas!",
-                "unitsLabel" : "Unidades",
-                "unitsPlaceholder" : "Cantidad de cajas",
                 "observationsLabel" : "Observaciones",
                 "observationsPlaceholder" : "Observaciones",
                 "currentReserves" : "Reservas actuales"
+            },
+            "reserves" : {
+                "currentReserves" : "Reservas actuales",
+                "destinationLabel" : "Destinatario",
+                "destinationPlaceholder" : "Destinatario de la reserva",
+                "unitsLabel" : "Cajas",
+                "responsibleLabel" : "Responsable",
+                "observationsLabel" : "Observaciones",
+                "observationsPlaceholder" : "Observaciones",
+                "creationDateLabel" : "Fecha de creación",
+                "addReserve" : "Agregar reserva",
+                "addReserveTitle" : "Crear reserva de: {{dato}}",
+                "createReserve" : "Crear reserva"
             }
         }
     },
@@ -391,6 +403,12 @@
                     "assigned" : "Una salida de stock ha sido realizada por {{user}}.",
                     "adjustment" : "Un ajuste de stock ha sido realizado por {{user}}.",
                     "reserve" : "Una reserva de stock ha sido realizada por {{user}}."
+                },
+                "updated" : {
+                    "entry" : "Una entrada de stock ha sido actualizada por {{user}}.",
+                    "assigned" : "Una salida de stock ha sido actualizada por {{user}}.",
+                    "adjustment" : "Un ajuste de stock ha sido actualizado por {{user}}.",
+                    "reserve" : "Una reserva de stock ha sido actualizada por {{user}}."
                 },
                 "undoMovement" : {
                     "entry" : "Una entrada de stock ha sido deshecha por {{user}}.",

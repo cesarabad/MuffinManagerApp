@@ -15,7 +15,7 @@ export enum MovementStatus {
 
 export interface MovementStock {
   id?: number;
-  productStockId: number;
+  productStockId?: number;
   productReference?: string;
   batch?: string;
   packagePrintDescription?: string;
@@ -31,7 +31,7 @@ export interface MovementStock {
 
 export interface ActiveReserveDto {
   id: number;
-  responsible: string | null;
+  responsible: UserSafeDto | null;
   units: number;
   destination: string;
   creationDate: Date;
