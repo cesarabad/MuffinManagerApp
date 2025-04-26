@@ -1,10 +1,10 @@
 import { Navigate, Route } from "react-router-dom";
 import { PrivateRoutes } from "../../models/routes";
 import RoutesWithNotFound from "../../helpers/routes-with-not-found";
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import { useAuth } from "../../contexts/auth/auth.context";
 import { Permission } from "../../models/auth/permisos.model";
-import { useWebSocketListener } from "../../services/web-socket-listenner.service";
+import { connectWebSocket, useWebSocketListener } from "../../services/web-socket-listenner.service";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { WebSocketMessage } from "../../models/web-socket-message/web-socket-message.model";
@@ -35,6 +35,12 @@ function Private() {
   };
 
   useWebSocketListener(`/topic/global`, handleMessage);
+
+  useEffect(() => {
+    connectWebSocket().catch((err) => {
+      console.error("Error connecting websocket in Private:", err);
+    });
+  }, []);
     
   return (
     <RoutesWithNotFound>
