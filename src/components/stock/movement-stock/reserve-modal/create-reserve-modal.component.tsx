@@ -127,19 +127,7 @@ export function CreateReserveModal({ productStockId, description, visible, onClo
         style={{ padding: '0 24px' }}
       >
         <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item
-              label={<strong>{t('stock.unitsLabel')}</strong>}
-              name="units"
-              rules={[{ required: true, message: `${t('validation.required')}` }]}>
-              <InputNumber
-                style={{ width: '100%' }}
-                min={1}
-                placeholder={t('stock.unitsPlaceholder')}
-                size="large"
-              />
-            </Form.Item>
-          </Col>
+          
 
           <Col span={24}>
             <Form.Item
@@ -153,7 +141,19 @@ export function CreateReserveModal({ productStockId, description, visible, onClo
               />
             </Form.Item>
           </Col>
-
+          <Col span={24}>
+            <Form.Item
+              label={<strong>{t('stock.unitsLabel')}</strong>}
+              name="units"
+              rules={[{ required: true, message: `${t('validation.required')}` }]}>
+              <InputNumber
+                style={{ width: '100%' }}
+                min={1}
+                placeholder={t('stock.unitsPlaceholder')}
+                size="large"
+              />
+            </Form.Item>
+          </Col>
           <Col span={24}>
             <Form.Item
               label={<strong>{t('stock.actions.reserves.observationsLabel')}</strong>}

@@ -21,7 +21,7 @@ const HomePage = () => {
         navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_DATA}`);
         break;
       case 'manageStock':
-        alert('Accediendo a gestionar el stock de magdalenas');
+        navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.STOCK}`);
         break;
       case 'manageUsers':
         alert('Accediendo a gestionar los usuarios');

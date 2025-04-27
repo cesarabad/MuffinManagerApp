@@ -145,6 +145,15 @@
     align-items: center;
     gap: 8px;
   }
+  .reserves-modal .ant-modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
   @media (max-width: 480px) {
     .reserves-wrapper {
       align-items: stretch;

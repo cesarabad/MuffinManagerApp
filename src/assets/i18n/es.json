@@ -259,6 +259,7 @@
         "versionLabel" : "Versión",
         "responsibleLabel" : "Responsable",
         "packagePrintLabel" : "Impresión de paquete",
+        "realStockLabel" : "Stock real",
         "packagePrintReferenceLabel" : "Referencia",
         "packagePrintDescriptionLabel" : "Descripción",
         "boxUnit" : "UDS/caja",

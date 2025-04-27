@@ -227,15 +227,9 @@ export function ProductStockRow({ productStock, productDescription, productRefer
             {t('button.back')}
           </Button>
         ]}
-        bodyStyle={{
-          maxHeight: 'calc(100vh - 200px)',
-          overflowY: 'auto',
-          paddingRight: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px'
-        }}
+        className="reserves-modal"
       >
+
         <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'flex-start' }}>
           <Button
             type="primary"

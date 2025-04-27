@@ -28,7 +28,7 @@ const Layout = () => {
         navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_DATA}`);
         break;
       case `${Permission.ManageStock}`:
-        //window.location.href = `/${PrivateRoutes}`;
+        navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.STOCK}`);
         break;
       case `${Permission.ManageUsers}`:
         //window.location.href = `/${PublicRoutes.MANAGE_USERS}`;
