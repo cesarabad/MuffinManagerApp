@@ -15,6 +15,9 @@ import { brandService } from '../../../services/manage-data/brand.service';
 import { baseProductItemService } from '../../../services/manage-data/product-data/base-product-item.service';
 import { productItemService } from '../../../services/manage-data/product-data/product-item.service';
 import { productService } from '../../../services/manage-data/product-data/product.service';
+import { useNavigate } from 'react-router-dom';
+import { PrivateRoutes } from '../../../models/routes';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
 
@@ -22,7 +25,7 @@ const StockPage = () => {
   const [brands, setBrands] = useState<BrandContent[]>();
   const { t } = useTranslation();
   const [historicModalVisible, setHistoricModalVisible] = useState(false);
-
+  const navigate = useNavigate();
   const openHistoricModal = () => setHistoricModalVisible(true);
   const closeHistoricModal = () => setHistoricModalVisible(false);
 
@@ -39,8 +42,12 @@ const StockPage = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  
+  const handleBack = () => {
+    navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.HOME}`);
+  }
 
-useWebSocketListener(
+  useWebSocketListener(
   [
     `/topic${movementStockService.getPath()}`,
     `/topic${packagePrintService.getPath()}`,
@@ -58,7 +65,15 @@ useWebSocketListener(
     <Layout className="stock-layout">
       <Header className="stock-header">
         <Space wrap size="large" className="header-space">
-          <Space size="middle">
+          <Button
+            icon={<ArrowLeftOutlined />}
+            onClick={handleBack}
+            className="secondary-button"
+            style={{ marginRight: 50, width: "auto" }}
+            >
+            {t("button.back")}
+            </Button>
+            <Space size="small">
             <Button
               type="primary"
               onClick={() => alert('Realizar movimiento')}
@@ -69,13 +84,10 @@ useWebSocketListener(
             <Button onClick={() => alert('Hacer recuento')} className="secondary-button">
               {t('stock.stockCount')}
             </Button>
-            <Button onClick={() => alert('Consultar reservas')} className="secondary-button">
-              {t('stock.checkReserves')}
-            </Button>
             <Button onClick={() => openHistoricModal()} className="secondary-button">
               {t('stock.historic')}
             </Button>
-          </Space>
+            </Space>
         </Space>
       </Header>
       <Content className="stock-content">

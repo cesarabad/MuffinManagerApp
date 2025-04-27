@@ -5,7 +5,7 @@
   
   .stock-header {
     background-color: #e9e1c3;
-    padding: 12px 24px;
+    padding: 6px 24px;
     box-shadow: 0 2px 8px rgba(92, 77, 46, 0.3);
     position: sticky;
     top: 70px;
@@ -22,7 +22,7 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 0px;
   }
   
   @media (max-width: 768px) {
