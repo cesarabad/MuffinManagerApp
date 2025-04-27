@@ -81,7 +81,7 @@ export function CreateReserveModal({ productStockId, description, visible, onClo
           }}
         >
           {t('button.clean')}
-        </Button>,<br/>,
+        </Button>,<br key={'a'}/>,
         <Button
           key="cancel"
           onClick={() => {

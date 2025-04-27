@@ -9,8 +9,9 @@ const LogoutButton = () => {
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    logout().then(() => {
+      navigate('/login');
+    })
   };
 
   return (

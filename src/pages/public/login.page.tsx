@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginFormValues, getLoginSchema } from '../../components/schemas/login.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form'; // Importar Controller
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { PrivateRoutes } from '../../models/routes';
 
@@ -13,22 +13,20 @@ const { Title } = Typography;
 const LoginPage = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth(); // Usamos el contexto de autenticación
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Usamos react-hook-form con zod
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(getLoginSchema(t)),
     mode: "onBlur",
     defaultValues: { dni: "", password: "" }
   });
 
-  // Manejo de envío
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
       await login(data);
-      navigate(`/${PrivateRoutes.PRIVATE}/`); // Redirige al Dashboard después de iniciar sesión
+      navigate(`/${PrivateRoutes.PRIVATE}/`);
     } catch (error) {
       console.error('Login failed', error);
     } finally {
@@ -55,14 +53,13 @@ const LoginPage = () => {
               control={control}
               render={({ field }) => (
                 <Input
-                  {...field} // Se conecta el campo a React Hook Form
+                  {...field}
                   placeholder={t("login.dniLabel")}
                 />
               )}
             />
           </Form.Item>
 
-          {/* Contraseña */}
           <Form.Item
             label={t("login.passwordLabel")}
             validateStatus={errors.password ? 'error' : ''}
@@ -82,7 +79,6 @@ const LoginPage = () => {
             />
           </Form.Item>
 
-          {/* Botón de Login */}
           <Form.Item>
             <Button
               type="primary"

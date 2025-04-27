@@ -8,7 +8,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: () => boolean;
   login: (request: LoginRequest) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   hasPermission: (permission: Permission) => boolean;
 }
 
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     Cookies.remove("user");
   };
 
