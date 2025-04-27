@@ -20,6 +20,7 @@ export interface ProductStockResponseDto {
     stock: number;
     observations: string | null;
     lastCheckDate: Date;
+    hasToCheck: boolean;
     reserves: ActiveReserveDto[];
 }
 

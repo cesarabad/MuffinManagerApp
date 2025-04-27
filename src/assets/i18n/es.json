@@ -281,6 +281,7 @@
         "historicLabel": "Histórico de movimientos de stock",
         "unitsPlaceholder" : "Cantidad de cajas",
         "noEndDate" : "No finalizado",
+        "checkStockSuccess" : "El stock ha sido confirmado correctamente.",
         "type" : {
             "name" : "Tipo",
             "entry" : "Entrada",
@@ -301,6 +302,7 @@
             "undoMovement" : "Deshacer movimiento",
             "askUndoMovement" : "¿Estás seguro de que deseas deshacer el movimiento?",
             "adjustment" : {
+                "checkStock" : "Revisar",
                 "modalTitle" : "Ajuste de stock",
                 "importantModalNote" : "¡Debes colocar la cantidad total de cajas, sin restar las reservadas!",
                 "observationsLabel" : "Observaciones",
@@ -418,6 +420,11 @@
                     "reserve" : "Una reserva de stock ha sido deshecha por {{user}}."
                 },
                 "endReserve" : "Una reserva de stock ha sido completada por {{user}}."
+            },
+            "checkStock" : {
+                "initialized" : "Un recuento de stock ha sido iniciado por {{user}}.",
+                "restarted" : "Un recuento de stock ha sido reiniciado por {{user}}.",
+                "canceled" : "Un recuento de stock ha sido finalizado manualmente por {{user}}."
             }
         }
     },

@@ -11,6 +11,8 @@ import CreateReserveModal from '../movement-stock/reserve-modal/create-reserve-m
 import { MovementType } from '../../../models/stock/movement-stock/reserve-dto.model';
 import { useAuth } from '../../../contexts/auth/auth.context';
 import { Permission } from '../../../models/index.model';
+import { productStockService } from '../../../services/stock/product-stock.service';
+import { toast } from 'react-toastify';
 
 const { Text } = Typography;
 
@@ -35,6 +37,8 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const [editingReserveId, setEditingReserveId] = useState<number | null>(null);  
   const [editedReserve, setEditedReserve] = useState<any>(null);
   const [createReserveModalVisible, setCreateReserveModalVisible] = useState(false);
+  const [checkStockModalVisible, setCheckStockModalVisible] = useState(false);
+
   const { hasPermission } = useAuth();
 
   const openHistoricModal = () => setHistoricModalVisible(true);
@@ -90,6 +94,15 @@ export function ProductStockRow({ productStock, productDescription, productRefer
             >
               {productStock.packagePrint.reference}
             </Button>
+          )}
+          {productStock.hasToCheck == true && (
+            <Button
+              className="check-stock-button"
+              onClick={() => setCheckStockModalVisible(true)}
+            >
+              {`${t('stock.actions.adjustment.checkStock')}`}
+            </Button>
+          
           )}
         </div>
 
@@ -421,6 +434,57 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         productStockId={productStock.id}
         description={`${productReference} | ${productStock.batch} - ${productDescription}`}
       />
+      <Modal
+        open={checkStockModalVisible}
+        title={
+          <>
+        <strong>{t('stock.productLabel')}:</strong> {productReference}
+        <br/>
+        <strong>{t('stock.batchLabel')}:</strong> {productStock.batch}
+        <br />
+        {productDescription}
+          </>
+        }
+        onCancel={() => setCheckStockModalVisible(false)}
+        footer={[
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+        <Button
+          key="back"
+          onClick={() => setCheckStockModalVisible(false)}
+        >
+          {t('button.back')}
+        </Button>
+        <Button
+          key="adjust"
+          style={{ backgroundColor: '#faad14', color: 'white', borderColor: '#faad14' }}
+          onClick={() => {setAdjustModalVisible(true); setCheckStockModalVisible(false);}}
+        >
+          {t('stock.adjust')}
+        </Button>
+        <Button
+          key="confirm"
+          type="primary"
+          onClick={async () => {
+            try {
+              await productStockService.updateLastCheckDate(productStock.id);
+              setCheckStockModalVisible(false);
+              toast.success(t('stock.checkStockSuccess'));
+            } catch (error) {
+              console.error(error);
+              toast.error("Error updating last check date");
+            }
+          }}
+        >
+          {t('button.confirm')}
+        </Button>
+          </div>
+        ]}
+      >
+        <p style={{ textAlign: 'center', fontSize: '18px' }}>
+          <strong>{t('stock.totalUnits')}:</strong><br />
+          {productStock.stock + productStock.reserves.reduce((sum, reserve) => sum + reserve.units, 0)} {t('stock.unit')}
+        </p>
+      </Modal>
 
     </Card>
   );

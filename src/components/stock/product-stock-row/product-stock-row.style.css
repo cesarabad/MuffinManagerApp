@@ -153,6 +153,20 @@
     flex-direction: column;
     gap: 12px;
   }
+  .check-stock-button {
+    background-color: #ffe58f; /* Un amarillo suave pero más vivo que el beige */
+    border-color: #d4b106; /* Un dorado que resalta más */
+    color: #5c4d2e;
+    font-weight: 600;
+    height: 32px;
+    margin-bottom: 8px;
+  }
+  
+  .check-stock-button:hover {
+    background-color: #fff566; /* Más intenso al pasar el mouse */
+    border-color: #d4b106;
+    color: #3c3012;
+  }
   
   @media (max-width: 480px) {
     .reserves-wrapper {
