@@ -276,12 +276,16 @@
         "totalStock" : "Stock total",
         "totalUnits" : "Cajas totales",
         "realizeMovement" : "Realizar movimiento",
-        "stockCount": "Hacer recuento",
+        "restartCheckStock" : "Reiniciar recuento",
+        "askRestartCheckStock" : "¿Estás seguro de que deseas reiniciar el recuento de stock?",
+        "stockCount": "Recuento",
         "checkReserves": "Consultar reservas",
         "historicLabel": "Histórico de movimientos de stock",
         "unitsPlaceholder" : "Cantidad de cajas",
         "noEndDate" : "No finalizado",
         "checkStockSuccess" : "El stock ha sido confirmado correctamente.",
+        "checkStockCompleted" : "¡Recuento de stock completado!",
+        "checkStockCompletedMessage" : "El recuento de stock ha sido completado correctamente.",
         "type" : {
             "name" : "Tipo",
             "entry" : "Entrada",
@@ -338,7 +342,9 @@
         "browse" : "Examinar",
         "remove" : "Eliminar",
         "back" : "Volver",
-        "select" : "Seleccionar"
+        "select" : "Seleccionar",
+        "initialize" : "Comenzar",
+        "finish" : "Finalizar"
     },
     "validation" : {
         "dni" : "El DNI no es válido",

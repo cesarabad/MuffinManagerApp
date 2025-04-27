@@ -36,6 +36,7 @@ export interface ProductContent {
   }
   
   export interface BrandContent {
+    hasToCheck: boolean;
     brandName: string;
     brandAliasVersion: string | null;
     brandLogoBase64: string | null;
