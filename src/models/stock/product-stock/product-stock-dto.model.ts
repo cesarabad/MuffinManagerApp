@@ -10,7 +10,6 @@ export interface ProductStockRequestDto {
     batch?: string;
     stock?: number;
     observations?: string | null;
-    lastCheckDate?: Date;
 }
 
 export interface ProductStockResponseDto {

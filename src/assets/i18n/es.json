@@ -255,10 +255,12 @@
         "label" : "Stock",
         "productLabel" : "Producto",
         "boxLabel" : "Caja",
+        "boxesLabel" : "Cajas",
         "batchLabel" : "Lote",
         "versionLabel" : "Versión",
         "responsibleLabel" : "Responsable",
         "packagePrintLabel" : "Impresión de paquete",
+        "selectPackagePrint" : "Seleccionar impresión de paquete",
         "realStockLabel" : "Stock real",
         "packagePrintReferenceLabel" : "Referencia",
         "packagePrintDescriptionLabel" : "Descripción",
@@ -286,6 +288,8 @@
         "checkStockSuccess" : "El stock ha sido confirmado correctamente.",
         "checkStockCompleted" : "¡Recuento de stock completado!",
         "checkStockCompletedMessage" : "El recuento de stock ha sido completado correctamente.",
+        "editProductStock" : "Modificar stock",
+        "createProductStock" : "Crear stock",
         "type" : {
             "name" : "Tipo",
             "entry" : "Entrada",
@@ -344,7 +348,8 @@
         "back" : "Volver",
         "select" : "Seleccionar",
         "initialize" : "Comenzar",
-        "finish" : "Finalizar"
+        "finish" : "Finalizar",
+        "update" : "Actualizar"
     },
     "validation" : {
         "dni" : "El DNI no es válido",

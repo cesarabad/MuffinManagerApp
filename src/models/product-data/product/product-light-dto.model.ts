@@ -5,5 +5,5 @@ export interface ProductLightDto {
     boxReference: string;
     boxDescription: string;
     itemsPerProduct: number;
-    aliasVersion: string | null;
+    aliasVersion?: string | null;
   }

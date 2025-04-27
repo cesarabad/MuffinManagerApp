@@ -13,6 +13,7 @@ import { useAuth } from '../../../contexts/auth/auth.context';
 import { Permission } from '../../../models/index.model';
 import { productStockService } from '../../../services/stock/product-stock.service';
 import { toast } from 'react-toastify';
+import ProductStockCreateModal from '../product-stock/create-product-stock-modal.component';
 
 const { Text } = Typography;
 
@@ -38,6 +39,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const [editedReserve, setEditedReserve] = useState<any>(null);
   const [createReserveModalVisible, setCreateReserveModalVisible] = useState(false);
   const [checkStockModalVisible, setCheckStockModalVisible] = useState(false);
+  const [isProductStockCreateModalVisible, setIsProductStockCreateModalVisible] = useState(false);
 
   const { hasPermission } = useAuth();
 
@@ -75,9 +77,30 @@ export function ProductStockRow({ productStock, productDescription, productRefer
       console.error("Error ending reserve:", error);
     }
   };
-
   return (
     <Card className="product-stock-card">
+       <Button
+        icon={<i className="fas fa-edit" />}
+        onClick={() => setIsProductStockCreateModalVisible(true)}
+        style={{
+          position: 'absolute',
+          top: '8px',
+          right: '8px',
+          zIndex: 1,
+          backgroundColor: 'rgba(100, 149, 237, 0.8)',
+          border: '1.5px solid rgba(70, 130, 180, 1)',
+          color: 'white',
+          borderRadius: '50%',
+          width: '36px',
+          height: '36px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backdropFilter: 'blur(4px)',
+        }}
+        
+        
+      />
       <div>
         <div className="batch-header">
           <Text className="stock-batch">{productStock.batch}</Text>
@@ -388,7 +411,6 @@ export function ProductStockRow({ productStock, productDescription, productRefer
                       <p><strong>{t('stock.actions.reserves.observationsLabel')}:</strong> {reserve.observations}</p>
                     )}
 
-                    {/* Botones normales */}
                     <div style={{
                       display: 'flex',
                       flexWrap: 'wrap',
@@ -485,7 +507,14 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           {productStock.stock + productStock.reserves.reduce((sum, reserve) => sum + reserve.units, 0)} {t('stock.unit')}
         </p>
       </Modal>
-
+      <ProductStockCreateModal
+        visible={isProductStockCreateModalVisible}
+        onClose={() => setIsProductStockCreateModalVisible(false)}
+        productStock={productStock}
+        productId={1}
+        productDescription={`${productReference} - ${productDescription}`}
+        stockRequired={true}
+      />
     </Card>
   );
 }
