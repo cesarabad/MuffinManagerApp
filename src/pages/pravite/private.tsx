@@ -95,7 +95,7 @@ function Private() {
 
       <Route
         path={PrivateRoutes.STOCK}
-        element={hasPermission(Permission.ManageStock) ? <StockPage /> : <Navigate to={PrivateRoutes.HOME} />}
+        element={hasPermission(Permission.ManageStock) || hasPermission(Permission.GetStock) ? <StockPage /> : <Navigate to={PrivateRoutes.HOME} />}
       />
 
     </RoutesWithNotFound>

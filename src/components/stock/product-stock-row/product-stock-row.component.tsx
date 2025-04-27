@@ -9,6 +9,8 @@ import StockAdjustmentModal from '../movement-stock/adjustment-modal/adjustment-
 import { movementStockService } from '../../../services/stock/movement-stock.service';
 import CreateReserveModal from '../movement-stock/reserve-modal/create-reserve-modal.component';
 import { MovementType } from '../../../models/stock/movement-stock/reserve-dto.model';
+import { useAuth } from '../../../contexts/auth/auth.context';
+import { Permission } from '../../../models/index.model';
 
 const { Text } = Typography;
 
@@ -33,6 +35,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const [editingReserveId, setEditingReserveId] = useState<number | null>(null);  
   const [editedReserve, setEditedReserve] = useState<any>(null);
   const [createReserveModalVisible, setCreateReserveModalVisible] = useState(false);
+  const { hasPermission } = useAuth();
 
   const openHistoricModal = () => setHistoricModalVisible(true);
   const closeHistoricModal = () => setHistoricModalVisible(false);
@@ -109,6 +112,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           <Button
             className="action-button reserves-button"
             onClick={() => setReservesModalVisible(true)}
+            disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
           >
             {t('stock.reserves')}
           </Button>
@@ -146,6 +150,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           <Button
             className="action-button adjust-button"
             onClick={() => setAdjustModalVisible(true)}
+            disabled={!hasPermission(Permission.ManageStock)}
           >
             {t('stock.adjust')}
           </Button>

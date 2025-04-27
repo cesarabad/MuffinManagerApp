@@ -90,10 +90,10 @@ const Layout = () => {
                 title={<FontAwesomeIcon icon={faWrench} />}
                 popupClassName="submenu-dark"
               >
-                {hasPermission(Permission.ManageData) && (<><Menu.Item key={`${Permission.ManageData}`}>{t('layout.menu.manageData')}</Menu.Item>
+                {(hasPermission(Permission.ManageData) || hasPermission(Permission.GetData)) && (<><Menu.Item key={`${Permission.ManageData}`}>{t('layout.menu.manageData')}</Menu.Item>
                   <Menu.Divider style={{ backgroundColor: 'rgba(77, 166, 255, 0.2)' }} /></>)}
                 
-                {hasPermission(Permission.ManageStock) && (<><Menu.Item key={`${Permission.ManageStock}`}>{t('layout.menu.manageStock')}</Menu.Item>
+                {(hasPermission(Permission.ManageStock) || hasPermission(Permission.GetStock)) && (<><Menu.Item key={`${Permission.ManageStock}`}>{t('layout.menu.manageStock')}</Menu.Item>
                   <Menu.Divider style={{ backgroundColor: 'rgba(77, 166, 255, 0.2)' }} /></>)}
                 
                 {hasPermission(Permission.ManageUsers) && (<Menu.Item key={`${Permission.ManageUsers}`}>{t('layout.menu.manageUsers')}</Menu.Item>)}

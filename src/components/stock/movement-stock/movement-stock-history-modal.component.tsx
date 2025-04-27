@@ -5,6 +5,8 @@ import { MovementStatus, MovementStock, MovementType } from "../../../models/sto
 import "./movement-stock-history-modal.style.scss";
 import { useTranslation } from "react-i18next";
 import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
+import { useAuth } from "../../../contexts/auth/auth.context";
+import { Permission } from "../../../models/index.model";
 
 interface StockHistoryModalProps {
   visible: boolean;
@@ -24,6 +26,7 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
   const [confirmTitle, setConfirmTitle] = useState("");
   const [confirmContent, setConfirmContent] = useState("");
   const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => {});
+  const { hasPermission } = useAuth();
 
   const calculatePageSize = (isCompact: boolean) => {
     const availableHeight = window.innerHeight;
@@ -209,6 +212,7 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
             )}
             type="primary"
             style={{ marginRight: 8 }}
+            disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
           >
             {t('stock.actions.endReserve')}
           </Button>
@@ -221,6 +225,7 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
             )}
             type="default"
             style={{ whiteSpace: "normal", wordBreak: "break-word", maxWidth: 150, padding: 3 }}
+            disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
           >
             {t('stock.actions.undoMovement')}
           </Button>)}

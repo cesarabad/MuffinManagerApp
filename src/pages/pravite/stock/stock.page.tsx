@@ -18,6 +18,8 @@ import { productService } from '../../../services/manage-data/product-data/produ
 import { useNavigate } from 'react-router-dom';
 import { PrivateRoutes } from '../../../models/routes';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useAuth } from '../../../contexts/auth/auth.context';
+import { Permission } from '../../../models/index.model';
 
 const { Header, Content } = Layout;
 
@@ -28,6 +30,7 @@ const StockPage = () => {
   const navigate = useNavigate();
   const openHistoricModal = () => setHistoricModalVisible(true);
   const closeHistoricModal = () => setHistoricModalVisible(false);
+  const { hasPermission } = useAuth();
 
   const fetchData = async () => {
     try {
@@ -74,19 +77,27 @@ const StockPage = () => {
             {t("button.back")}
             </Button>
             <Space size="small">
-            <Button
-              type="primary"
-              onClick={() => alert('Realizar movimiento')}
-              className="primary-button"
-            >
-              {t('stock.realizeMovement')}
-            </Button>
-            <Button onClick={() => alert('Hacer recuento')} className="secondary-button">
-              {t('stock.stockCount')}
-            </Button>
-            <Button onClick={() => openHistoricModal()} className="secondary-button">
-              {t('stock.historic')}
-            </Button>
+              <Button
+                type="primary"
+                onClick={() => alert('Realizar movimiento')}
+                className="primary-button"
+                disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
+              >
+                {t('stock.realizeMovement')}
+              </Button>
+              <Button 
+                onClick={() => alert('Hacer recuento')} 
+                className="secondary-button"
+                disabled={!hasPermission(Permission.ManageStock)}
+              >
+                {t('stock.stockCount')}
+              </Button>
+              <Button 
+                onClick={() => openHistoricModal()} 
+                className="secondary-button"
+                disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock) && !hasPermission(Permission.GetStock)}>
+                {t('stock.historic')}
+              </Button>
             </Space>
         </Space>
       </Header>
