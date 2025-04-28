@@ -10,7 +10,7 @@ interface ProductStockCreateModalProps {
   visible: boolean;
   onClose: () => void;
   productStock?: ProductStockResponseDto;
-  productId: number;
+  productId?: number;
   productDescription?: string;
   stockRequired: boolean;
 }

@@ -21,6 +21,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useAuth } from '../../../contexts/auth/auth.context';
 import { Permission } from '../../../models/index.model';
 import { checkStockService } from '../../../services/stock/check-stock.service';
+import ProductStockCreateModal from '../../../components/stock/product-stock/create-product-stock-modal.component';
 
 const { Header, Content } = Layout;
 
@@ -30,6 +31,7 @@ const StockPage = () => {
   const [forceCreateModalVisible, setForceCreateModalVisible] = useState(false);
   const [isWaitingForCreateFail, setIsWaitingForCreateFail] = useState(false);
   const [isCheckStockCompleted, setIsCheckStockCompleted] = useState(false);
+  const [isCreateProductStockModalVisible, setIsCreateProductStockModalVisible] = useState(false);
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -138,11 +140,11 @@ const StockPage = () => {
           <Space size="small">
             <Button
               type="primary"
-              onClick={() => alert('Realizar movimiento')}
+              onClick={() => setIsCreateProductStockModalVisible(true)}
               className="primary-button"
               disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
             >
-              {t('stock.realizeMovement')}
+              {t('stock.createProductStock')}
             </Button>
             <Dropdown menu={{ items: checkStockMenu.props.items }} trigger={['click']}>
               <Button
@@ -196,6 +198,10 @@ const StockPage = () => {
       >
         <p>{t('stock.checkStockCompletedMessage')}</p>
       </Modal>
+      <ProductStockCreateModal
+        visible={isCreateProductStockModalVisible}
+        onClose={() => setIsCreateProductStockModalVisible(false)}
+        stockRequired={false}/>
     </Layout>
   );
 };
