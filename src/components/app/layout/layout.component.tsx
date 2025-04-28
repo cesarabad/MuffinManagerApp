@@ -47,7 +47,7 @@ const Layout = () => {
           top: 0,
           left: isLoginPage ? 0 : -25,
           right: 0,
-          zIndex: 1000,
+          zIndex: 99,
           display: 'flex',
           alignItems: 'center',
           justifyContent: isLoginPage ? 'center' : 'flex-start',

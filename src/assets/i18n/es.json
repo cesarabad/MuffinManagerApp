@@ -295,7 +295,8 @@
             "entry" : "Entrada",
             "assigned" : "Salida",
             "adjustment" : "Ajuste",
-            "reserve" : "Reserva"
+            "reserve" : "Reserva",
+            "delete" : "Eliminado"
         },
         "status" : {
             "name" : "Estado",
@@ -309,6 +310,8 @@
             "askEndReserve" : "¿Estás seguro de que deseas completar la reserva?",
             "undoMovement" : "Deshacer movimiento",
             "askUndoMovement" : "¿Estás seguro de que deseas deshacer el movimiento?",
+            "deleteStock" : "Eliminar stock",
+            "askDeleteStock" : "¿Estás seguro de que deseas eliminar el stock?",
             "adjustment" : {
                 "checkStock" : "Revisar",
                 "modalTitle" : "Ajuste de stock",
@@ -429,7 +432,8 @@
                     "entry" : "Una entrada de stock ha sido deshecha por {{user}}.",
                     "assigned" : "Una salida de stock ha sido deshecha por {{user}}.",
                     "adjustment" : "Un ajuste de stock ha sido deshecho por {{user}}.",
-                    "reserve" : "Una reserva de stock ha sido deshecha por {{user}}."
+                    "reserve" : "Una reserva de stock ha sido deshecha por {{user}}.",
+                    "delete" : "Un stock eliminado ha sido recuperado por {{user}}."
                 },
                 "endReserve" : "Una reserva de stock ha sido completada por {{user}}."
             },

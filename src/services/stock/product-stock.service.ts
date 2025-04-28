@@ -24,5 +24,9 @@ export const productStockService = {
 
     updateLastCheckDate: async (productStockId: number) => {
         return await httpCrudService<void>(PATH).post(`/updateLastCheckDate/${productStockId}`, {});
+    },
+
+    deleteById: async (id: number) => {
+        return await httpCrudService<void>(PATH).post(`/delete/${id}`, {});
     }
 }

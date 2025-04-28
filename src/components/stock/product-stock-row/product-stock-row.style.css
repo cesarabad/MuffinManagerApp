@@ -100,6 +100,9 @@
   .reserves-button:hover {
     background-color: #e9e1c3;
   }
+  .stock-batch {
+    white-space: nowrap;
+  }
   
   .history-button {
     background-color: #f5ecd5;
@@ -180,7 +183,7 @@
     }
   }
   
-  @media (min-width: 800px) and (max-width: 1280px) {
+  @media (min-width: 800px) and (max-width: 990px) {
     .stock-reserves {
       flex-direction: column !important;
       align-items: stretch;
@@ -198,6 +201,8 @@
       width: 100%;
     }
   
+    
+
     .product-stock-card {
       width: 100%;
     }
@@ -207,12 +212,101 @@
     }
   
     .stock-batch {
-      font-size: 14px;
+      font-size: 12px;
+      white-space: nowrap;
     }
-  
+    .check-stock-button {
+      height: 28px;
+      font-size: 12px;
+      padding: 10px;
+    }
     .print-button {
       height: 28px;
       font-size: 12px;
+      padding: 10px;
+    }
+  
+    .stock-value {
+      font-size: 13px;
+      padding: 4px 6px;
+    }
+  
+    .stock-reserves {
+      font-size: 12px;
+    }
+  
+    .stock-observations {
+      font-size: 12px;
+      padding: 4px 6px;
+    }
+  
+    .stock-action-buttons {
+      flex-direction: column;
+      gap: 6px;
+    }
+  
+    .stock-action-buttons .action-button {
+      height: 30px;
+      font-size: 13px;
+    }
+  
+    .reserves-wrapper {
+      flex-direction: column;
+      gap: 6px;
+    }
+  
+    .reserves-wrapper button {
+      width: 100%;
+      font-size: 13px;
+      height: 30px;
+    }
+  
+    .reserves-wrapper div {
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 990px) and (max-width: 1700px) {
+    .stock-reserves {
+      flex-direction: column !important;
+      align-items: stretch;
+      gap: 8px;
+    }
+  
+    .stock-reserves button {
+      width: 100%;
+    }
+  
+    .stock-reserves div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      width: 100%;
+    }
+  
+    
+
+    .product-stock-card {
+      width: 100%;
+    }
+  
+    .product-stock-card .ant-card-body {
+      padding: 8px;
+    }
+  
+    .stock-batch {
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .check-stock-button {
+      height: 28px;
+      font-size: 12px;
+      padding: 10px;
+    }
+    .print-button {
+      height: 28px;
+      font-size: 12px;
+      padding: 10px;
     }
   
     .stock-value {
@@ -274,4 +368,38 @@
   }
   .stock-reserve-badge.with-observations {
     --bg-color: var(--badge-observation);
+  }
+
+  @media (max-width: 500px) {
+    .product-stock-card {
+      font-size: 12px;
+    }
+
+    .stock-batch {
+      font-size: 12px;
+    }
+
+    .stock-value {
+      font-size: 11px;
+    }
+
+    .stock-observations {
+      font-size: 11px;
+    }
+
+    .stock-reserves {
+      font-size: 11px;
+    }
+
+    .action-button {
+      font-size: 11px;
+    }
+
+    .stock-badge {
+      font-size: 12px;
+    }
+
+    .stock-reserve-badge {
+      font-size: 11px;
+    }
   }

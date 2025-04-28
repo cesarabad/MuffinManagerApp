@@ -5,6 +5,7 @@ export enum MovementType {
   Assigned = 'Assigned',
   Adjustment = 'Adjustment',
   Reserve = 'Reserve',
+  Delete = 'Delete',
 }
 
 export enum MovementStatus {
