@@ -48,6 +48,11 @@ const ProductModalInput = ({ reference, onChange }: ProductModalInputProps) => {
       dataIndex: 'productItemInfo',
       key: 'productItemInfo',
     },
+    {
+      title: t('stock.versionLabel'),
+      dataIndex: 'aliasVersion',
+      key: 'aliasVersion',
+    }
   ];
 
   return (
@@ -63,6 +68,7 @@ const ProductModalInput = ({ reference, onChange }: ProductModalInputProps) => {
         width="100%"
         style={{ maxHeight: '100vh', overflow: 'hidden' }}
         wrapClassName="custom-modal"
+        zIndex={1000}
       >
         <div style={{ height: 'calc(100vh - 120px)', overflowY: 'auto' }}>
           <Table

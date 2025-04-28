@@ -62,6 +62,7 @@ const PackagePrintModalInput = ({ reference, onChange }: PackagePrintModalInputP
         onCancel={() => setVisible(false)}
         footer={null}
         width={800}
+        zIndex={1000}
       >
         <Table
           dataSource={packagePrints}

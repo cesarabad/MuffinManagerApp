@@ -238,30 +238,31 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
     <Modal
       className={compactMode ? "compact-mode" : ""}
       title={
+      <>
+        {t('stock.historicLabel')}
+        {description && (
         <>
-          {t('stock.historicLabel')}
-          {description && (
-            <>
-              <br />
-              {description}
-            </>
-          )}
+          <br />
+          {description}
         </>
+        )}
+      </>
       }
       open={visible}
       onCancel={onClose}
       footer={null}
       width={"95%"}
       destroyOnClose
+      zIndex = {100}
     >
       <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={data}
-        loading={loading}
-        pagination={{ pageSize }}
-        scroll={{ x: "max-content" }}
-        rowClassName={(record: MovementStock) => `movement-type-${record.type.toLowerCase()}`}
+      rowKey="id"
+      columns={columns}
+      dataSource={data}
+      loading={loading}
+      pagination={{ pageSize }}
+      scroll={{ x: "max-content" }}
+      rowClassName={(record: MovementStock) => `movement-type-${record.type.toLowerCase()}`}
       />
     </Modal>
     <Modal
@@ -274,7 +275,8 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
     onCancel={() => setConfirmVisible(false)}
     okText={t('button.confirm')}
     cancelText={t('button.cancel')}
-  >
+    zIndex={1000}
+    >
     <p>{confirmContent}</p>
   </Modal>
 </>  

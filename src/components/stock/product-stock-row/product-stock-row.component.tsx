@@ -244,6 +244,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
       <Modal
         open={confirmVisible}
         title={confirmTitle}
+        zIndex={1000}
         onOk={() => {
           onConfirmAction();
           setConfirmVisible(false);
@@ -268,6 +269,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
             {t('button.back')}
           </Button>
         ]}
+        zIndex={100}
         className="reserves-modal"
       >
 

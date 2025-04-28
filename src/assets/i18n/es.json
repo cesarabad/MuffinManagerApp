@@ -349,7 +349,8 @@
         "select" : "Seleccionar",
         "initialize" : "Comenzar",
         "finish" : "Finalizar",
-        "update" : "Actualizar"
+        "update" : "Actualizar",
+        "create" : "Crear"
     },
     "validation" : {
         "dni" : "El DNI no es válido",

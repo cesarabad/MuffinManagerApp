@@ -96,6 +96,7 @@ const ProductStockCreateModal = ({ visible, onClose, productStock, productDescri
     <Modal
       title={productStock?.id ? t('stock.editProductStock') : t('stock.createProductStock')}
       open={visible}
+      zIndex={100}
       onCancel={handleCancel}
       footer={[
         <Button key="clear" onClick={handleClear}>

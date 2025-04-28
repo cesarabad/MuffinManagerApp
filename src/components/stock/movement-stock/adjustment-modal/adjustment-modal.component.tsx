@@ -45,6 +45,8 @@ const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
       await movementStockService.insert(movement);
       message.success(t('stock.adjustmentSuccess'));
       onClose();
+      setUnits('');
+      setObservation('');
     } catch (error) {
       message.error(t('stock.adjustmentError'));
     } finally {
@@ -79,82 +81,94 @@ const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
     <Modal
       title={t('stock.actions.adjustment.modalTitle')}
       open={visible}
-      onCancel={onClose}
+      onCancel={() => {
+      onClose();
+      setUnits('');
+      setObservation('');
+      }}
       footer={[
-        <Button key="back" onClick={onClose} icon={<i className="fas fa-arrow-left" />}>
-          {t('button.back')}
-        </Button>,
-        <Button
-          key="adjust"
-          type="primary"
-          onClick={handleAdjust}
-          disabled={!units}
-          loading={submitting}
-        >
-          <i className="fas fa-tools" /> {t('stock.adjust')}
-        </Button>,
+      <Button
+        key="back"
+        onClick={() => {
+        onClose();
+        setUnits('');
+        setObservation('');
+        }}
+        icon={<i className="fas fa-arrow-left" />}
+      >
+        {t('button.back')}
+      </Button>,
+      <Button
+        key="adjust"
+        type="primary"
+        onClick={handleAdjust}
+        disabled={!units}
+        loading={submitting}
+      >
+        <i className="fas fa-tools" /> {t('stock.adjust')}
+      </Button>,
       ]}
     >
       {description && <Text strong>{description}</Text>}
 
       <div className="reserves-section-custom">
-        <Text strong>{t('stock.actions.adjustment.currentReserves')}</Text>
-        <div className="reserves-wrapper-custom">
-            {productStock.reserves.map(renderReserveBadge)}
-        </div>
+      <Text strong>{t('stock.actions.adjustment.currentReserves')}</Text>
+      <div className="reserves-wrapper-custom">
+        {productStock.reserves.map(renderReserveBadge)}
+      </div>
       </div>
 
       <div className="total-units-summary-custom">
-        <div className="total-info">
-            <div className="stock-info">
-            <Text className="stock-label">{t('stock.label')}: </Text>
-            <Text className="stock-value-custom">{productStock.stock} {t('stock.unit')}</Text>
-            </div>
-            <div className="reserve-info">
-            <Text className="reserve-label">{t('stock.actions.adjustment.currentReserves')}: </Text>
-            <Text className="reserve-value-custom">
-                {productStock.reserves.reduce((acc, reserve) => acc + reserve.units, 0)} {t('stock.unit')}
-            </Text>
-            </div>
-            <div className="total-info">
-            <Text className="total-label">{t('stock.totalUnits')}:</Text>
-            <Text className="total-value-custom">{totalUnits} {t('stock.unit')}</Text>
-            </div>
+      <div className="total-info">
+        <div className="stock-info">
+        <Text className="stock-label">{t('stock.label')}: </Text>
+        <Text className="stock-value-custom">{productStock.stock} {t('stock.unit')}</Text>
         </div>
+        <div className="reserve-info">
+        <Text className="reserve-label">{t('stock.actions.adjustment.currentReserves')}: </Text>
+        <Text className="reserve-value-custom">
+          {productStock.reserves.reduce((acc, reserve) => acc + reserve.units, 0)} {t('stock.unit')}
+        </Text>
+        </div>
+        <div className="total-info">
+        <Text className="total-label">{t('stock.totalUnits')}:</Text>
+        <Text className="total-value-custom">{totalUnits} {t('stock.unit')}</Text>
+        </div>
+      </div>
     </div>
 
 
       <div className="important-note-custom yellow">
-        <i className="fas fa-exclamation-triangle yellow-icon" />
-        <Text className="yellow-text">{t('stock.actions.adjustment.importantModalNote')}</Text>
+      <i className="fas fa-exclamation-triangle yellow-icon" />
+      <Text className="yellow-text">{t('stock.actions.adjustment.importantModalNote')}</Text>
       </div>
 
       <div className="form-group">
-        <Text strong>{t('stock.unitsLabel')}</Text>
-        <Input
-          type="number"
-          value={units}
-          onChange={(e) => {
-            const val = e.target.value;
-            if (/^\d*$/.test(val)) setUnits(val);
-          }}
-          placeholder={t('stock.unitsPlaceholder')}
-        />
-        {units && (<div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>
-          {t('stock.realStockLabel')}: {units} - {productStock.reserves.reduce((acc, r) => acc + r.units, 0)} ={' '}
-          {parseInt(units, 10) - productStock.reserves.reduce((acc, r) => acc + r.units, 0)}
-        </div>)}
+      <Text strong>{t('stock.unitsLabel')}</Text>
+      <Input
+        type="number"
+        value={units}
+        onChange={(e) => {
+        const val = e.target.value;
+        if (/^\d*$/.test(val)) setUnits(val);
+        }}
+        placeholder={t('stock.unitsPlaceholder')}
+      />
+      {units && (<div style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>
+        {t('stock.realStockLabel')}: {units} - {productStock.reserves.reduce((acc, r) => acc + r.units, 0)} ={' '}
+        {parseInt(units, 10) - productStock.reserves.reduce((acc, r) => acc + r.units, 0)}
+      </div>)}
       </div>
 
 
       <div className="form-group">
-        <Text strong>{t('stock.actions.adjustment.observationsLabel')}</Text>
-        <Input.TextArea
-            value={observation}
-            onChange={(e) => setObservation(e.target.value)}
-            placeholder={t('stock.actions.adjustment.observationsPlaceholder')}
-            rows={2}
-        />
+      <Text strong>{t('stock.actions.adjustment.observationsLabel')}</Text>
+      <Input.TextArea
+        value={observation}
+        onChange={(e) => setObservation(e.target.value)}
+        placeholder={t('stock.actions.adjustment.observationsPlaceholder')}
+        rows={2}
+      />
       </div>
     </Modal>
   );

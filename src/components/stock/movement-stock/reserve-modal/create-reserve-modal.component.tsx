@@ -68,6 +68,7 @@ export function CreateReserveModal({ productStockId, description, visible, onClo
         clearForm();
         onClose();
       }}
+      zIndex={1000}
       footer={[<Button
           key="clear"
           onClick={clearForm}
