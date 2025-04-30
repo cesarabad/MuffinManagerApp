@@ -137,7 +137,7 @@ const Layout = () => {
           right: 0,
           textAlign: 'center',
           backgroundColor: '#f5f5f5',
-          zIndex: 1000,
+          zIndex: 99,
         }}
       >
         {t("layout.footer")}

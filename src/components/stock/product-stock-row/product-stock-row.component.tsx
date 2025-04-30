@@ -511,7 +511,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         title={
           <>
         <strong>{t('stock.productLabel')}:</strong> {productReference}
-        <br/>
+        <br />
         <strong>{t('stock.batchLabel')}:</strong> {productStock.batch}
         <br />
         {productDescription}
@@ -519,31 +519,43 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         }
         onCancel={() => setCheckStockModalVisible(false)}
         footer={[
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-        <Button
-          key="back"
-          onClick={() => setCheckStockModalVisible(false)}
-        >
-          {t('button.back')}
-        </Button>
+          <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '8px',
+          flexWrap: 'wrap',
+        }}
+          >
+        
         <Button
           key="adjust"
-          style={{ backgroundColor: '#faad14', color: 'white', borderColor: '#faad14' }}
-          onClick={() => {setAdjustModalVisible(true); setCheckStockModalVisible(false);}}
+          style={{
+            backgroundColor: '#faad14',
+            color: 'white',
+            borderColor: '#faad14',
+            fontSize: '14px',
+            padding: '4px 8px',
+          }}
+          onClick={() => {
+            setAdjustModalVisible(true);
+            setCheckStockModalVisible(false);
+          }}
         >
           {t('stock.adjust')}
         </Button>
         <Button
           key="confirm"
           type="primary"
+          style={{ fontSize: '14px', padding: '4px 8px' }}
           onClick={async () => {
             try {
-              await productStockService.updateLastCheckDate(productStock.id);
-              setCheckStockModalVisible(false);
-              toast.success(t('stock.checkStockSuccess'));
+          await productStockService.updateLastCheckDate(productStock.id);
+          setCheckStockModalVisible(false);
+          toast.success(t('stock.checkStockSuccess'));
             } catch (error) {
-              console.error(error);
-              toast.error("Error updating last check date");
+          console.error(error);
+          toast.error(t('stock.checkStockError'));
             }
           }}
         >
@@ -552,9 +564,18 @@ export function ProductStockRow({ productStock, productDescription, productRefer
           </div>
         ]}
       >
-        <p style={{ textAlign: 'center', fontSize: '18px' }}>
-          <strong>{t('stock.totalUnits')}:</strong><br />
-          {productStock.stock + productStock.reserves.reduce((sum, reserve) => sum + reserve.units, 0)} {t('stock.unit')}
+        <p
+          style={{
+        textAlign: 'center',
+        fontSize: '18px',
+        padding: window.innerWidth < 768 ? '8px' : '16px',
+          }}
+        >
+          <strong>{t('stock.totalUnits')}:</strong>
+          <br />
+          {productStock.stock +
+        productStock.reserves.reduce((sum, reserve) => sum + reserve.units, 0)}{' '}
+          {t('stock.unit')}
         </p>
       </Modal>
       <ProductStockCreateModal

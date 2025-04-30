@@ -294,6 +294,7 @@
         "movementType" : "Tipo de movimiento",
         "selectType" : "Seleccionar tipo",
         "performMovement" : "Realizar movimiento",
+        "checkStockError" : "Error al confirmar el stock.",
         "type" : {
             "name" : "Tipo",
             "entry" : "Entrada",
