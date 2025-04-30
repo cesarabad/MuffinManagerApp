@@ -113,7 +113,7 @@
   .history-button:hover {
     background-color: #e9e1c3;
   }
-  
+   
   .reserves-wrapper {
     display: flex;
     align-items: center;
@@ -233,6 +233,7 @@
   
     .stock-reserves {
       font-size: 12px;
+      width: 100%;
     }
   
     .stock-observations {

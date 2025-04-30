@@ -1,0 +1,61 @@
+.form-group {
+    margin-bottom: 16px;
+  }
+  
+  .form-group .ant-typography {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  
+  .ant-modal .ant-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  
+  .ant-modal-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  
+  .ant-modal-footer .ant-btn {
+    min-width: 120px;
+  }
+  
+  .ant-modal-footer .ant-btn-primary {
+    min-width: 160px;
+    font-size: 16px;
+    padding: 10px 20px;
+    font-weight: 600;
+  }
+  
+  .ant-modal-footer .ant-btn i {
+    font-size: 14px;
+  }
+  
+  input[type='number'],
+  input[type='text'],
+  textarea {
+    border-radius: 8px;
+  }
+  
+  .ant-input,
+  .ant-select-selector,
+  .ant-input-textarea {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .ant-modal-content {
+    border-radius: 12px;
+  }
+  
+  .ant-modal-title {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  

@@ -267,6 +267,7 @@
         "boxUnit" : "UDS/caja",
         "unitsLabel" : "Unidades",
         "destinationLabel" : "Destino",
+        "destinationPlaceholder" : "Destino del movimiento",
         "observationsLabel" : "Observaciones",
         "creationDateLabel" : "Fecha de creación",
         "endDateLabel" : "Fecha de fin",
@@ -290,6 +291,9 @@
         "checkStockCompletedMessage" : "El recuento de stock ha sido completado correctamente.",
         "editProductStock" : "Modificar stock",
         "createProductStock" : "Crear stock",
+        "movementType" : "Tipo de movimiento",
+        "selectType" : "Seleccionar tipo",
+        "performMovement" : "Realizar movimiento",
         "type" : {
             "name" : "Tipo",
             "entry" : "Entrada",
@@ -312,6 +316,10 @@
             "askUndoMovement" : "¿Estás seguro de que deseas deshacer el movimiento?",
             "deleteStock" : "Eliminar stock",
             "askDeleteStock" : "¿Estás seguro de que deseas eliminar el stock?",
+            "movement" : {
+                "modalTitle" : "Movimiento de stock",
+                "title" : "Movimiento"
+            },
             "adjustment" : {
                 "checkStock" : "Revisar",
                 "modalTitle" : "Ajuste de stock",

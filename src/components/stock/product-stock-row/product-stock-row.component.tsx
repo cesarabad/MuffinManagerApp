@@ -14,6 +14,7 @@ import { Permission } from '../../../models/index.model';
 import { productStockService } from '../../../services/stock/product-stock.service';
 import { toast } from 'react-toastify';
 import ProductStockCreateModal from '../product-stock/create-product-stock-modal.component';
+import StockMovementModal from '../movement-stock/entry-assigned-modal/stock-movement-modal.component';
 
 const { Text } = Typography;
 
@@ -40,6 +41,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   const [createReserveModalVisible, setCreateReserveModalVisible] = useState(false);
   const [checkStockModalVisible, setCheckStockModalVisible] = useState(false);
   const [isProductStockCreateModalVisible, setIsProductStockCreateModalVisible] = useState(false);
+  const [isMovementStockModalVisible, setIsMovementStockModalVisible] = useState(false);
 
   const { hasPermission } = useAuth();
 
@@ -79,70 +81,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
   };
   return (
     <Card className="product-stock-card">
-        <div
-          style={
-            !productStock.hasToCheck && (window.innerWidth > 1500 || window.innerWidth < 768)
-              ? {
-            position: 'absolute',
-            top: '8px',
-            right: '8px',
-            zIndex: 1,
-            display: 'flex',
-            gap: '8px',
-          }
-              : {
-            display: 'flex',
-            gap: '8px',
-            justifyContent: 'flex-end',
-            marginBottom: '8px',
-          }
-          }
-        >
-          <Button
-            icon={<i className="fas fa-edit" />}
-            onClick={() => setIsProductStockCreateModalVisible(true)}
-            style={{
-              backgroundColor: 'rgba(100, 149, 237, 0.8)',
-              border: '1.5px solid rgba(70, 130, 180, 1)',
-              color: 'white',
-              borderRadius: '50%',
-              width: '36px',
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backdropFilter: 'blur(4px)',
-            }}
-          />
-          <Button
-            icon={<i className="fas fa-trash" />}
-            onClick={() =>
-              openConfirmModal(
-          async () => {
-            try {
-              await productStockService.deleteById(productStock.id);
-            } catch (error) {
-              console.error(error);
-            }
-          },
-          t('stock.actions.deleteStock'),
-          t('stock.actions.askDeleteStock')
-              )
-            }
-            style={{
-              backgroundColor: 'rgba(255, 136, 136, 0.8)',
-              border: '1.5px solid rgba(178, 34, 34, 1)',
-              color: 'white',
-              borderRadius: '50%',
-              width: '36px',
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backdropFilter: 'blur(4px)',
-            }}
-          />
-        </div>
+        
 
       <div>
         <div className="batch-header">
@@ -161,16 +100,82 @@ export function ProductStockRow({ productStock, productDescription, productRefer
               {productStock.packagePrint.reference}
             </Button>
           )}
-            {productStock.hasToCheck && (
+            
+
+            <div
+              style={
+                {
+                display: 'flex',
+                gap: '8px',
+                justifyContent: 'flex-end',
+                marginBottom: '8px',
+                width: '100%',
+              }
+              }
+            >
+              <Button
+                icon={<i className="fas fa-edit" />}
+                onClick={() => setIsProductStockCreateModalVisible(true)}
+                style={{
+                  backgroundColor: 'rgba(100, 149, 237, 0.8)',
+                  border: '1.5px solid rgba(70, 130, 180, 1)',
+                  color: 'white',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backdropFilter: 'blur(4px)',
+                }}
+              />
+              <Button
+                icon={<i className="fas fa-trash" />}
+                onClick={() =>
+                  openConfirmModal(
+              async () => {
+                try {
+                  await productStockService.deleteById(productStock.id);
+                } catch (error) {
+                  console.error(error);
+                }
+              },
+              t('stock.actions.deleteStock'),
+              t('stock.actions.askDeleteStock')
+                  )
+                }
+                style={{
+                  backgroundColor: 'rgba(255, 136, 136, 0.8)',
+                  border: '1.5px solid rgba(178, 34, 34, 1)',
+                  color: 'white',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backdropFilter: 'blur(4px)',
+                }}
+              />
+            </div>
+          </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
             <Button
+              className="action-button print-button"
+              onClick={() => setIsMovementStockModalVisible(true)}
+            >
+              {`${t('stock.actions.movement.title')}`}
+            </Button>
+            {productStock.hasToCheck && (
+              <Button
               className="check-stock-button"
               onClick={() => setCheckStockModalVisible(true)}
               style={{ marginLeft: 'auto' }}
-            >
+              >
               {`${t('stock.actions.adjustment.checkStock')}`}
-            </Button>
+              </Button>
             )}
-        </div>
+            </div>
 
         {productStock.observations && (
           <div className="stock-observations">{productStock.observations}</div>
@@ -188,13 +193,13 @@ export function ProductStockRow({ productStock, productDescription, productRefer
 
       
         <div className="stock-reserves reserves-wrapper">
-          <Button
+            <Button
             className="action-button reserves-button"
             onClick={() => setReservesModalVisible(true)}
             disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
-          >
+            >
             {t('stock.reserves')}
-          </Button>
+            </Button>
 
           <div>
             {productStock.reserves.map((reserve, index) => {
@@ -559,6 +564,11 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         productId={1}
         productDescription={`${productReference} - ${productDescription}`}
         stockRequired={true}
+      />
+      <StockMovementModal 
+        visible={isMovementStockModalVisible}
+        onClose={() => setIsMovementStockModalVisible(false)}
+        productStockId={productStock.id}
       />
     </Card>
   );
