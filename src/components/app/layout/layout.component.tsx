@@ -33,6 +33,9 @@ const Layout = () => {
       case `${Permission.ManageUsers}`:
         //window.location.href = `/${PublicRoutes.MANAGE_USERS}`;
         break;
+      case `profile`:
+        navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.PROFILE}`);
+        break;
       default:
         break;
     }
@@ -40,7 +43,6 @@ const Layout = () => {
 
   return (
     <AntLayout style={{ minHeight: '100vh' }}>
-      {/* Header con logo */}
       <Header
         style={{
           position: 'fixed',
@@ -64,7 +66,6 @@ const Layout = () => {
           }}
         /></a>
 
-        {/* Menú visible solo si no estamos en la página de login */}
         {!isLoginPage && (
           <div style={{ flex: 1, display: 'flex' }}>
             <Menu
@@ -105,6 +106,10 @@ const Layout = () => {
                 popupClassName="submenu-dark"
               >
                 <Menu.Item
+                  key="profile">
+                  {t("layout.menu.profile")}
+                </Menu.Item>
+                <Menu.Item
                   key="logout">
                   <LogoutButton />
                 </Menu.Item>
@@ -114,22 +119,20 @@ const Layout = () => {
         )}
       </Header>
 
-      {/* Aquí se renderizan las páginas hijas */}
       <Content
         style={{
           padding: '20px',
           marginTop: '64px', 
           minHeight: 'calc(100vh - 128px)', 
-          backgroundColor: '#FFF8E1', // Crema claro para el fondo de la página
+          backgroundColor: '#FFF8E1',
         }}
       >
         <Outlet />
       </Content>
 
-      {/* Footer fijo */}
       <Footer
         style={{
-          position: 'fixed', // Hacer el footer fijo
+          position: 'fixed',
           bottom: 0,
           fontWeight: 'bold',
           color: '#403d39',

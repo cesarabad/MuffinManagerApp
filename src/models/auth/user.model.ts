@@ -8,3 +8,13 @@ export interface User {
     permissions: PermissionList,
     token: string
 }
+
+export interface UserStats {
+    user: number,
+    name: string,
+    totalEntries: number,
+    totalAdjustments: number,
+    totalAssigneds: number,
+    totalReserveds: number,
+    totalChecked: number,
+}

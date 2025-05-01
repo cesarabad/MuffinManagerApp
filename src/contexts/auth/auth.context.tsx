@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import { LoginRequest } from "../../models/auth/login-request.model";
 import { User } from "../../models/auth/user.model";
 import { Permission } from "../../models/auth/permisos.model"; // Asegurate de tener esto
+import { UpdateUserDto } from "../../models/auth/update-user-dto.model";
+import { httpCrudService } from "../../services/http-crud.service";
 
 interface AuthContextType {
   user: User | null;
@@ -10,10 +12,12 @@ interface AuthContextType {
   login: (request: LoginRequest) => Promise<void>;
   logout: () => Promise<void>;
   hasPermission: (permission: Permission) => boolean;
+  updateUser: (updatedUserDto: UpdateUserDto) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const PATH = "/user";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
@@ -48,6 +52,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const currentTime = Math.floor(Date.now() / 1000);
     return decodedToken.exp < currentTime;
   };
+
+  const updateUser = async (updatedUserDto: UpdateUserDto) => {
+    const response: User = await httpCrudService<User>(PATH).post("/update", updatedUserDto);
+    if (response) {
+      saveUser(response);
+      location.reload();
+    }
+  }
 
   const getUser = (): User | null => {
     const userCookie = Cookies.get("user");
@@ -88,6 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     Cookies.remove("user");
+    location.reload();
   };
 
   const isAuthenticated = (): boolean => {
@@ -100,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission }}>
+    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

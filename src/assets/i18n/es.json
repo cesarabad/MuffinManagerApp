@@ -9,6 +9,7 @@
             "home" : "Inicio",
             "manageData" : "Modificar Datos",
             "manageStock" : "Movimientos de Stock",
+            "profile" : "Perfil",
             "manageUsers" : "Usuarios"
         }
     },
@@ -353,7 +354,7 @@
         "no" : "No",
         "cancel" : "Cancelar",
         "add" : "Agregar",
-        "edit" : "Actualizar",
+        "edit" : "Editar",
         "clean" : "Limpiar",
         "confirm" : "Confirmar",
         "browse" : "Examinar",
@@ -363,7 +364,8 @@
         "initialize" : "Comenzar",
         "finish" : "Finalizar",
         "update" : "Actualizar",
-        "create" : "Crear"
+        "create" : "Crear",
+        "save" : "Guardar"
     },
     "validation" : {
         "dni" : "El DNI no es válido",
@@ -373,7 +375,8 @@
         "maxLength" : "Este campo no puede tener más de {{max}} caracteres",
         "pattern" : "El formato no es válido",
         "email" : "El correo electrónico no es válido",
-        "number" : "El valor no es un número"
+        "number" : "El valor no es un número",
+        "passwordMinLength" : "La contraseña debe tener al menos {{min}} caracteres"
     },
     "ws" : {
         "box" : {
@@ -454,6 +457,56 @@
             }
         }
     },
+    "permission": {
+        "get_products": "Ver productos",
+        "manage_stock": "Modificar stock",
+        "get_brands": "Ver marcas",
+        "get_products_data": "Ver datos de productos",
+        "get_product_items": "Ver items de productos",
+        "get_box": "Ver cajas",
+        "get_base_product_items": "Ver productos base",
+        "get_stock": "Ver stock",
+        "manage_data": "Modificar datos",
+        "get_package_print": "Ver impresión de paquetes",
+        "manage_users": "Modificar usuarios",
+        "get_data": "Ver datos",
+        "get_muffin_shapes": "Ver formas de magdalenas",
+        "manage_movement_stock": "Realizar movimientos de stock",
+        "create_users": "Crear usuarios",
+        "disable_users": "Deshabilitar usuarios",
+        "dev" : "Desarrollador",
+        "super_admin" : "Super admin"
+    },
+    "permissionGroup" : {
+        "data" : "Datos",
+        "stock" : "Stock",
+        "users" : "Usuarios",
+        "products" : "Productos",
+        "admin" : "Admin",
+        "general" : ""
+    },
+    "profile" : {
+        "title" : "Perfil de {{fullName}}",
+        "editTitle" : "Modificar perfil",
+        "dniLabel" : "DNI",
+        "nameLabel" : "Nombre",
+        "secondNameLabel" : "Apellido",
+        "passwordLabel" : "Contraseña",
+        "newPasswordLabel" : "Nueva contraseña",
+        "permissionsLabel" : "Permisos",
+        "verificationSectionTitle" : "Inserta tu contraseña para realizar los cambios",
+        "roleLabel" : "Rol",
+        "noPermissionsInGroup" : "No tienes permisos en este grupo.",
+        "personalInfo" : "Información personal",
+        "stats" : {
+            "title" : "Estadísticas", 
+            "totalEntries" : "Entradas realizadas",
+            "totalAdjustments" : "Ajustes realizados",
+            "totalAssigneds" : "Salidas realizadas",
+            "totalReserveds" : "Reservas realizadas",
+            "totalChecked" : "Stock revisado"
+        }
+    },
     "boolean" : {
         "true" : "Sí",
         "false" : "No"
@@ -466,6 +519,7 @@
         "unauthorized" : "Necesitas autorización para acceder a este recurso.",
         "forbidden" : "Ne tienes permiso para acceder a este recurso.",
         "save" : "Error al guardar los datos.",
-        "delete" : "Error al eliminar los datos."
+        "delete" : "Error al eliminar los datos.",
+        "password" : "Contraseña incorrecta."
     }
 }

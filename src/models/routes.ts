@@ -16,4 +16,5 @@ export const PrivateRoutes = {
     MANAGE_PRODUCT_ITEM: `manage-data/product-data/product-item`,
     MANAGE_PRODUCT: `manage-data/product-data/product`,
     STOCK: `stock`,
+    PROFILE: 'profile',
 }

@@ -1,5 +1,5 @@
 import { Navigate, Route } from "react-router-dom";
-import { PrivateRoutes } from "../../models/routes";
+import { PrivateRoutes, PublicRoutes } from "../../models/routes";
 import RoutesWithNotFound from "../../helpers/routes-with-not-found";
 import { lazy, useEffect } from "react";
 import { useAuth } from "../../contexts/auth/auth.context";
@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { WebSocketMessage } from "../../models/web-socket-message/web-socket-message.model";
 import BrandPage from "./manage-data/brand-management/brand-management.page";
 import ManageProductDataPage from "./manage-data/product-data-management/product-data-management.page";
+import ProfilePage from "./user/profile.page";
 
 const HomePage = lazy(() => import("./home.page"));
 const ManageDataPage = lazy(() => import("./manage-data.page"));
@@ -22,7 +23,7 @@ const ProductPage = lazy(() => import("./manage-data/product-data-management/pro
 const StockPage = lazy(() => import("./stock/stock.page"));
 
 function Private() {
-  const { hasPermission } = useAuth();
+  const { hasPermission, isAuthenticated } = useAuth();
   const { t } = useTranslation();
 
   const handleMessage = (message: string) => {
@@ -96,6 +97,11 @@ function Private() {
       <Route
         path={PrivateRoutes.STOCK}
         element={hasPermission(Permission.ManageStock) || hasPermission(Permission.GetStock) ? <StockPage /> : <Navigate to={PrivateRoutes.HOME} />}
+      />
+
+      <Route
+        path={PrivateRoutes.PROFILE}
+        element={isAuthenticated() ? <ProfilePage /> : <Navigate to={PublicRoutes.LOGIN} />}
       />
 
     </RoutesWithNotFound>
