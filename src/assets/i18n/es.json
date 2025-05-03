@@ -475,7 +475,8 @@
         "create_users": "Crear usuarios",
         "disable_users": "Deshabilitar usuarios",
         "dev" : "Desarrollador",
-        "super_admin" : "Super admin"
+        "super_admin" : "Super admin",
+        "employee" : "Empleado"
     },
     "permissionGroup" : {
         "data" : "Datos",

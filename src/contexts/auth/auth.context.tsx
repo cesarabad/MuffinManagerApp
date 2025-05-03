@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const hasPermission = (permission: Permission): boolean => {
     const user = getUser();
-    return user?.permissions.includes(permission) ?? false;
+    return (user?.permissions.includes(permission) || user?.permissions.includes(Permission.Dev) || user?.permissions.includes(Permission.SuperAdmin)) ?? false;
   };
 
   return (

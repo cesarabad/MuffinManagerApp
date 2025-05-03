@@ -302,10 +302,10 @@ const ProfilePage: React.FC = () => {
                             hasPermission(Permission.Dev) ? "#1890ff" : "#52c41a"
                     }}>
                       <Text strong>
-                        {hasPermission(Permission.SuperAdmin) 
-                          ? "Super Admin" 
-                          : hasPermission(Permission.Dev) 
-                            ? "Developer"
+                        {hasPermission(Permission.Dev) 
+                          ? t('permission.super_admin') 
+                          : hasPermission(Permission.SuperAdmin) 
+                            ? t('permission.super_admin')
                             : "User"
                         }
                       </Text>
