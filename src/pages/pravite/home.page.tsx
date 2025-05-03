@@ -24,7 +24,7 @@ const HomePage = () => {
         navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.STOCK}`);
         break;
       case 'manageUsers':
-        alert('Accediendo a gestionar los usuarios');
+        navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_USERS}`);
         break;
       default:
         break;

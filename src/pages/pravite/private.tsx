@@ -8,9 +8,6 @@ import { connectWebSocket, useWebSocketListener } from "../../services/web-socke
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { WebSocketMessage } from "../../models/web-socket-message/web-socket-message.model";
-import BrandPage from "./manage-data/brand-management/brand-management.page";
-import ManageProductDataPage from "./manage-data/product-data-management/product-data-management.page";
-import ProfilePage from "./user/profile.page";
 
 const HomePage = lazy(() => import("./home.page"));
 const ManageDataPage = lazy(() => import("./manage-data.page"));
@@ -21,6 +18,10 @@ const BaseProductItemPage = lazy(() => import("./manage-data/product-data-manage
 const ProductItemPage = lazy(() => import("./manage-data/product-data-management/product-item/product-item-management.page"));
 const ProductPage = lazy(() => import("./manage-data/product-data-management/product/product-management.page"));
 const StockPage = lazy(() => import("./stock/stock.page"));
+const UserManagementPage = lazy(() => import("./user/user-management.page"));
+const ProfilePage = lazy(() => import("./user/profile.page"));
+const BrandPage = lazy(() => import("./manage-data/brand-management/brand-management.page"));
+const ManageProductDataPage = lazy(() => import("./manage-data/product-data-management/product-data-management.page"));
 
 function Private() {
   const { hasPermission, isAuthenticated } = useAuth();
@@ -51,7 +52,12 @@ function Private() {
 
       <Route 
         path={PrivateRoutes.MANAGE_DATA} 
-        element={(hasPermission(Permission.ManageData) || hasPermission(Permission.GetData)) ? <ManageDataPage/> : <Navigate to={PrivateRoutes.HOME}/>}
+        element={(hasPermission(Permission.ManageData)) ? <ManageDataPage/> : <Navigate to={PrivateRoutes.HOME}/>}
+      />
+
+      <Route 
+        path={PrivateRoutes.MANAGE_USERS} 
+        element={hasPermission(Permission.ManageUsers) ? <UserManagementPage/> : <Navigate to={PrivateRoutes.HOME}/>}
       />
 
       <Route 
@@ -99,9 +105,19 @@ function Private() {
         element={hasPermission(Permission.ManageStock) || hasPermission(Permission.GetStock) ? <StockPage /> : <Navigate to={PrivateRoutes.HOME} />}
       />
 
+      {/* Profile routes - both personal profile and user profiles with ID parameter */}
       <Route
         path={PrivateRoutes.PROFILE}
         element={isAuthenticated() ? <ProfilePage /> : <Navigate to={PublicRoutes.LOGIN} />}
+      />
+      
+      <Route
+        path={`${PrivateRoutes.PROFILE}/:userId`}
+        element={
+          isAuthenticated() && hasPermission(Permission.ManageUsers) 
+            ? <ProfilePage /> 
+            : <Navigate to={PrivateRoutes.HOME} />
+        }
       />
 
     </RoutesWithNotFound>

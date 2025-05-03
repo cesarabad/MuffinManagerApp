@@ -8,6 +8,8 @@ import { httpCrudService } from "../../services/http-crud.service";
 import { RegisterRequest } from "../../models/auth/register-request.model";
 import { toast } from "react-toastify";
 import { t } from "i18next";
+import { UserSafeDto } from "../../models/auth/user-safe-dto.model";
+import { UserDetailedDto } from "../../models/auth/user-detailed-dto.model";
 
 interface AuthContextType {
   user: User | null;
@@ -17,6 +19,7 @@ interface AuthContextType {
   hasPermission: (permission: Permission) => boolean;
   updateUser: (updatedUserDto: UpdateUserDto) => Promise<void>;
   createUser: (userDto: RegisterRequest) => Promise<void>;
+  getDetailedUser: (userId: number) => Promise<UserDetailedDto>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -72,6 +75,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+
+  const getDetailedUser = async (userId: number) => {
+    return await httpCrudService<UserDetailedDto>(PATH).get(`/detailed/${userId}`);
+  }
+
   const getUser = (): User | null => {
     const userCookie = Cookies.get("user");
     if (userCookie) {
@@ -124,7 +132,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, updateUser, createUser }}>
+    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, updateUser, createUser, getDetailedUser }}>
       {children}
     </AuthContext.Provider>
   );

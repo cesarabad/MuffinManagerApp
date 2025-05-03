@@ -4,7 +4,7 @@ export interface User {
     id: number,
     dni: string,
     name: string,
-    secondName: string,
+    secondName?: string,
     permissions: PermissionList,
     token: string
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/auth/auth.context";
 import { GroupedPermissions, Permission, UserStats } from "../../../models/index.model";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,8 @@ import {
   Statistic,
   Typography,
   Avatar,
+  Space,
+  Popconfirm,
 } from "antd";
 import {
   InboxOutlined,
@@ -23,35 +26,128 @@ import {
   UserOutlined,
   LockOutlined,
   SafetyOutlined,
+  ArrowLeftOutlined,
+  StopOutlined,
+  CheckOutlined,
 } from "@ant-design/icons";
 import PageContainer from "../../../components/app/generic-page-container/PageContainer.component";
 import ProfileDataManagerModal from "../../../components/user/edit-modal/profile-data-manager-modal.component";
 import { userService } from "../../../services/user/user.service";
+import { PrivateRoutes } from "../../../models/routes";
+import { User } from "../../../models/auth/user.model";
+import { UserDetailedDto } from "../../../models/auth/user-detailed-dto.model";
+import { toast } from "react-toastify";
 
 const { Title, Text } = Typography;
 
 const ProfilePage: React.FC = () => {
-  const { user, isAuthenticated, hasPermission } = useAuth();
+  const { userId } = useParams<{ userId?: string }>();
+  const navigate = useNavigate();
+  const { user: currentUser, hasPermission, getDetailedUser } = useAuth();
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [loadingStats, setLoadingStats] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [profileUser, setProfileUser] = useState<User | null>(null);
+  const [detailedUser, setDetailedUser] = useState<UserDetailedDto | null>(null);
+  const [isOwnProfile, setIsOwnProfile] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      userService
-        .getStats(user.id)
-        .then((response) => {
-          setStats(response);
-        })
-        .catch((err) => {
-          console.error("Error loading user stats:", err);
-        })
-        .finally(() => setLoadingStats(false));
-    }
-  }, [user]);
+    const fetchUserData = async () => {
+      // If userId is provided and the user has permission to manage users, fetch that user
+      if (userId && hasPermission(Permission.ManageUsers)) {
+        try {
+          setLoadingProfile(true);
+          const userDetailed = await getDetailedUser(parseInt(userId));
+          setDetailedUser(userDetailed);
+          
+          // Create a User object from UserDetailedDto for compatibility
+          const userObj: User = {
+            id: userDetailed.id,
+            dni: userDetailed.dni,
+            name: userDetailed.name,
+            secondName: userDetailed.secondName,
+            permissions: userDetailed.permissions.map(p => p.name as Permission),
+            token: ''
+          };
+          
+          setProfileUser(userObj);
+          setIsOwnProfile(userId === currentUser?.id.toString());
+          
+          fetchUserStats(parseInt(userId));
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          toast.error(t("error.fetchingUser"));
+          setProfileUser(currentUser);
+          setIsOwnProfile(true);
+          
+          if (currentUser) {
+            fetchUserStats(currentUser.id);
+          }
+        } finally {
+          setLoadingProfile(false);
+        }
+      } else {
+        // Use the current logged-in user
+        setProfileUser(currentUser);
+        setIsOwnProfile(true);
+        
+        // Get detailed user data for current user
+        if (currentUser) {
+          try {
+            const userDetailed = await getDetailedUser(currentUser.id);
+            setDetailedUser(userDetailed);
+            fetchUserStats(currentUser.id);
+          } catch (error) {
+            console.error("Error fetching detailed user data:", error);
+            fetchUserStats(currentUser.id);
+          }
+        }
+      }
+    };
 
-  // Función para obtener un color según la categoría de permiso
+    fetchUserData();
+  }, [userId, currentUser, hasPermission, t, getDetailedUser]);
+
+  const fetchUserStats = (id: number) => {
+    setLoadingStats(true);
+    userService
+      .getStats(id)
+      .then((response) => {
+        setStats(response);
+      })
+      .catch((err) => {
+        console.error("Error loading user stats:", err);
+      })
+      .finally(() => setLoadingStats(false));
+  };
+
+  // Function to handle user disable/enable
+  const handleToggleUserStatus = async () => {
+    if (!detailedUser) return;
+    
+    try {
+      // In a real implementation, call an API to disable/enable user
+      alert('No implementado');
+      
+      // For UI demonstration, toggle the status locally
+      setDetailedUser(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          isDisabled: !prev.isDisabled
+        };
+      });
+      
+      toast.success(t(detailedUser.isDisabled ? "user.enabled" : "user.disabled"));
+    } catch (error) {
+      console.error("Error toggling user status:", error);
+      toast.error(t("error.userStatusChange"));
+    }
+  };
+
+  // Function to get a color according to permission category
   const getPermissionColor = (groupName: string): string => {
     const colors: Record<string, string> = {
       data: "blue",
@@ -64,30 +160,55 @@ const ProfilePage: React.FC = () => {
     return colors[groupName] || "default";
   };
 
-  // Renderiza los permisos agrupados siguiendo la estructura de GroupedPermissions
+  // Extract permission map from detailedUser for easier permission checking
+  const getUserPermissionMap = (): { [key: string]: boolean } => {
+    if (!detailedUser) return {};
+    
+    const permMap: { [key: string]: boolean } = {};
+    
+    // Add direct permissions
+    detailedUser.permissions.forEach(p => {
+      permMap[p.name] = true;
+    });
+    
+    // Add permissions from groups
+    detailedUser.groups.forEach(group => {
+      group.permissions.forEach(p => {
+        permMap[p.name] = true;
+      });
+    });
+    
+    return permMap;
+  };
+
+  // Renders grouped permissions following the GroupedPermissions structure
   const renderPermissions = () => {
-    if (!user) return null;
+    if (!profileUser || !detailedUser) return null;
+
+    const permissionMap = getUserPermissionMap();
 
     return Object.entries(GroupedPermissions).map(([groupKey, groupValue]) => {
-      // Verificar si el grupo tiene subgrupos
+      // Check if the group has subgroups
       const hasSubGroups = !Array.isArray(groupValue);
       
-      // Para grupos con subgrupos, verificar si hay permisos en algún subgrupo
+      // For groups with subgroups, check if there are permissions in any subgroup
       let hasAnyPermissions = false;
       
+      const checkPermission = (perm: Permission) => {
+        return permissionMap[perm] === true;
+      };
+      
       if (hasSubGroups) {
-        // Verificar permisos en subgrupos
+        // Check permissions in subgroups
         Object.entries(groupValue).forEach(([_, permissions]) => {
-          const filteredPermissions = (permissions as Permission[]).filter(
-            (perm) => hasPermission(perm)
-          );
+          const filteredPermissions = (permissions as Permission[]).filter(checkPermission);
           if (filteredPermissions.length > 0) {
             hasAnyPermissions = true;
           }
         });
       } else {
-        // Verificar permisos en grupo simple
-        hasAnyPermissions = (groupValue as Permission[]).some((perm) => hasPermission(perm));
+        // Check permissions in simple group
+        hasAnyPermissions = (groupValue as Permission[]).some(checkPermission);
       }
       
       return (
@@ -103,7 +224,7 @@ const ProfilePage: React.FC = () => {
           bodyStyle={{ padding: hasSubGroups ? "12px 24px" : "16px 24px" }}
         >
           {!hasAnyPermissions ? (
-            // Mostrar mensaje cuando no hay permisos en este grupo
+            // Show message when there are no permissions in this group
             <div style={{ 
               padding: "16px", 
               textAlign: "center", 
@@ -116,11 +237,9 @@ const ProfilePage: React.FC = () => {
               </Text>
             </div>
           ) : hasSubGroups ? (
-            // Renderizar subgrupos
+            // Render subgroups
             Object.entries(groupValue).map(([subGroupKey, permissions]) => {
-              const filteredPermissions = (permissions as Permission[]).filter(
-                (perm) => hasPermission(perm)
-              );
+              const filteredPermissions = (permissions as Permission[]).filter(checkPermission);
               
               if (filteredPermissions.length === 0) return null;
               
@@ -144,10 +263,10 @@ const ProfilePage: React.FC = () => {
               );
             })
           ) : (
-            // Renderizar permisos directos
+            // Render direct permissions
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {(groupValue as Permission[])
-                .filter((perm) => hasPermission(perm))
+                .filter(checkPermission)
                 .map((perm) => (
                   <Tag 
                     key={perm}
@@ -164,10 +283,56 @@ const ProfilePage: React.FC = () => {
     });
   };
 
-  if (!user) {
-    if (isAuthenticated()) {
-      location.reload();
+  // Render groups section
+  const renderGroups = () => {
+    if (!detailedUser || !detailedUser.groups || detailedUser.groups.length === 0) {
+      return (
+        <Empty 
+          description={t("profile.noGroups")} 
+          image={Empty.PRESENTED_IMAGE_SIMPLE} 
+        />
+      );
     }
+
+    return (
+      <Row gutter={[16, 16]}>
+        {detailedUser.groups.map(group => (
+          <Col xs={24} md={12} lg={8} key={group.id}>
+            <Card 
+              title={group.name}
+              size="small"
+              style={{ borderRadius: 8 }}
+            >
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {group.permissions.map(perm => (
+                  <Tag 
+                    key={perm.id}
+                    color="blue"
+                  >
+                    {perm.name}
+                  </Tag>
+                ))}
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    );
+  };
+
+  // Loading state
+  if (loadingProfile) {
+    return (
+      <PageContainer>
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <Spin size="large" />
+        </div>
+      </PageContainer>
+    );
+  }
+
+  // Not authenticated state
+  if (!profileUser || !detailedUser) {
     return (
       <PageContainer>
         <Empty 
@@ -178,9 +343,37 @@ const ProfilePage: React.FC = () => {
     );
   }
 
+  // Determine if current user can edit this profile
+  const canEdit = isOwnProfile || 
+    (hasPermission(Permission.ManageUsers) && 
+     (currentUser?.id !== profileUser.id));
+  
+  // Determine if current user can disable this user
+  const canDisable = !isOwnProfile && 
+    hasPermission(Permission.ManageUsers) && 
+    !profileUser.permissions.includes(Permission.Dev);
+
+  const isDev = permissionIncluded(detailedUser, "dev");
+  const isSuperAdmin = permissionIncluded(detailedUser, "super_admin");
+
+  // Helper function to check if a permission is included
+  function permissionIncluded(user: UserDetailedDto, permName: string): boolean {
+    return !!user.permissions.find(p => p.name === permName) ||
+           !!user.groups.find(g => g.permissions.find(p => p.name === permName));
+  }
+
   return (
     <PageContainer>
-      {/* Sección de información de perfil */}
+      {!isOwnProfile && (
+        <Button 
+          icon={<ArrowLeftOutlined />} 
+          onClick={() => navigate(PrivateRoutes.MANAGE_USERS)}
+          style={{ marginBottom: 16 }}
+        >
+          {t("button.backToUsers")}
+        </Button>
+      )}
+      
       <Card
         style={{ 
           borderRadius: 8, 
@@ -190,28 +383,56 @@ const ProfilePage: React.FC = () => {
         }}
       >
         <Row gutter={24}>
-          {/* Perfil y Botón de Edición */}
           <Col xs={24} md={6} style={{ textAlign: "center" }}>
             <Avatar 
               size={120} 
               icon={<UserOutlined />} 
               style={{ 
-                backgroundColor: "#1890ff",
+                backgroundColor: !detailedUser.isDisabled ? "#1890ff" : "#d9d9d9",
                 marginBottom: 16,
-                boxShadow: "0 4px 12px rgba(24,144,255,0.3)"
+                boxShadow: !detailedUser.isDisabled ? "0 4px 12px rgba(24,144,255,0.3)" : "none"
               }} 
             />
-            <Title level={3} style={{ margin: 0 }}>
-              {user.name} {user.secondName}
+            <Title level={3} style={{ margin: 0, color: !detailedUser.isDisabled ? 'inherit' : '#999' }}>
+              {detailedUser.name} {detailedUser.secondName}
             </Title>
+            {detailedUser.isDisabled && (
+              <Tag color="error" style={{ margin: '8px 0' }}>
+                {t("user.disabled")}
+              </Tag>
+            )}
             <div style={{ marginTop: 16 }}>
-              <Button type="primary" onClick={() => setIsModalOpen(true)}>
-                {t("button.edit")}
-              </Button>
+              <Space>
+                {canEdit && (
+                  <Button 
+                    type="primary" 
+                    onClick={() => setIsModalOpen(true)}
+                    disabled={detailedUser.isDisabled && !isOwnProfile}
+                  >
+                    {t("button.edit")}
+                  </Button>
+                )}
+                
+                {canDisable && (
+                  <Popconfirm
+                    title={t(!detailedUser.isDisabled ? "user.confirmDisable" : "user.confirmEnable")}
+                    onConfirm={handleToggleUserStatus}
+                    okText={t("button.yes")}
+                    cancelText={t("button.no")}
+                  >
+                    <Button 
+                      danger={!detailedUser.isDisabled}
+                      type={!detailedUser.isDisabled ? "primary" : "default"}
+                      icon={!detailedUser.isDisabled ? <StopOutlined /> : <CheckOutlined />}
+                    >
+                      {!detailedUser.isDisabled ? t("button.disable") : t("button.enable")}
+                    </Button>
+                  </Popconfirm>
+                )}
+              </Space>
             </div>
           </Col>
           
-          {/* Información Personal */}
           <Col xs={24} md={18}>
             <div style={{ padding: "0 16px" }}>
               <Title level={4} style={{ marginBottom: 16 }}>
@@ -220,7 +441,6 @@ const ProfilePage: React.FC = () => {
               </Title>
               
               <Row gutter={[16, 16]}>
-                {/* Primera columna */}
                 <Col xs={24} md={12}>
                   <Card 
                     size="small" 
@@ -236,12 +456,11 @@ const ProfilePage: React.FC = () => {
                       borderRadius: 4,
                       border: "1px solid #e8e8e8"
                     }}>
-                      <Text strong>{user.dni}</Text>
+                      <Text strong>{detailedUser.dni}</Text>
                     </div>
                   </Card>
                 </Col>
                 
-                {/* Segunda columna */}
                 <Col xs={24} md={12}>
                   <Card 
                     size="small" 
@@ -257,12 +476,11 @@ const ProfilePage: React.FC = () => {
                       borderRadius: 4,
                       border: "1px solid #e8e8e8"
                     }}>
-                      <Text strong>{user.name}</Text>
+                      <Text strong>{detailedUser.name}</Text>
                     </div>
                   </Card>
                 </Col>
                 
-                {/* Tercera columna */}
                 <Col xs={24} md={12}>
                   <Card 
                     size="small" 
@@ -278,12 +496,11 @@ const ProfilePage: React.FC = () => {
                       borderRadius: 4,
                       border: "1px solid #e8e8e8"
                     }}>
-                      <Text strong>{user.secondName}</Text>
+                      <Text strong>{detailedUser.secondName}</Text>
                     </div>
                   </Card>
                 </Col>
                 
-                {/* Cuarta columna */}
                 <Col xs={24} md={12}>
                   <Card 
                     size="small" 
@@ -298,15 +515,15 @@ const ProfilePage: React.FC = () => {
                       padding: "8px 12px", 
                       borderRadius: 4,
                       border: "1px solid #e8e8e8",
-                      color: hasPermission(Permission.SuperAdmin) ? "#f5222d" : 
-                            hasPermission(Permission.Dev) ? "#1890ff" : "#52c41a"
+                      color: isSuperAdmin ? "#f5222d" : 
+                             isDev ? "#1890ff" : "#52c41a"
                     }}>
                       <Text strong>
-                        {hasPermission(Permission.Dev) 
-                          ? t('permission.super_admin') 
-                          : hasPermission(Permission.SuperAdmin) 
+                        {isDev
+                          ? t('permission.dev') 
+                          : isSuperAdmin
                             ? t('permission.super_admin')
-                            : "User"
+                            : t('permission.employee')
                         }
                       </Text>
                     </div>
@@ -318,7 +535,7 @@ const ProfilePage: React.FC = () => {
         </Row>
       </Card>
 
-      {/* Sección de estadísticas */}
+      {/* Statistics Section */}
       <Card 
         title={
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -419,7 +636,26 @@ const ProfilePage: React.FC = () => {
         )}
       </Card>
 
-      {/* Sección de permisos */}
+      {/* Groups Section */}
+      <Card 
+        title={
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <UserSwitchOutlined style={{ marginRight: 8, color: "#1890ff" }} />
+            <Title level={4} style={{ margin: 0 }}>
+              {t("profile.groupsLabel")}
+            </Title>
+          </div>
+        }
+        style={{ 
+          borderRadius: 8, 
+          marginBottom: 24,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.09)"
+        }}
+      >
+        {renderGroups()}
+      </Card>
+
+      {/* Permissions Section */}
       <div>
         <div style={{ 
           display: "flex", 
@@ -438,8 +674,31 @@ const ProfilePage: React.FC = () => {
 
       <ProfileDataManagerModal
         open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        user={user}
+        onClose={() => {
+          setIsModalOpen(false);
+          // Refresh user data after modal closes if needed
+          if (userId && hasPermission(Permission.ManageUsers)) {
+            getDetailedUser(parseInt(userId))
+              .then(userDetailed => {
+                setDetailedUser(userDetailed);
+                
+                // Update profileUser as well
+                const userObj: User = {
+                  id: userDetailed.id,
+                  dni: userDetailed.dni,
+                  name: userDetailed.name,
+                  secondName: userDetailed.secondName,
+                  permissions: userDetailed.permissions.map(p => p.name as Permission),
+                  token: ''
+                };
+                setProfileUser(userObj);
+              })
+              .catch(error => {
+                console.error("Error refreshing user data:", error);
+              });
+          }
+        }}
+        detailedUser={detailedUser}
       />
     </PageContainer>
   );

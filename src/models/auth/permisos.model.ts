@@ -18,6 +18,19 @@ export enum Permission {
     CreateUsers = 'create_users',
     DisableUsers = 'disable_users'
   }
+
+export interface PermissionEntity {
+  id: number;
+  name: string;
+}
+
+export interface GroupEntity {
+  id: number;
+  name: string;
+  permissions: PermissionEntity[];
+}
+
+
 export type PermissionList = Permission[];
 export const GroupedPermissions: Record<
   string,
