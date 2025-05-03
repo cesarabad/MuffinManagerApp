@@ -30,6 +30,10 @@ export interface GroupEntity {
   permissions: PermissionEntity[];
 }
 
+export interface AvailableUserPermissions {
+  permissions: PermissionEntity[];
+  groups: GroupEntity[];
+}
 
 export type PermissionList = Permission[];
 export const GroupedPermissions: Record<

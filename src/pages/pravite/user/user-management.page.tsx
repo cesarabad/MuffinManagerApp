@@ -41,7 +41,7 @@ const { Title } = Typography;
 const UserManagementPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { hasPermission, user: currentUser, getDetailedUser } = useAuth();
+  const { hasPermission, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserSafeDto[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserDetailedDto | null>(null);
   const [isManageUserDataModalOpen, setIsManageUserDataModalOpen] = useState(false);
@@ -74,7 +74,7 @@ const UserManagementPage: React.FC = () => {
   const handleEditUser = async (userId: number) => {
     try {
       // Get detailed user information for editing
-      const userDetailed = await getDetailedUser(userId);
+      const userDetailed = await userService.getDetailedUser(userId);
       setSelectedUser(userDetailed);
       setIsManageUserDataModalOpen(true);
     } catch (error) {

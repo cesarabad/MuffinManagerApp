@@ -43,7 +43,7 @@ const { Title, Text } = Typography;
 const ProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId?: string }>();
   const navigate = useNavigate();
-  const { user: currentUser, hasPermission, getDetailedUser } = useAuth();
+  const { user: currentUser, hasPermission } = useAuth();
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stats, setStats] = useState<UserStats | null>(null);
@@ -59,7 +59,7 @@ const ProfilePage: React.FC = () => {
       if (userId && hasPermission(Permission.ManageUsers)) {
         try {
           setLoadingProfile(true);
-          const userDetailed = await getDetailedUser(parseInt(userId));
+          const userDetailed = await userService.getDetailedUser(parseInt(userId));
           setDetailedUser(userDetailed);
           
           // Create a User object from UserDetailedDto for compatibility
@@ -96,7 +96,7 @@ const ProfilePage: React.FC = () => {
         // Get detailed user data for current user
         if (currentUser) {
           try {
-            const userDetailed = await getDetailedUser(currentUser.id);
+            const userDetailed = await userService.getDetailedUser(currentUser.id);
             setDetailedUser(userDetailed);
             fetchUserStats(currentUser.id);
           } catch (error) {
@@ -108,7 +108,7 @@ const ProfilePage: React.FC = () => {
     };
 
     fetchUserData();
-  }, [userId, currentUser, hasPermission, t, getDetailedUser]);
+  }, [userId, currentUser, hasPermission, t, userService.getDetailedUser]);
 
   const fetchUserStats = (id: number) => {
     setLoadingStats(true);
@@ -136,11 +136,11 @@ const ProfilePage: React.FC = () => {
         if (!prev) return null;
         return {
           ...prev,
-          isDisabled: !prev.isDisabled
+          disabled: !prev.disabled
         };
       });
       
-      toast.success(t(detailedUser.isDisabled ? "user.enabled" : "user.disabled"));
+      toast.success(t(detailedUser.disabled ? "user.enabled" : "user.disabled"));
     } catch (error) {
       console.error("Error toggling user status:", error);
       toast.error(t("error.userStatusChange"));
@@ -388,15 +388,15 @@ const ProfilePage: React.FC = () => {
               size={120} 
               icon={<UserOutlined />} 
               style={{ 
-                backgroundColor: !detailedUser.isDisabled ? "#1890ff" : "#d9d9d9",
+                backgroundColor: !detailedUser.disabled ? "#1890ff" : "#d9d9d9",
                 marginBottom: 16,
-                boxShadow: !detailedUser.isDisabled ? "0 4px 12px rgba(24,144,255,0.3)" : "none"
+                boxShadow: !detailedUser.disabled ? "0 4px 12px rgba(24,144,255,0.3)" : "none"
               }} 
             />
-            <Title level={3} style={{ margin: 0, color: !detailedUser.isDisabled ? 'inherit' : '#999' }}>
+            <Title level={3} style={{ margin: 0, color: !detailedUser.disabled ? 'inherit' : '#999' }}>
               {detailedUser.name} {detailedUser.secondName}
             </Title>
-            {detailedUser.isDisabled && (
+            {detailedUser.disabled && (
               <Tag color="error" style={{ margin: '8px 0' }}>
                 {t("user.disabled")}
               </Tag>
@@ -407,7 +407,7 @@ const ProfilePage: React.FC = () => {
                   <Button 
                     type="primary" 
                     onClick={() => setIsModalOpen(true)}
-                    disabled={detailedUser.isDisabled && !isOwnProfile}
+                    disabled={detailedUser.disabled && !isOwnProfile}
                   >
                     {t("button.edit")}
                   </Button>
@@ -415,17 +415,17 @@ const ProfilePage: React.FC = () => {
                 
                 {canDisable && (
                   <Popconfirm
-                    title={t(!detailedUser.isDisabled ? "user.confirmDisable" : "user.confirmEnable")}
+                    title={t(!detailedUser.disabled ? "user.confirmDisable" : "user.confirmEnable")}
                     onConfirm={handleToggleUserStatus}
                     okText={t("button.yes")}
                     cancelText={t("button.no")}
                   >
                     <Button 
-                      danger={!detailedUser.isDisabled}
-                      type={!detailedUser.isDisabled ? "primary" : "default"}
-                      icon={!detailedUser.isDisabled ? <StopOutlined /> : <CheckOutlined />}
+                      danger={!detailedUser.disabled}
+                      type={!detailedUser.disabled ? "primary" : "default"}
+                      icon={!detailedUser.disabled ? <StopOutlined /> : <CheckOutlined />}
                     >
-                      {!detailedUser.isDisabled ? t("button.disable") : t("button.enable")}
+                      {!detailedUser.disabled ? t("button.disable") : t("button.enable")}
                     </Button>
                   </Popconfirm>
                 )}
@@ -678,7 +678,7 @@ const ProfilePage: React.FC = () => {
           setIsModalOpen(false);
           // Refresh user data after modal closes if needed
           if (userId && hasPermission(Permission.ManageUsers)) {
-            getDetailedUser(parseInt(userId))
+            userService.getDetailedUser(parseInt(userId))
               .then(userDetailed => {
                 setDetailedUser(userDetailed);
                 

@@ -5,7 +5,7 @@ export interface UserDetailedDto {
     dni: string;
     name: string;
     secondName?: string;
-    isDisabled: boolean;
+    disabled: boolean;
     permissions: PermissionEntity[];
     groups: GroupEntity[];
 }

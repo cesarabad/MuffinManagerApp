@@ -2,14 +2,12 @@ import { createContext, useContext, ReactNode } from "react";
 import Cookies from "js-cookie";
 import { LoginRequest } from "../../models/auth/login-request.model";
 import { User } from "../../models/auth/user.model";
-import { Permission } from "../../models/auth/permisos.model"; // Asegurate de tener esto
-import { UpdateUserDto } from "../../models/auth/update-user-dto.model";
+import { Permission } from "../../models/auth/permisos.model";
 import { httpCrudService } from "../../services/http-crud.service";
 import { RegisterRequest } from "../../models/auth/register-request.model";
 import { toast } from "react-toastify";
 import { t } from "i18next";
-import { UserSafeDto } from "../../models/auth/user-safe-dto.model";
-import { UserDetailedDto } from "../../models/auth/user-detailed-dto.model";
+import { UpdateUserDto } from "../../models/auth/update-user-dto.model";
 
 interface AuthContextType {
   user: User | null;
@@ -17,9 +15,9 @@ interface AuthContextType {
   login: (request: LoginRequest) => Promise<void>;
   logout: () => Promise<void>;
   hasPermission: (permission: Permission) => boolean;
-  updateUser: (updatedUserDto: UpdateUserDto) => Promise<void>;
   createUser: (userDto: RegisterRequest) => Promise<void>;
-  getDetailedUser: (userId: number) => Promise<UserDetailedDto>;
+  saveUser: (user: User) => void;
+  updateUser: (updatedUserDto: UpdateUserDto) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -60,24 +58,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return decodedToken.exp < currentTime;
   };
 
-  const updateUser = async (updatedUserDto: UpdateUserDto) => {
-    const response: User = await httpCrudService<User>(PATH).post("/update", updatedUserDto);
-    if (response) {
-      saveUser(response);
-      location.reload();
-    }
-  }
 
   const createUser = async (userDto: RegisterRequest) => {
     const response: User = await httpCrudService<User>(PATH).post("/register", userDto);
     if (response) {
       toast.success(t("profile.registerSuccess"));
     }
-  }
-
-
-  const getDetailedUser = async (userId: number) => {
-    return await httpCrudService<UserDetailedDto>(PATH).get(`/detailed/${userId}`);
   }
 
   const getUser = (): User | null => {
@@ -122,6 +108,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     location.reload();
   };
 
+  
+
+
+  const updateUser = async (updatedUserDto: UpdateUserDto) => {
+    const response: User = await httpCrudService<User>(PATH).post("/update", updatedUserDto);
+    if (response.id) {
+      saveUser(response);
+      location.reload();
+    }
+  }
+
   const isAuthenticated = (): boolean => {
     return !!getUser();
   };
@@ -132,7 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, updateUser, createUser, getDetailedUser }}>
+    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, createUser, saveUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

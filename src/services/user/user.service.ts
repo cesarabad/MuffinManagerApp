@@ -1,10 +1,11 @@
+import { UserDetailedDto } from "../../models/auth/user-detailed-dto.model";
 import { UserSafeDto } from "../../models/auth/user-safe-dto.model";
-import { UserStats } from "../../models/index.model";
+import { AvailableUserPermissions, UserStats } from "../../models/index.model";
 import { httpCrudService } from "../http-crud.service";
-const PATH = "/user"
 
+const PATH = "/user";
 export const userService = {
-    
+
     getPath: () => PATH,
 
     getStats: (userId: number) => {
@@ -17,6 +18,14 @@ export const userService = {
 
     toggleDisabledUser: (userId: number) => {
         return httpCrudService<void>(PATH).post(`/toggleDisabled/${userId}`, {});
+    },
+
+    getDetailedUser: async (userId: number) => {
+        return await httpCrudService<UserDetailedDto>(PATH).get(`/detailed/${userId}`);
+    },
+
+    getAvailableUserPermissions: async () => {
+        return await httpCrudService<AvailableUserPermissions>(PATH).get("/availablePermissions");
     }
 
 }
