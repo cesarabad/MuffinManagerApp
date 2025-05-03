@@ -5,6 +5,9 @@ import { User } from "../../models/auth/user.model";
 import { Permission } from "../../models/auth/permisos.model"; // Asegurate de tener esto
 import { UpdateUserDto } from "../../models/auth/update-user-dto.model";
 import { httpCrudService } from "../../services/http-crud.service";
+import { RegisterRequest } from "../../models/auth/register-request.model";
+import { toast } from "react-toastify";
+import { t } from "i18next";
 
 interface AuthContextType {
   user: User | null;
@@ -13,6 +16,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   hasPermission: (permission: Permission) => boolean;
   updateUser: (updatedUserDto: UpdateUserDto) => Promise<void>;
+  createUser: (userDto: RegisterRequest) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,6 +62,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (response) {
       saveUser(response);
       location.reload();
+    }
+  }
+
+  const createUser = async (userDto: RegisterRequest) => {
+    const response: User = await httpCrudService<User>(PATH).post("/register", userDto);
+    if (response) {
+      toast.success(t("profile.registerSuccess"));
     }
   }
 
@@ -113,7 +124,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, updateUser }}>
+    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, updateUser, createUser }}>
       {children}
     </AuthContext.Provider>
   );

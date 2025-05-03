@@ -376,7 +376,8 @@
         "pattern" : "El formato no es válido",
         "email" : "El correo electrónico no es válido",
         "number" : "El valor no es un número",
-        "passwordMinLength" : "La contraseña debe tener al menos {{min}} caracteres"
+        "passwordMinLength" : "La contraseña debe tener al menos {{min}} caracteres",
+        "passwordsMustMatch" : "Las contraseñas no coinciden."
     },
     "ws" : {
         "box" : {
@@ -487,18 +488,20 @@
         "general" : ""
     },
     "profile" : {
-        "title" : "Perfil de {{fullName}}",
-        "editTitle" : "Modificar perfil",
+        "editTitle" : "Modificar usuario",
+        "createTitle" : "Crear usuario",
         "dniLabel" : "DNI",
         "nameLabel" : "Nombre",
         "secondNameLabel" : "Apellido",
         "passwordLabel" : "Contraseña",
         "newPasswordLabel" : "Nueva contraseña",
+        "confirmPasswordLabel" : "Confirmar contraseña",
         "permissionsLabel" : "Permisos",
         "verificationSectionTitle" : "Inserta tu contraseña para realizar los cambios",
         "roleLabel" : "Rol",
         "noPermissionsInGroup" : "No tienes permisos en este grupo.",
         "personalInfo" : "Información personal",
+        "registerSuccess" : "El usuario ha sido registrado correctamente.",
         "stats" : {
             "title" : "Estadísticas", 
             "totalEntries" : "Entradas realizadas",

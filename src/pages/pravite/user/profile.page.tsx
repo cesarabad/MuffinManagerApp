@@ -25,7 +25,7 @@ import {
   SafetyOutlined,
 } from "@ant-design/icons";
 import PageContainer from "../../../components/app/generic-page-container/PageContainer.component";
-import EditProfileModal from "../../../components/user/edit-modal/edit-user-modal.component";
+import ProfileDataManagerModal from "../../../components/user/edit-modal/profile-data-manager-modal.component";
 import { userService } from "../../../services/user/user.service";
 
 const { Title, Text } = Typography;
@@ -436,7 +436,7 @@ const ProfilePage: React.FC = () => {
         {renderPermissions()}
       </div>
 
-      <EditProfileModal
+      <ProfileDataManagerModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         user={user}
