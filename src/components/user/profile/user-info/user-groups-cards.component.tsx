@@ -105,7 +105,7 @@ const UserGroupsCard: React.FC<UserGroupsCardProps> = ({
                           color="blue" 
                           key={permission.id}
                         >
-                          {permission.name}
+                          {t(`permission.${permission.name}`)}
                         </Tag>
                       ))}
                       {group.permissions.length > 3 && (

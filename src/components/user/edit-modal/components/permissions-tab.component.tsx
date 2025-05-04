@@ -82,9 +82,13 @@ const PermissionsTab: React.FC<PermissionsTabProps> = ({
                             {t(`permission.${permission}`)}
                           </Tag>
                           {inSelectedGroup && (
-                            <Text type="secondary" style={{ marginLeft: 8, fontSize: '12px' }}>
-                              ({t("profile.includedInGroup")})
-                            </Text>
+                            <>  
+                                <br/>
+                                <Text type="secondary" style={{ marginLeft: 0, fontSize: '12px' }}>
+                                ({t("profile.includedInGroup")})
+                                </Text>
+                            </>
+                            
                           )}
                         </Checkbox>
                       </Col>
@@ -114,9 +118,13 @@ const PermissionsTab: React.FC<PermissionsTabProps> = ({
                         {t(`permission.${permission}`)}
                       </Tag>
                       {inSelectedGroup && (
-                        <Text type="secondary" style={{ marginLeft: 8, fontSize: '12px' }}>
-                          ({t("profile.includedInGroup")})
-                        </Text>
+                        <>
+                            <br/>
+                            <Text type="secondary" style={{ marginLeft: 0, fontSize: '12px' }}>
+                            ({t("profile.includedInGroup")})
+                            </Text>
+                        </>
+                        
                       )}
                     </Checkbox>
                   </Col>

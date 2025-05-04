@@ -25,7 +25,7 @@ const BackButton: React.FC<BackButtonProps> = ({ t }) => {
   return (
     <ButtonHighlight 
       icon={<ArrowLeftOutlined />} 
-      onClick={() => navigate(PrivateRoutes.MANAGE_USERS)}
+      onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.MANAGE_USERS}`)}
       style={{ marginBottom: 16 }}
       size="large"
     >

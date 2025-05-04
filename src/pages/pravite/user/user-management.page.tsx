@@ -28,13 +28,15 @@ import {
 } from "@ant-design/icons";
 import { UserSafeDto } from "../../../models/auth/user-safe-dto.model";
 import { useAuth } from "../../../contexts/auth/auth.context";
-import { Permission } from "../../../models/index.model";
+import { GroupEntity, Permission, PermissionEntity } from "../../../models/index.model";
 import PageContainer from "../../../components/app/generic-page-container/PageContainer.component";
 import ProfileDataManagerModal from "../../../components/user/edit-modal/profile-data-manager-modal.component";
 import { UserDetailedDto } from "../../../models/auth/user-detailed-dto.model";
 import { toast } from "react-toastify";
 import { PrivateRoutes } from "../../../models/routes";
 import { userService } from "../../../services/user/user.service";
+import CreateGroupEntityModal from "../../../components/user/edit-modal/components/groups/create-group-entity-modal.component";
+import GroupManagement from "../../../components/user/edit-modal/components/groups/group-management.component";
 
 const { Title } = Typography;
 
@@ -47,10 +49,62 @@ const UserManagementPage: React.FC = () => {
   const [isManageUserDataModalOpen, setIsManageUserDataModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [isCreateGroupEntityModalVisible, setIsCreateGroupEntityModalVisible] = useState(false);
+    const [groups, setGroups] = useState<GroupEntity[]>([]);
+    const [loadingGroups, setLoadingGroups] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState<GroupEntity | null>(null);
+    const [availablePermissions, setAvailablePermissions] = useState<PermissionEntity[]>([]);
 
   useEffect(() => {
     loadUsers();
+    fetchGroups();
   }, []);
+
+  const fetchGroups = async () => {
+      try {
+        setLoadingGroups(true);
+        const response = await userService.getAvailableUserPermissions();
+        setGroups(response.groups);
+        
+        // Extraer todos los permisos disponibles
+    const groupPermissions = response.groups.flatMap(group => group.permissions);
+    const individualPermissions = response.permissions;
+    
+    // Combinar y eliminar duplicados por id
+    const uniquePermissions = [...groupPermissions, ...individualPermissions]
+      .reduce((unique: PermissionEntity[], permission) => {
+        if (!unique.some(p => p.id === permission.id)) {
+          unique.push(permission);
+        }
+        return unique;
+      }, []);
+        setAvailablePermissions(uniquePermissions);
+      } catch (error) {
+        console.error("Error loading groups:", error);
+        toast.error(t("error.loadingGroups"));
+      } finally {
+        setLoadingGroups(false);
+      }
+    };
+  
+    const handleManageGroup = (group?: GroupEntity) => {
+      if (group) {
+        setSelectedGroup(group);
+      } else {
+        setSelectedGroup(null);
+      }
+      setIsCreateGroupEntityModalVisible(true);
+    };  
+  
+    const handleDeleteGroup = async (groupId: number) => {
+      try {
+        
+        await userService.deleteGroupEntity(groupId);
+      } catch (error) {
+        console.error("Error deleting group:", error);
+        toast.error(t("error.deletingGroup"));
+      }
+    };
 
   const loadUsers = async () => {
     try {
@@ -161,7 +215,7 @@ const columns = [
                 
                 <Tooltip title={!record.disabled ? t("button.disable") : t("button.enable")}>
                     <Popconfirm
-                        title={t(!record.disabled ? "user.confirmDisable" : "user.confirmEnable")}
+                        title={t(!record.disabled ? "profile.confirmDisable" : "profile.confirmEnable")}
                         onConfirm={() => handleToggleUserStatus(record.id)}
                         okText={t("button.yes")}
                         cancelText={t("button.no")}
@@ -210,7 +264,7 @@ const columns = [
           <Col xs={24} md={8} lg={6}>
             <Input
               prefix={<SearchOutlined />}
-              placeholder={t("search.placeholder")}
+              placeholder={t("profile.searchPlaceholder")}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
@@ -224,7 +278,7 @@ const columns = [
           </div>
         ) : users.length === 0 ? (
           <Empty
-            description={t("user.noUsers")}
+            description={t("profile.noUsers")}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         ) : (
@@ -245,6 +299,25 @@ const columns = [
         onClose={handleManageUserDataModalClose}
         detailedUser={selectedUser || undefined}
       />
+      <GroupManagement
+        groups={groups}
+        loading={loadingGroups}
+        onCreateGroup={() => handleManageGroup()}
+        onEditGroup={(group) => handleManageGroup(group)}
+        onDeleteGroup={handleDeleteGroup}
+        />
+
+
+        <CreateGroupEntityModal
+        open={isCreateGroupEntityModalVisible}
+        onClose={() => {
+            setIsCreateGroupEntityModalVisible(false);
+        }}
+        onSuccess={fetchGroups}
+        groupToEdit={selectedGroup}
+        loading={loadingGroups}
+        availablePermissions={availablePermissions}
+        />
     </PageContainer>
   );
 };

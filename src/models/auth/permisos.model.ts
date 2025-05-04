@@ -61,6 +61,6 @@ export const GroupedPermissions: Record<
     Permission.ManageStock,
     Permission.ManageMovementStock,
   ],
-  users: [Permission.CreateUsers, Permission.DisableUsers],
+  users: [Permission.CreateUsers, Permission.DisableUsers, Permission.ManageUsers],
   admin: [Permission.Dev, Permission.SuperAdmin],
 };

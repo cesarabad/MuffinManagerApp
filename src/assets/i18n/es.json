@@ -371,7 +371,9 @@
         "expand" : "Expandir",
         "collapse" : "Recoger",
         "view" : "Ver",
-        "enable" : "Habilitar"
+        "enable" : "Habilitar",
+        "selectAll" : "Seleccionar todos",
+        "delete" : "Eliminar"
     },
     "validation" : {
         "dni" : "El DNI no es válido",
@@ -483,7 +485,17 @@
         "disable_users": "Deshabilitar usuarios",
         "dev" : "Desarrollador",
         "super_admin" : "Super admin",
-        "employee" : "Empleado"
+        "employee" : "Empleado",
+        "selectAll" : "Seleccionar todos",
+        "noPermissionsAvailable" : "No hay permisos disponibles.",
+        "category" : {
+            "data" : "Datos",
+            "stock" : "Stock",
+            "users" : "Usuarios",
+            "products" : "Productos",
+            "admin" : "Admin",
+            "general" : ""
+        }
     },
     "permissionGroup" : {
         "data" : "Datos",
@@ -496,6 +508,7 @@
     "profile" : {
         "editTitle" : "Modificar usuario",
         "createTitle" : "Crear usuario",
+        "noUsers" : "No hay usuarios disponibles.",
         "dniLabel" : "DNI",
         "nameLabel" : "Nombre",
         "secondNameLabel" : "Apellido",
@@ -506,11 +519,17 @@
         "permissionsLabel" : "Permisos",
         "statusLabel" : "Estado",
         "verificationSectionTitle" : "Inserta tu contraseña para realizar los cambios",
+        "editGroup" : "Modificar grupo",
+        "groupName" : "Nombre del grupo",
+        "groupNamePlaceholder" : "Nombre del grupo",
+        "createGroup" : "Crear grupo",
+        "selectPermissions" : "Seleccionar permisos",
         "roleLabel" : "Rol",
         "activateUserLabel" : "Activar usuario",
         "managementLabel" : "Gestión de usuarios",
         "noPermissionsInGroup" : "No tienes permisos en este grupo.",
         "permissionsInGroup" : "Permisos en el grupo",
+        "includedInGroup" : "Incluido en un grupo",
         "personalInfo" : "Información personal",
         "registerSuccess" : "El usuario ha sido registrado correctamente.",
         "noStats" : "No hay estadísticas disponibles.",
@@ -526,6 +545,19 @@
         "statusActive" : "Activo",
         "statusDisabled" : "Deshabilitado",
         "actionsLabel" : "Acciones",
+        "dniPlaceholder" : "12345678A",
+        "namePlaceholder" : "Juan",
+        "secondNamePlaceholder" : "Pérez",
+        "searchPlaceholder" : "Buscar usuario",
+        "confirmEnable" : "¿Estás seguro de que deseas habilitar este usuario?",
+        "confirmDisable" : "¿Estás seguro de que deseas deshabilitar este usuario?",
+        "selectedGroups" : "Grupos seleccionados",
+        "includedPermissions" : "Permisos incluidos",
+        "groupsManagement" : "Gestión de grupos de permisos",
+        "groupNameLabel" : "Nombre del grupo",
+        "permissionCountLabel" : "Número de permisos",
+        "confirmDeleteGroup" : "¿Estás seguro de que deseas eliminar este grupo?",
+        "permissionNameLabel" : "Nombre del permiso",
         "stats" : {
             "title" : "Estadísticas", 
             "totalEntries" : "Entradas realizadas",

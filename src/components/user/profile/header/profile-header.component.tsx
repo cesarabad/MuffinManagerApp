@@ -242,7 +242,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 
                 {canDisable && (
                   <Popconfirm
-                    title={t(!detailedUser.disabled ? "user.confirmDisable" : "user.confirmEnable")}
+                    title={t(!detailedUser.disabled ? "profile.confirmDisable" : "profile.confirmEnable")}
                     onConfirm={onToggleStatus}
                     okText={t("button.yes")}
                     cancelText={t("button.no")}

@@ -203,7 +203,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             {detailedUser.disabled && (
               <StatusBadge 
                 count={
-                  <Tooltip title={t("user.disabled")}>
+                  <Tooltip title={t("profile.isDisabledLabel")}>
                     <StopOutlined style={{ color: "white" }} />
                   </Tooltip>
                 } 
@@ -223,7 +223,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               {detailedUser.name} {detailedUser.secondName}
               {detailedUser.disabled && (
                 <Text type="secondary" style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 12 }}>
-                  ({t("user.inactive")})
+                  ({t("profile.inactiveLabel")})
                 </Text>
               )}
             </Title>
@@ -249,7 +249,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 
                 {canDisable && (
                   <Popconfirm
-                    title={t(!detailedUser.disabled ? "user.confirmDisable" : "user.confirmEnable")}
+                    title={t(!detailedUser.disabled ? "profile.confirmDisable" : "profile.confirmEnable")}
                     onConfirm={onToggleStatus}
                     okText={t("button.yes")}
                     cancelText={t("button.no")}

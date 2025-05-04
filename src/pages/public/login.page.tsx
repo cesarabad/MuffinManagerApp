@@ -27,6 +27,7 @@ const LoginPage = () => {
     try {
       await login(data);
       navigate(`/${PrivateRoutes.PRIVATE}/`);
+      location.reload();
     } catch (error) {
       console.error('Login failed', error);
     } finally {

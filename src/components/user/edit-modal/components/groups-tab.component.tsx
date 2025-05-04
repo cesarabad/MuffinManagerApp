@@ -97,7 +97,7 @@ const GroupsTab: React.FC<GroupsTabProps> = ({
             {getGroupPermissionIds().map(permId => {
               const permission = availablePermissions.find(p => p.id === permId);
               return permission ? (
-                <Col key={permission.id} xs={24} sm={12} md={8} lg={6}>
+                <Col key={permission.id} >
                   <Tag 
                     color="green" 
                     style={{ padding: '4px 8px', marginBottom: 8 }}

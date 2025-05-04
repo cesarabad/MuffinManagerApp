@@ -17,7 +17,6 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({ form, isEdit, onFinish }) =
       form={form} 
       layout="vertical" 
       onFinish={onFinish}
-      requiredMark="optional"
     >
       {isEdit && (
         <>
@@ -71,7 +70,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({ form, isEdit, onFinish }) =
             name="dni"
             rules={[{ required: true, message: t("validation.required") }]}
           >
-            <Input placeholder="12345678A" />
+            <Input placeholder={t('profile.dniPlaceholder')} />
           </Form.Item>
         </Col>
         
@@ -86,7 +85,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({ form, isEdit, onFinish }) =
             name="name"
             rules={[{ required: true, message: t("validation.required") }]}
           >
-            <Input placeholder="John" />
+            <Input placeholder={t('profile.namePlaceholder')} />
           </Form.Item>
         </Col>
       </Row>
@@ -103,7 +102,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({ form, isEdit, onFinish }) =
             name="secondName"
             rules={[{ required: true, message: t("validation.required") }]}
           >
-            <Input placeholder="Doe" />
+            <Input placeholder={t('profile.secondNamePlaceholder')} />
           </Form.Item>
         </Col>
       </Row>

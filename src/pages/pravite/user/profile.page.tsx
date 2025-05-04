@@ -35,7 +35,6 @@ const ProfilePage: React.FC = () => {
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [detailedUser, setDetailedUser] = useState<UserDetailedDto | null>(null);
   const [isOwnProfile, setIsOwnProfile] = useState(true);
-  
   // Estados para manejar expansiones
   const [expandedGroups, setExpandedGroups] = useState<Record<number, boolean>>({});
   const [expandedPermissionGroups, setExpandedPermissionGroups] = useState<Record<string, boolean>>({});
@@ -100,6 +99,8 @@ const ProfilePage: React.FC = () => {
     fetchUserData();
   }, [userId, currentUser, hasPermission, t]);
 
+  
+  
   const fetchUserStats = (id: number) => {
     setLoadingStats(true);
     userService
@@ -115,26 +116,7 @@ const ProfilePage: React.FC = () => {
 
   // Function to handle user disable/enable
   const handleToggleUserStatus = async () => {
-    if (!detailedUser) return;
-    
-    try {
-      // In a real implementation, call an API to disable/enable user
-      toast.info(t("user.statusChangeInProgress"));
-      
-      // For UI demonstration, toggle the status locally
-      setDetailedUser(prev => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          disabled: !prev.disabled
-        };
-      });
-      
-      toast.success(t(detailedUser.disabled ? "user.enabled" : "user.disabled"));
-    } catch (error) {
-      console.error("Error toggling user status:", error);
-      toast.error(t("error.userStatusChange"));
-    }
+    await userService.toggleDisabledUser(detailedUser?.id || 0)
   };
 
   // Function to get a color according to permission category
@@ -272,30 +254,10 @@ const ProfilePage: React.FC = () => {
         open={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
-          // Refresh user data after modal closes if needed
-          if (userId && hasPermission(Permission.ManageUsers)) {
-            userService.getDetailedUser(parseInt(userId))
-              .then(userDetailed => {
-                setDetailedUser(userDetailed);
-                
-                // Update profileUser as well
-                const userObj: User = {
-                  id: userDetailed.id,
-                  dni: userDetailed.dni,
-                  name: userDetailed.name,
-                  secondName: userDetailed.secondName,
-                  permissions: userDetailed.permissions.map(p => p.name as Permission),
-                  token: ''
-                };
-                setProfileUser(userObj);
-              })
-              .catch(error => {
-                console.error("Error refreshing user data:", error);
-              });
-          }
         }}
         detailedUser={detailedUser}
       />
+      
     </PageContainer>
   );
 };
