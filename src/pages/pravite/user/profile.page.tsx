@@ -1,48 +1,32 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+// ProfilePage.tsx (Componente principal)
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../../../contexts/auth/auth.context";
-import { GroupedPermissions, Permission, UserStats } from "../../../models/index.model";
+import { Permission, UserStats } from "../../../models/index.model";
 import { useTranslation } from "react-i18next";
-import {
-  Card,
-  Empty,
-  Button,
-  Tag,
-  Row,
-  Col,
-  Spin,
-  Statistic,
-  Typography,
-  Avatar,
-  Space,
-  Popconfirm,
-} from "antd";
-import {
-  InboxOutlined,
-  FormOutlined,
-  UserSwitchOutlined,
-  ClockCircleOutlined,
-  CheckCircleOutlined,
-  UserOutlined,
-  LockOutlined,
-  SafetyOutlined,
-  ArrowLeftOutlined,
-  StopOutlined,
-  CheckOutlined,
-} from "@ant-design/icons";
+import { Empty, Spin, Typography } from "antd";
 import PageContainer from "../../../components/app/generic-page-container/PageContainer.component";
 import ProfileDataManagerModal from "../../../components/user/edit-modal/profile-data-manager-modal.component";
 import { userService } from "../../../services/user/user.service";
-import { PrivateRoutes } from "../../../models/routes";
 import { User } from "../../../models/auth/user.model";
 import { UserDetailedDto } from "../../../models/auth/user-detailed-dto.model";
 import { toast } from "react-toastify";
 
-const { Title, Text } = Typography;
+// Importar componentes modulares
+import {
+  BackButton,
+  ProfileHeader,
+  UserInfoCard,
+  UserStatsCard,
+  UserGroupsCard,
+  UserPermissionsCard,
+  UserRoleHelper
+} from "../../../components/user/index";
+
+const { Text } = Typography;
 
 const ProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId?: string }>();
-  const navigate = useNavigate();
   const { user: currentUser, hasPermission } = useAuth();
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,6 +36,10 @@ const ProfilePage: React.FC = () => {
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [detailedUser, setDetailedUser] = useState<UserDetailedDto | null>(null);
   const [isOwnProfile, setIsOwnProfile] = useState(true);
+  
+  // Estados para manejar expansiones
+  const [expandedGroups, setExpandedGroups] = useState<Record<number, boolean>>({});
+  const [expandedPermissionGroups, setExpandedPermissionGroups] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -108,7 +96,7 @@ const ProfilePage: React.FC = () => {
     };
 
     fetchUserData();
-  }, [userId, currentUser, hasPermission, t, userService.getDetailedUser]);
+  }, [userId, currentUser, hasPermission, t]);
 
   const fetchUserStats = (id: number) => {
     setLoadingStats(true);
@@ -129,7 +117,7 @@ const ProfilePage: React.FC = () => {
     
     try {
       // In a real implementation, call an API to disable/enable user
-      alert('No implementado');
+      toast.info(t("user.statusChangeInProgress"));
       
       // For UI demonstration, toggle the status locally
       setDetailedUser(prev => {
@@ -181,151 +169,31 @@ const ProfilePage: React.FC = () => {
     return permMap;
   };
 
-  // Renders grouped permissions following the GroupedPermissions structure
-  const renderPermissions = () => {
-    if (!profileUser || !detailedUser) return null;
-
-    const permissionMap = getUserPermissionMap();
-
-    return Object.entries(GroupedPermissions).map(([groupKey, groupValue]) => {
-      // Check if the group has subgroups
-      const hasSubGroups = !Array.isArray(groupValue);
-      
-      // For groups with subgroups, check if there are permissions in any subgroup
-      let hasAnyPermissions = false;
-      
-      const checkPermission = (perm: Permission) => {
-        return permissionMap[perm] === true;
-      };
-      
-      if (hasSubGroups) {
-        // Check permissions in subgroups
-        Object.entries(groupValue).forEach(([_, permissions]) => {
-          const filteredPermissions = (permissions as Permission[]).filter(checkPermission);
-          if (filteredPermissions.length > 0) {
-            hasAnyPermissions = true;
-          }
-        });
-      } else {
-        // Check permissions in simple group
-        hasAnyPermissions = (groupValue as Permission[]).some(checkPermission);
-      }
-      
-      return (
-        <Card 
-          key={groupKey}
-          title={
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <SafetyOutlined style={{ marginRight: 8, color: getPermissionColor(groupKey) }} />
-              <Text strong>{t(`permissionGroup.${groupKey}`)}</Text>
-            </div>
-          }
-          style={{ marginBottom: 16, borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.09)" }}
-          bodyStyle={{ padding: hasSubGroups ? "12px 24px" : "16px 24px" }}
-        >
-          {!hasAnyPermissions ? (
-            // Show message when there are no permissions in this group
-            <div style={{ 
-              padding: "16px", 
-              textAlign: "center", 
-              backgroundColor: "#f5f5f5",
-              borderRadius: 8,
-              color: "#999"
-            }}>
-              <Text type="secondary">
-                {t("profile.noPermissionsInGroup")}
-              </Text>
-            </div>
-          ) : hasSubGroups ? (
-            // Render subgroups
-            Object.entries(groupValue).map(([subGroupKey, permissions]) => {
-              const filteredPermissions = (permissions as Permission[]).filter(checkPermission);
-              
-              if (filteredPermissions.length === 0) return null;
-              
-              return (
-                <div key={subGroupKey} style={{ marginBottom: 16 }}>
-                  <Text type="secondary" style={{ display: "block", marginBottom: 8 }}>
-                    {t(`permissionGroup.${subGroupKey}`)}
-                  </Text>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {filteredPermissions.map((perm) => (
-                      <Tag 
-                        key={perm}
-                        color={getPermissionColor(subGroupKey)}
-                        style={{ padding: "4px 8px", margin: 0, borderRadius: 4 }}
-                      >
-                        {t(`permission.${perm}`)}
-                      </Tag>
-                    ))}
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            // Render direct permissions
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {(groupValue as Permission[])
-                .filter(checkPermission)
-                .map((perm) => (
-                  <Tag 
-                    key={perm}
-                    color={getPermissionColor(groupKey)}
-                    style={{ padding: "4px 8px", margin: 0, borderRadius: 4 }}
-                  >
-                    {t(`permission.${perm}`)}
-                  </Tag>
-                ))}
-            </div>
-          )}
-        </Card>
-      );
-    });
+  // Toggle permission group expansion
+  const togglePermissionGroup = (groupKey: string) => {
+    setExpandedPermissionGroups(prev => ({
+      ...prev,
+      [groupKey]: !prev[groupKey]
+    }));
   };
 
-  // Render groups section
-  const renderGroups = () => {
-    if (!detailedUser || !detailedUser.groups || detailedUser.groups.length === 0) {
-      return (
-        <Empty 
-          description={t("profile.noGroups")} 
-          image={Empty.PRESENTED_IMAGE_SIMPLE} 
-        />
-      );
-    }
-
-    return (
-      <Row gutter={[16, 16]}>
-        {detailedUser.groups.map(group => (
-          <Col xs={24} md={12} lg={8} key={group.id}>
-            <Card 
-              title={group.name}
-              size="small"
-              style={{ borderRadius: 8 }}
-            >
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {group.permissions.map(perm => (
-                  <Tag 
-                    key={perm.id}
-                    color="blue"
-                  >
-                    {perm.name}
-                  </Tag>
-                ))}
-              </div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    );
+  // Toggle group expansion
+  const toggleGroup = (groupId: number) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupId]: !prev[groupId]
+    }));
   };
 
   // Loading state
   if (loadingProfile) {
     return (
       <PageContainer>
-        <div style={{ textAlign: "center", padding: "40px 0" }}>
+        <div style={{ textAlign: "center", padding: "80px 0" }}>
           <Spin size="large" />
+          <div style={{ marginTop: 24 }}>
+            <Text>{t("loading.userProfile")}</Text>
+          </div>
         </div>
       </PageContainer>
     );
@@ -336,7 +204,7 @@ const ProfilePage: React.FC = () => {
     return (
       <PageContainer>
         <Empty 
-          description={t("profile.notAuthenticated")} 
+          description={<Text style={{ fontSize: 16 }}>{t("profile.notAuthenticated")}</Text>} 
           image={Empty.PRESENTED_IMAGE_SIMPLE} 
         />
       </PageContainer>
@@ -353,325 +221,57 @@ const ProfilePage: React.FC = () => {
     hasPermission(Permission.ManageUsers) && 
     !profileUser.permissions.includes(Permission.Dev);
 
-  const isDev = permissionIncluded(detailedUser, "dev");
-  const isSuperAdmin = permissionIncluded(detailedUser, "super_admin");
-
-  // Helper function to check if a permission is included
-  function permissionIncluded(user: UserDetailedDto, permName: string): boolean {
-    return !!user.permissions.find(p => p.name === permName) ||
-           !!user.groups.find(g => g.permissions.find(p => p.name === permName));
-  }
-
   return (
     <PageContainer>
-      {!isOwnProfile && (
-        <Button 
-          icon={<ArrowLeftOutlined />} 
-          onClick={() => navigate(PrivateRoutes.MANAGE_USERS)}
-          style={{ marginBottom: 16 }}
-        >
-          {t("button.backToUsers")}
-        </Button>
-      )}
+      {/* Back Button */}
+      {!isOwnProfile && <BackButton t={t} />}
       
-      <Card
-        style={{ 
-          borderRadius: 8, 
-          marginBottom: 24, 
-          boxShadow: "0 2px 8px rgba(0,0,0,0.09)",
-          overflow: "hidden"
-        }}
-      >
-        <Row gutter={24}>
-          <Col xs={24} md={6} style={{ textAlign: "center" }}>
-            <Avatar 
-              size={120} 
-              icon={<UserOutlined />} 
-              style={{ 
-                backgroundColor: !detailedUser.disabled ? "#1890ff" : "#d9d9d9",
-                marginBottom: 16,
-                boxShadow: !detailedUser.disabled ? "0 4px 12px rgba(24,144,255,0.3)" : "none"
-              }} 
-            />
-            <Title level={3} style={{ margin: 0, color: !detailedUser.disabled ? 'inherit' : '#999' }}>
-              {detailedUser.name} {detailedUser.secondName}
-            </Title>
-            {detailedUser.disabled && (
-              <Tag color="error" style={{ margin: '8px 0' }}>
-                {t("user.disabled")}
-              </Tag>
-            )}
-            <div style={{ marginTop: 16 }}>
-              <Space>
-                {canEdit && (
-                  <Button 
-                    type="primary" 
-                    onClick={() => setIsModalOpen(true)}
-                    disabled={detailedUser.disabled && !isOwnProfile}
-                  >
-                    {t("button.edit")}
-                  </Button>
-                )}
-                
-                {canDisable && (
-                  <Popconfirm
-                    title={t(!detailedUser.disabled ? "user.confirmDisable" : "user.confirmEnable")}
-                    onConfirm={handleToggleUserStatus}
-                    okText={t("button.yes")}
-                    cancelText={t("button.no")}
-                  >
-                    <Button 
-                      danger={!detailedUser.disabled}
-                      type={!detailedUser.disabled ? "primary" : "default"}
-                      icon={!detailedUser.disabled ? <StopOutlined /> : <CheckOutlined />}
-                    >
-                      {!detailedUser.disabled ? t("button.disable") : t("button.enable")}
-                    </Button>
-                  </Popconfirm>
-                )}
-              </Space>
-            </div>
-          </Col>
-          
-          <Col xs={24} md={18}>
-            <div style={{ padding: "0 16px" }}>
-              <Title level={4} style={{ marginBottom: 16 }}>
-                <UserOutlined style={{ marginRight: 8 }} />
-                {t("profile.personalInfo")}
-              </Title>
-              
-              <Row gutter={[16, 16]}>
-                <Col xs={24} md={12}>
-                  <Card 
-                    size="small" 
-                    bordered={false}
-                    style={{ backgroundColor: "#f5f5f5", height: "100%" }}
-                  >
-                    <div style={{ marginBottom: 8 }}>
-                      <Text type="secondary">{t("profile.dniLabel")}</Text>
-                    </div>
-                    <div style={{ 
-                      backgroundColor: "#fff", 
-                      padding: "8px 12px", 
-                      borderRadius: 4,
-                      border: "1px solid #e8e8e8"
-                    }}>
-                      <Text strong>{detailedUser.dni}</Text>
-                    </div>
-                  </Card>
-                </Col>
-                
-                <Col xs={24} md={12}>
-                  <Card 
-                    size="small" 
-                    bordered={false}
-                    style={{ backgroundColor: "#f5f5f5", height: "100%" }}
-                  >
-                    <div style={{ marginBottom: 8 }}>
-                      <Text type="secondary">{t("profile.nameLabel")}</Text>
-                    </div>
-                    <div style={{ 
-                      backgroundColor: "#fff", 
-                      padding: "8px 12px", 
-                      borderRadius: 4,
-                      border: "1px solid #e8e8e8"
-                    }}>
-                      <Text strong>{detailedUser.name}</Text>
-                    </div>
-                  </Card>
-                </Col>
-                
-                <Col xs={24} md={12}>
-                  <Card 
-                    size="small" 
-                    bordered={false}
-                    style={{ backgroundColor: "#f5f5f5", height: "100%" }}
-                  >
-                    <div style={{ marginBottom: 8 }}>
-                      <Text type="secondary">{t("profile.secondNameLabel")}</Text>
-                    </div>
-                    <div style={{ 
-                      backgroundColor: "#fff", 
-                      padding: "8px 12px", 
-                      borderRadius: 4,
-                      border: "1px solid #e8e8e8"
-                    }}>
-                      <Text strong>{detailedUser.secondName}</Text>
-                    </div>
-                  </Card>
-                </Col>
-                
-                <Col xs={24} md={12}>
-                  <Card 
-                    size="small" 
-                    bordered={false}
-                    style={{ backgroundColor: "#f5f5f5", height: "100%" }}
-                  >
-                    <div style={{ marginBottom: 8 }}>
-                      <Text type="secondary">{t("profile.roleLabel")}</Text>
-                    </div>
-                    <div style={{ 
-                      backgroundColor: "#fff", 
-                      padding: "8px 12px", 
-                      borderRadius: 4,
-                      border: "1px solid #e8e8e8",
-                      color: isSuperAdmin ? "#f5222d" : 
-                             isDev ? "#1890ff" : "#52c41a"
-                    }}>
-                      <Text strong>
-                        {isDev
-                          ? t('permission.dev') 
-                          : isSuperAdmin
-                            ? t('permission.super_admin')
-                            : t('permission.employee')
-                        }
-                      </Text>
-                    </div>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
-      </Card>
+      {/* Profile Header */}
+      <ProfileHeader
+        detailedUser={detailedUser}
+        canEdit={canEdit}
+        canDisable={canDisable}
+        isOwnProfile={isOwnProfile}
+        t={t}
+        onEdit={() => setIsModalOpen(true)}
+        onToggleStatus={handleToggleUserStatus}
+        userRole={<UserRoleHelper detailedUser={detailedUser} t={t} />}
+      />
 
-      {/* Statistics Section */}
-      <Card 
-        title={
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <ClockCircleOutlined style={{ marginRight: 8, color: "#1890ff" }} />
-            <span>{t("profile.stats.title")}</span>
-          </div>
-        }
-        style={{ 
-          borderRadius: 8, 
-          marginBottom: 24,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.09)"
-        }}
-      >
-        {loadingStats ? (
-          <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <Spin size="large" />
-          </div>
-        ) : stats ? (
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ 
-                backgroundColor: "#e6f7ff", 
-                padding: 16, 
-                borderRadius: 8,
-                height: "100%"
-              }}>
-                <Statistic
-                  title={t("profile.stats.totalEntries")}
-                  value={stats.totalEntries}
-                  prefix={<InboxOutlined style={{ color: "#1890ff" }} />}
-                  valueStyle={{ color: "#1890ff" }}
-                />
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ 
-                backgroundColor: "#f6ffed", 
-                padding: 16, 
-                borderRadius: 8,
-                height: "100%"
-              }}>
-                <Statistic
-                  title={t("profile.stats.totalAdjustments")}
-                  value={stats.totalAdjustments}
-                  prefix={<FormOutlined style={{ color: "#52c41a" }} />}
-                  valueStyle={{ color: "#52c41a" }}
-                />
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ 
-                backgroundColor: "#fff7e6", 
-                padding: 16, 
-                borderRadius: 8,
-                height: "100%"
-              }}>
-                <Statistic
-                  title={t("profile.stats.totalAssigneds")}
-                  value={stats.totalAssigneds}
-                  prefix={<UserSwitchOutlined style={{ color: "#fa8c16" }} />}
-                  valueStyle={{ color: "#fa8c16" }}
-                />
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ 
-                backgroundColor: "#fff1f0", 
-                padding: 16, 
-                borderRadius: 8,
-                height: "100%"
-              }}>
-                <Statistic
-                  title={t("profile.stats.totalReserveds")}
-                  value={stats.totalReserveds}
-                  prefix={<ClockCircleOutlined style={{ color: "#f5222d" }} />}
-                  valueStyle={{ color: "#f5222d" }}
-                />
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ 
-                backgroundColor: "#f9f0ff", 
-                padding: 16, 
-                borderRadius: 8,
-                height: "100%"
-              }}>
-                <Statistic
-                  title={t("profile.stats.totalChecked")}
-                  value={stats.totalChecked}
-                  prefix={<CheckCircleOutlined style={{ color: "#722ed1" }} />}
-                  valueStyle={{ color: "#722ed1" }}
-                />
-              </div>
-            </Col>
-          </Row>
-        ) : (
-          <Empty description={t("profile.noStats")} />
-        )}
-      </Card>
+      {/* User Information */}
+      <UserInfoCard 
+        detailedUser={detailedUser} 
+        t={t} 
+        userRole={<UserRoleHelper detailedUser={detailedUser} t={t} />}
+      />
+      
+      {/* Statistics */}
+      <UserStatsCard 
+        stats={stats} 
+        loading={loadingStats} 
+        t={t} 
+      />
 
-      {/* Groups Section */}
-      <Card 
-        title={
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <UserSwitchOutlined style={{ marginRight: 8, color: "#1890ff" }} />
-            <Title level={4} style={{ margin: 0 }}>
-              {t("profile.groupsLabel")}
-            </Title>
-          </div>
-        }
-        style={{ 
-          borderRadius: 8, 
-          marginBottom: 24,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.09)"
-        }}
-      >
-        {renderGroups()}
-      </Card>
+      {/* Groups */}
+      <UserGroupsCard 
+        detailedUser={detailedUser} 
+        t={t} 
+        expandedGroups={expandedGroups} 
+        toggleGroup={toggleGroup} 
+      />
 
-      {/* Permissions Section */}
-      <div>
-        <div style={{ 
-          display: "flex", 
-          alignItems: "center", 
-          marginBottom: 16,
-          paddingBottom: 8,
-          borderBottom: "1px solid #f0f0f0"
-        }}>
-          <LockOutlined style={{ marginRight: 8, color: "#1890ff" }} />
-          <Title level={4} style={{ margin: 0 }}>
-            {t("profile.permissionsLabel")}
-          </Title>
-        </div>
-        {renderPermissions()}
-      </div>
+      {/* Permissions */}
+      <UserPermissionsCard
+        profileUser={profileUser}
+        detailedUser={detailedUser}
+        t={t}
+        expandedPermissionGroups={expandedPermissionGroups}
+        togglePermissionGroup={togglePermissionGroup}
+        getPermissionColor={getPermissionColor}
+        getUserPermissionMap={getUserPermissionMap}
+      />
 
+      {/* Edit Modal */}
       <ProfileDataManagerModal
         open={isModalOpen}
         onClose={() => {

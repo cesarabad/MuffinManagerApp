@@ -1,17 +1,42 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Divider, Checkbox, Tabs, Row, Col, Tag, Card, Typography, Select, Button } from "antd";
+import { 
+  Form, 
+  Divider, 
+  Tabs, 
+  Typography, 
+  Button,
+  message,
+  Input
+} from "antd";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../contexts/auth/auth.context";
-import { GroupedPermissions, GroupEntity, Permission, PermissionEntity } from "../../../models/auth/permisos.model";
-import { SafetyOutlined, LockOutlined, UserOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { 
+  GroupEntity, 
+  PermissionEntity 
+} from "../../../models/auth/permisos.model";
+import { 
+  KeyOutlined,
+  CheckCircleOutlined,
+  UserOutlined,
+  UsergroupAddOutlined,
+  LockOutlined
+} from "@ant-design/icons";
 import { UserDetailedDto } from "../../../models/auth/user-detailed-dto.model";
 import { userService } from "../../../services/user/user.service";
 import { UpdateUserDto } from "../../../models/auth/update-user-dto.model";
 import { RegisterRequest } from "../../../models/auth/register-request.model";
 
+// Import componentes
+import UserInfoSection from "./components/user-info-section.component";
+import BasicInfoTab from "./components/basic-info-tab.component";
+import GroupsTab from "./components/groups-tab.component";
+import PermissionsTab from "./components/permissions-tab.component";
+
+// Styled components
+import { StyledModal } from "./components/styled-components.component";
+
 const { TabPane } = Tabs;
-const { Text } = Typography;
-const { Option } = Select;
+const { Title } = Typography;
 
 interface ProfileDataManagerModalProps {
   open: boolean;
@@ -19,21 +44,28 @@ interface ProfileDataManagerModalProps {
   detailedUser?: UserDetailedDto;
 }
 
-const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ open, onClose, detailedUser }) => {
+const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ 
+  open, 
+  onClose, 
+  detailedUser 
+}) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { hasPermission, updateUser, createUser } = useAuth();
+  const { updateUser, createUser } = useAuth();
   const isEdit = !!detailedUser;
 
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<number[]>([]);
   const [manuallySelectedPermissions, setManuallySelectedPermissions] = useState<number[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [availablePermissions, setAvailablePermissions] = useState<PermissionEntity[]>([]);
   const [availableGroups, setAvailableGroups] = useState<GroupEntity[]>([]);
 
+
   useEffect(() => {
     const fetchAvailablePermissions = async () => {
+      setLoading(true);
       try {
         const { permissions, groups } = await userService.getAvailableUserPermissions();
         
@@ -58,15 +90,18 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ open,
         setAvailableGroups(groups);
       } catch (error) {
         console.error("Error fetching available permissions and groups", error);
+        message.error(t("errors.fetchPermissionsFailed"));
         setAvailablePermissions([]);
         setAvailableGroups([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     if (open) {
       fetchAvailablePermissions();
     }
-  }, [open]);
+  }, [open, t]);
 
   const getPermissionColor = (groupName: string): string => {
     const colors: Record<string, string> = {
@@ -80,11 +115,20 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ open,
     return colors[groupName] || "default";
   };
 
-  const handleSubmit = async (values: any) => {
-    try {
-      if (isEdit) {
+  
 
-        const formData : UpdateUserDto = {
+  const handleSubmit = async () => {
+    try {
+      // Validar el formulario antes de enviar
+      await form.validateFields();
+      
+      // Obtener valores actualizados
+      const values = form.getFieldsValue();
+      
+      setLoading(true);
+      
+      if (isEdit) {
+        const formData: UpdateUserDto = {
           id: values.id,
           dni: values.dni,
           name: values.name,
@@ -95,23 +139,28 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ open,
           permissions: availablePermissions.filter(p => manuallySelectedPermissions.includes(p.id)),
           groups: availableGroups.filter(g => selectedGroups.includes(g.id)),
         };
+        console.log("Submitting user data:", formData);
         await updateUser(formData);
+        message.success(t("profile.updateSuccess"));
       } else {
-
-        const formData : RegisterRequest = {
+        const formData: RegisterRequest = {
           dni: values.dni,
           name: values.name,
           secondName: values.secondName,
-          password: values.password,
+          password: values.password || values.newPassword,
           permissions: availablePermissions.filter(p => manuallySelectedPermissions.includes(p.id)),
           groups: availableGroups.filter(g => selectedGroups.includes(g.id)),
         };
         await createUser(formData);
+        message.success(t("profile.createSuccess"));
       }
 
       onClose();
     } catch (error) {
       console.error("Error submitting user form", error);
+      message.error(t("errors.submitFailed"));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -214,120 +263,22 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ open,
     const allPermissions = [...new Set([...manuallySelectedPermissions, ...Array.from(groupPermissionIds)])];
     setSelectedPermissions(allPermissions);
   };
-  
-  const renderPermissionGroups = () => {
-    const groupPermissionIds = getGroupPermissionIds();
-    
-    // Create a map of permission names to IDs
-    const permissionNameMap = new Map<string, number>();
-    availablePermissions.forEach(p => {
-      permissionNameMap.set(p.name, p.id);
-    });
-
-    // Track rendered permissions to avoid duplicates
-    const renderedPermissions = new Set<string>();
-
-    return Object.entries(GroupedPermissions).map(([groupKey, groupValue]) => {
-      const hasSubGroups = !Array.isArray(groupValue);
-
-      return (
-        <Card
-          key={groupKey}
-          title={
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <SafetyOutlined style={{ marginRight: 8, color: getPermissionColor(groupKey) }} />
-              <Text strong>{t(`permissionGroup.${groupKey}`)}</Text>
-            </div>
-          }
-          style={{ marginBottom: 16, borderRadius: 8 }}
-          size="small"
-        >
-          {hasSubGroups ? (
-            Object.entries(groupValue).map(([subGroupKey, permissions]) => (
-              <div key={subGroupKey} style={{ marginBottom: 16 }}>
-                <Text type="secondary" style={{ display: "block", marginBottom: 8 }}>
-                  {t(`permissionGroup.${subGroupKey}`)}
-                </Text>
-                <Row gutter={[8, 8]}>
-                  {(permissions as Permission[]).map((permission) => {
-                    // Skip if we've already rendered this permission
-                    if (renderedPermissions.has(permission)) return null;
-                    renderedPermissions.add(permission);
-                    
-                    const permId = permissionNameMap.get(permission);
-                    if (!permId) return null;
-                    const inSelectedGroup = groupPermissionIds.includes(permId);
-                    return (
-                      <Col key={permission} span={24}>
-                        <Checkbox
-                          checked={selectedPermissions.includes(permId)}
-                          onChange={(e) => handlePermissionChange(permId, e.target.checked)}
-                          disabled={!hasPermission(permission) || inSelectedGroup}
-                        >
-                          <Tag color={getPermissionColor(subGroupKey)}>
-                            {t(`permission.${permission}`)}
-                          </Tag>
-                          {inSelectedGroup && (
-                            <Text type="secondary" style={{ marginLeft: 8, fontSize: '12px' }}>
-                              ({t("profile.includedInGroup")})
-                            </Text>
-                          )}
-                        </Checkbox>
-                      </Col>
-                    );
-                  })}
-                </Row>
-              </div>
-            ))
-          ) : (
-            <Row gutter={[8, 8]}>
-              {(groupValue as Permission[]).map((permission) => {
-                // Skip if we've already rendered this permission
-                if (renderedPermissions.has(permission)) return null;
-                renderedPermissions.add(permission);
-                
-                const permId = permissionNameMap.get(permission);
-                if (!permId) return null;
-                const inSelectedGroup = groupPermissionIds.includes(permId);
-                return (
-                  <Col key={permission} span={24}>
-                    <Checkbox
-                      checked={selectedPermissions.includes(permId)}
-                      onChange={(e) => handlePermissionChange(permId, e.target.checked)}
-                      disabled={!hasPermission(permission) || inSelectedGroup}
-                    >
-                      <Tag color={getPermissionColor(groupKey)}>
-                        {t(`permission.${permission}`)}
-                      </Tag>
-                      {inSelectedGroup && (
-                        <Text type="secondary" style={{ marginLeft: 8, fontSize: '12px' }}>
-                          ({t("profile.includedInGroup")})
-                        </Text>
-                      )}
-                    </Checkbox>
-                  </Col>
-                );
-              })}
-            </Row>
-          )}
-        </Card>
-      );
-    });
-  };
 
   return (
-    <Modal
+    <StyledModal
       title={isEdit ? t("profile.editTitle") : t("profile.createTitle")}
       open={open}
       onCancel={onClose}
-      onOk={() => form.submit()}
-      okText={isEdit ? t("button.update") : t("button.create")}
-      cancelText={t("button.cancel")}
       width={800}
+      centered
+      maskClosable={false}
       footer={
         <div style={{ textAlign: "left" }}>
           <Divider orientation="left" plain style={{ marginTop: "10px", marginBottom: '10px' }} />
-          <strong>{t("profile.verificationSectionTitle")}</strong>
+          <Title level={5} style={{ margin: '0 0 16px 0' }}>
+            <KeyOutlined style={{ marginRight: 8 }} />
+            {t("profile.verificationSectionTitle")}
+          </Title>
             
           <Form form={form} layout="vertical">
             <Form.Item
@@ -335,8 +286,8 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ open,
               name="password"
               style={{ marginTop: '10px' }}
               rules={[
-          { required: true, message: t("validation.required") },
-          { min: 6, message: t("validation.passwordMinLength", { min: 6 }) },
+                { required: true, message: t("validation.required") },
+                { min: 6, message: t("validation.passwordMinLength", { min: 6 }) },
               ]}
             >
               <Input.Password />
@@ -344,137 +295,85 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({ open,
             
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
               <Button onClick={onClose} style={{ marginRight: 8 }}>
-          {t("button.cancel")}
+                {t("button.cancel")}
               </Button>
-              <Button type="primary" onClick={() => form.submit()}>
-          {isEdit ? t("button.update") : t("button.create")}
+              <Button 
+                type="primary" 
+                onClick={handleSubmit} 
+                loading={loading}
+                icon={<CheckCircleOutlined />}
+              >
+                {isEdit ? t("button.update") : t("button.create")}
               </Button>
             </div>
           </Form>
         </div>
       }
     >
-      <Tabs defaultActiveKey="basicInfo">
+      {isEdit && detailedUser && (
+        <UserInfoSection detailedUser={detailedUser} />
+      )}
+      
+      <Tabs 
+        defaultActiveKey="basicInfo"
+        type="card"
+        size="large"
+        animated={{ inkBar: true, tabPane: true }}
+      >
         <TabPane
-          tab={<><UserOutlined /> {t("profile.basicInfo")}</>}
+          tab={
+            <span>
+              <UserOutlined style={{ marginRight: 8 }} />
+              {t("profile.basicInfo")}
+            </span>
+          }
           key="basicInfo"
         >
-          <Form form={form} layout="vertical" onFinish={handleSubmit}>
-            {isEdit && (
-              <>
-                <Form.Item name="id" hidden><Input /></Form.Item>
-                <Form.Item name="disabled" valuePropName="checked">
-                  <Checkbox>{t("profile.isDisabledLabel")}</Checkbox>
-                </Form.Item>
-              </>
-            )}
-
-            <Form.Item
-              label={t("profile.dniLabel")}
-              name="dni"
-              rules={[{ required: true, message: t("validation.required") }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={t("profile.nameLabel")}
-              name="name"
-              rules={[{ required: true, message: t("validation.required") }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={t("profile.secondNameLabel")}
-              name="secondName"
-              rules={[{ required: true, message: t("validation.required") }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={isEdit ? t("profile.newPasswordLabel") : t("profile.passwordLabel")}
-              name="newPassword"
-              rules={[{ min: 6, message: t("validation.passwordMinLength", { min: 6 }) },
-                { required: !isEdit, message: t("validation.required") }]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              label={t("profile.confirmPasswordLabel")}
-              name="confirmPassword"
-              dependencies={['newPassword']}
-              rules={[
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue('newPassword') === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error(t("validation.passwordsMustMatch")));
-                  },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-          </Form>
+          <BasicInfoTab 
+            form={form} 
+            isEdit={isEdit} 
+            onFinish={handleSubmit} 
+          />
         </TabPane>
 
         <TabPane
-          tab={<><UsergroupAddOutlined /> {t("profile.groupsLabel")}</>}
+          tab={
+            <span>
+              <UsergroupAddOutlined style={{ marginRight: 8 }} />
+              {t("profile.groupsLabel")}
+            </span>
+          }
           key="groups"
         >
-          <div style={{ padding: '0 5px' }}>
-            <Form.Item label={t("profile.selectGroups")}>
-              <Select
-                mode="multiple"
-                style={{ width: '100%' }}
-                placeholder={t("profile.selectGroupsPlaceholder")}
-                value={selectedGroups}
-                onChange={handleGroupChange}
-              >
-                {availableGroups.map(group => (
-                  <Option key={group.id} value={group.id}>{group.name}</Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            {selectedGroups.length > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <Text strong>{t("profile.selectedGroups")}</Text>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
-                  {selectedGroups.map(groupId => {
-                    const group = availableGroups.find(g => g.id === groupId);
-                    return group ? (
-                      <Tag
-                        key={group.id}
-                        color="blue"
-                        closable
-                        onClose={() => handleGroupChange(selectedGroups.filter(id => id !== group.id))}
-                      >
-                        {group.name}
-                      </Tag>
-                    ) : null;
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
+          <GroupsTab 
+            availableGroups={availableGroups}
+            selectedGroups={selectedGroups}
+            handleGroupChange={handleGroupChange}
+            getGroupPermissionIds={getGroupPermissionIds}
+            availablePermissions={availablePermissions}
+            loading={loading}
+          />
         </TabPane>
 
         <TabPane
-          tab={<><LockOutlined /> {t("profile.permissionsLabel")}</>}
+          tab={
+            <span>
+              <LockOutlined style={{ marginRight: 8 }} />
+              {t("profile.permissionsLabel")}
+            </span>
+          }
           key="permissions"
         >
-          <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '0 5px' }}>
-            {renderPermissionGroups()}
-          </div>
+          <PermissionsTab 
+            getPermissionColor={getPermissionColor}
+            availablePermissions={availablePermissions}
+            getGroupPermissionIds={getGroupPermissionIds}
+            selectedPermissions={selectedPermissions}
+            handlePermissionChange={handlePermissionChange}
+          />
         </TabPane>
       </Tabs>
-    </Modal>
+    </StyledModal>
   );
 };
 
