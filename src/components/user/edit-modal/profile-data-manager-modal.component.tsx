@@ -271,6 +271,7 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({
       onCancel={onClose}
       width={800}
       centered
+      isDisabled={detailedUser?.disabled}
       maskClosable={false}
       footer={
         <div style={{ textAlign: "left" }}>

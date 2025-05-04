@@ -1,73 +1,157 @@
-import { Row, Col, Typography, Space, Popconfirm, Badge, Avatar } from "antd";
-import { UserOutlined, IdcardOutlined, FormOutlined, StopOutlined, CheckOutlined } from "@ant-design/icons";
+import { Row, Col, Typography, Space, Popconfirm, Badge, Avatar, Tooltip } from "antd";
+import { IdcardOutlined, FormOutlined, StopOutlined, CheckOutlined } from "@ant-design/icons";
 import { UserDetailedDto } from "../../../../models/auth/user-detailed-dto.model";
 import styled from "styled-components";
 
 const { Title, Text } = Typography;
 
+// Contenedor principal con un diseño más moderno y sutil
 const HeaderContainer = styled.div`
-  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-  border-radius: 12px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+  border-radius: 16px;
   padding: 32px;
   margin-bottom: 24px;
-  color: white;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-    pointer-events: none;
-  }
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
   
   @media (max-width: 768px) {
     padding: 24px 16px;
   }
 `;
 
-const HeaderButton = styled.button`
+// Barra superior de acento de color
+const AccentBar = styled.div<{ $isDisabled?: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: ${props => props.$isDisabled 
+    ? 'linear-gradient(90deg, #ff4d4f 0%, #ff7875 100%)' 
+    : 'linear-gradient(90deg, #1890ff 0%, #36cfc9 100%)'};
+`;
+
+// Botones con diseño más moderno
+const ActionButton = styled.button<{ variant?: 'primary' | 'danger' | 'success' }>`
   background-color: white;
-  color: #1890ff;
-  border: none;
-  border-radius: 2px;
-  padding: 0 15px;
+  color: ${props => {
+    if (props.variant === 'danger') return '#ff4d4f';
+    if (props.variant === 'success') return '#52c41a';
+    return '#1890ff';
+  }};
+  border: 1px solid ${props => {
+    if (props.variant === 'danger') return '#ff4d4f';
+    if (props.variant === 'success') return '#52c41a';
+    return '#1890ff';
+  }};
+  border-radius: 6px;
+  padding: 0 16px;
   height: 40px;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
   
   &:hover {
-    background-color: #f0f0f0;
-    color: #096dd9;
+    background-color: ${props => {
+      if (props.variant === 'danger') return '#ff4d4f';
+      if (props.variant === 'success') return '#52c41a';
+      return '#1890ff';
+    }};
+    color: white;
   }
   
   &:disabled {
     background-color: #f5f5f5;
     color: #d9d9d9;
+    border-color: #d9d9d9;
     cursor: not-allowed;
   }
 `;
 
-const UserAvatar = styled(Avatar)`
-  width: 120px;
-  height: 120px;
-  font-size: 48px;
+// Avatar circular mejorado
+const UserAvatar = styled(Avatar)<{ $isDisabled?: boolean }>`
+  width: 110px;
+  height: 110px;
+  font-size: 42px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: ${props => props.$isDisabled ? '#f5f5f5' : 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)'};
+  color: ${props => props.$isDisabled ? 'red' : 'white'};
+  border: 4px solid ${props => props.$isDisabled ? '#ff4d4f' : 'white'};
+  box-shadow: ${props => props.$isDisabled ? '0 2px 8px rgba(0, 0, 0, 0.06)' : '0 8px 24px rgba(24, 144, 255, 0.25)'};
+`;
+
+// Contenedor para el avatar y detalles relacionados
+const AvatarSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+`;
+
+// Badge de estado con mejor diseño
+const StatusBadge = styled(Badge)`
+  .ant-badge-count {
+    box-shadow: 0 0 0 2px white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+`;
+
+// Etiqueta de rol con diseño original
+const RoleTag = styled.div`
+  margin-top: 16px;
   color: #1890ff;
-  border: 4px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 16px rgba(24, 144, 255, 0.25);
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+// Contenedor de información del usuario
+const UserInfoContainer = styled.div`
+  padding-left: 16px;
+  
+  @media (max-width: 768px) {
+    padding-left: 0;
+    margin-top: 16px;
+  }
+`;
+
+// Línea divisoria para la información
+const InfoDivider = styled.div`
+  height: 1px;
+  background: #f0f0f0;
+  margin: 16px 0;
+`;
+
+// Contenedor de información
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+  
+  .info-icon {
+    color: #8c8c8c;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+  
+  .info-text {
+    color: #262626;
+    font-size: 15px;
+  }
 `;
 
 interface ProfileHeaderProps {
@@ -97,55 +181,63 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
   return (
     <HeaderContainer>
+      <AccentBar $isDisabled={detailedUser.disabled}/>
       <Row gutter={[24, 24]} align="middle">
-        <Col xs={24} md={6} style={{ textAlign: "center" }}>
-          <div style={{ position: "relative", display: "inline-block" }}>
-            <UserAvatar size={120} icon={<UserOutlined />}>
+        <Col xs={24} sm={8} md={6} style={{ textAlign: "center" }}>
+          <AvatarSection>
+            <UserAvatar 
+              $isDisabled={detailedUser.disabled}
+              size={110}
+              style={{ marginBottom: 5 }}
+            >
               {getUserInitial()}
             </UserAvatar>
+            
             {detailedUser.disabled && (
-              <Badge 
-                count={<StopOutlined style={{ color: "white" }} />} 
-                style={{ 
-                  backgroundColor: "#ff4d4f",
-                  boxShadow: "0 0 0 2px white",
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
+              <StatusBadge 
+                count={
+                  <Tooltip title={t("profile.inactiveLabel")}>
+                    <StopOutlined style={{ color: "red" }} />
+                  </Tooltip>
+                } 
+              style={{ backgroundColor: "#ff4d4f"}}
               />
             )}
-          </div>
-          <div style={{ marginTop: 16 }}>
-            {userRole}
-          </div>
+            
+            <RoleTag>
+              {userRole}
+            </RoleTag>
+          </AvatarSection>
         </Col>
         
-        <Col xs={24} md={18}>
-          <div>
-            <Title level={2} style={{ margin: 0, color: "white" }}>
+        <Col xs={24} sm={16} md={18}>
+          <UserInfoContainer>
+            <Title level={3} style={{ margin: 0, fontWeight: 600, color: "#262626" }}>
               {detailedUser.name} {detailedUser.secondName}
+              {detailedUser.disabled && (
+                <Text type="secondary" style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 12 }}>
+                  ({t("profile.inactiveLabel")})
+                </Text>
+              )}
             </Title>
             
-            <div style={{ margin: "16px 0", display: "flex", alignItems: "center" }}>
-              <IdcardOutlined style={{ marginRight: 8 }} />
-              <Text style={{ color: "rgba(255, 255, 255, 0.85)", fontSize: 16 }}>
-                {detailedUser.dni}
-              </Text>
-            </div>
+            <InfoItem>
+              <IdcardOutlined className="info-icon" />
+              <Text className="info-text">{detailedUser.dni}</Text>
+            </InfoItem>
             
-            <div style={{ margin: "24px 0 8px" }}>
-              <Space size="large">
+            <InfoDivider />
+            
+            <div style={{ margin: "16px 0 8px" }}>
+              <Space size="middle">
                 {canEdit && (
-                  <HeaderButton
+                    <ActionButton
                     onClick={onEdit}
                     disabled={detailedUser.disabled && !isOwnProfile}
-                  >
+                    variant={detailedUser.disabled ? "danger" : "primary"}
+                    >
                     <FormOutlined /> {t("button.edit")}
-                  </HeaderButton>
+                    </ActionButton>
                 )}
                 
                 {canDisable && (
@@ -154,22 +246,19 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     onConfirm={onToggleStatus}
                     okText={t("button.yes")}
                     cancelText={t("button.no")}
-                    placement="topRight"
+                    placement="top"
                   >
-                    <HeaderButton 
-                      style={{
-                        backgroundColor: !detailedUser.disabled ? "#fff1f0" : "white",
-                        color: !detailedUser.disabled ? "#ff4d4f" : "#52c41a"
-                      }}
+                    <ActionButton 
+                      variant={!detailedUser.disabled ? "danger" : "success"}
                     >
                       {!detailedUser.disabled ? <StopOutlined /> : <CheckOutlined />}
                       {!detailedUser.disabled ? t("button.disable") : t("button.enable")}
-                    </HeaderButton>
+                    </ActionButton>
                   </Popconfirm>
                 )}
               </Space>
             </div>
-          </div>
+          </UserInfoContainer>
         </Col>
       </Row>
     </HeaderContainer>

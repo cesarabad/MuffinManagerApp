@@ -22,9 +22,10 @@ interface ProductStockRowProps {
   productStock: ProductStockResponseDto;
   productReference?: string;
   productDescription?: string;
+  productId: number;
 }
 
-export function ProductStockRow({ productStock, productDescription, productReference }: ProductStockRowProps) {
+export function ProductStockRow({ productStock, productDescription, productReference, productId }: ProductStockRowProps) {
   const stockBadgeClass = productStock.stock > 0 ? 'stock-badge' : 'stock-badge zero';
   const { t } = useTranslation();
   const [historicModalVisible, setHistoricModalVisible] = useState(false);
@@ -582,7 +583,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
         visible={isProductStockCreateModalVisible}
         onClose={() => setIsProductStockCreateModalVisible(false)}
         productStock={productStock}
-        productId={1}
+        productId={productId}
         productDescription={`${productReference} - ${productDescription}`}
         stockRequired={true}
       />

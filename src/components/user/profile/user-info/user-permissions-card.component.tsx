@@ -1,14 +1,14 @@
-import { Card, Row, Col, Tag, Badge, Typography, Button } from "antd";
+import { Card, Tag, Badge, Typography, Button } from "antd";
 import { LockOutlined, SafetyOutlined } from "@ant-design/icons";
 import { UserDetailedDto } from "../../../../models/auth/user-detailed-dto.model";
 import { GroupedPermissions, Permission, User } from "../../../../models/index.model";
+import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
 
 interface UserPermissionsCardProps {
   profileUser: User;
   detailedUser: UserDetailedDto;
-  t: (key: string) => string;
   expandedPermissionGroups: Record<string, boolean>;
   togglePermissionGroup: (groupKey: string) => void;
   getPermissionColor: (groupName: string) => string;
@@ -18,12 +18,12 @@ interface UserPermissionsCardProps {
 const UserPermissionsCard: React.FC<UserPermissionsCardProps> = ({
   profileUser,
   detailedUser,
-  t,
   expandedPermissionGroups,
   togglePermissionGroup,
   getPermissionColor,
   getUserPermissionMap
 }) => {
+    const { t } = useTranslation();
   const renderPermissions = () => {
     if (!profileUser || !detailedUser) return null;
 
@@ -141,33 +141,45 @@ const UserPermissionsCard: React.FC<UserPermissionsCardProps> = ({
                       <Text strong>{t(`permissionGroup.${subgroup}`)}</Text>
                     </div>
                   )}
-                  <Row gutter={[8, 8]}>
+                  {/* Modified this section to use flex container instead of Row/Col grid */}
+                  <div style={{ 
+                    display: "flex", 
+                    flexWrap: "wrap", 
+                    gap: "4px" // Smaller gap between tags
+                  }}>
                     {permissions.map(perm => (
-                      <Col key={perm} xs={24} sm={12} md={8} lg={6}>
-                        <Tag 
-                          color={getPermissionColor(subgroup !== 'default' ? subgroup : groupKey)}
-                          style={{ 
-                            padding: "4px 8px", 
-                            margin: "4px 4px",
-                            borderRadius: 4,
-                            fontSize: "13px"
-                          }}
-                        >
-                          {t(`permission.${perm}`)}
-                        </Tag>
-                      </Col>
+                      <Tag 
+                        key={perm}
+                        color={getPermissionColor(subgroup !== 'default' ? subgroup : groupKey)}
+                        style={{ 
+                          padding: "4px 8px", 
+                          margin: "2px 0", // Reduced margin to bring tags closer
+                          borderRadius: 4,
+                          fontSize: "13px"
+                        }}
+                      >
+                        {t(`permission.${perm}`)}
+                      </Tag>
                     ))}
-                  </Row>
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
             <div style={{ padding: "4px 0" }}>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {/* Also modified this section for collapsed view */}
+              <div style={{ 
+                display: "flex", 
+                flexWrap: "wrap", 
+                gap: "4px" // Smaller gap between tags
+              }}>
                 {groupPermissions.slice(0, 3).map((item, index) => (
                   <Tag 
                     key={index}
                     color={getPermissionColor(item.subgroup || groupKey)}
+                    style={{
+                      margin: "0" // Remove default margin
+                    }}
                   >
                     {t(`permission.${item.permission}`)}
                   </Tag>
@@ -175,9 +187,9 @@ const UserPermissionsCard: React.FC<UserPermissionsCardProps> = ({
                 {permissionCount > 3 && (
                   <Tag 
                     color="default"
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", margin: "0" }}
                   >
-                    +{permissionCount - 3} más
+                    {t('button.seeMore', { count: permissionCount - 3})}
                   </Tag>
                 )}
               </div>

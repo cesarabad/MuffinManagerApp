@@ -92,7 +92,7 @@ const UserGroupsCard: React.FC<UserGroupsCardProps> = ({
                             padding: "2px 8px"
                           }}
                         >
-                          {permission.name}
+                          {t(`permission.${permission.name}`)}
                         </Tag>
                       ))}
                     </div>

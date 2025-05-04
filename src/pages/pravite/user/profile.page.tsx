@@ -16,7 +16,6 @@ import { toast } from "react-toastify";
 import {
   BackButton,
   ProfileHeader,
-  UserInfoCard,
   UserStatsCard,
   UserGroupsCard,
   UserPermissionsCard,
@@ -27,7 +26,7 @@ const { Text } = Typography;
 
 const ProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId?: string }>();
-  const { user: currentUser, hasPermission } = useAuth();
+  const { user: currentUser, hasPermission, isAuthenticated } = useAuth();
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stats, setStats] = useState<UserStats | null>(null);
@@ -43,6 +42,9 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!currentUser && isAuthenticated()) {
+        location.reload();
+      }
       // If userId is provided and the user has permission to manage users, fetch that user
       if (userId && hasPermission(Permission.ManageUsers)) {
         try {
@@ -238,12 +240,7 @@ const ProfilePage: React.FC = () => {
         userRole={<UserRoleHelper detailedUser={detailedUser} t={t} />}
       />
 
-      {/* User Information */}
-      <UserInfoCard 
-        detailedUser={detailedUser} 
-        t={t} 
-        userRole={<UserRoleHelper detailedUser={detailedUser} t={t} />}
-      />
+     
       
       {/* Statistics */}
       <UserStatsCard 
@@ -264,7 +261,6 @@ const ProfilePage: React.FC = () => {
       <UserPermissionsCard
         profileUser={profileUser}
         detailedUser={detailedUser}
-        t={t}
         expandedPermissionGroups={expandedPermissionGroups}
         togglePermissionGroup={togglePermissionGroup}
         getPermissionColor={getPermissionColor}

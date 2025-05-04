@@ -29,7 +29,7 @@ const BackButton: React.FC<BackButtonProps> = ({ t }) => {
       style={{ marginBottom: 16 }}
       size="large"
     >
-      {t("button.backToUsers")}
+      {t("profile.backToUsers")}
     </ButtonHighlight>
   );
 };

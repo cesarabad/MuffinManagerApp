@@ -84,7 +84,7 @@ export function ProductRow({ product }: ProductRowProps) {
           <Row gutter={[12, 12]}>
             {product.stockDetails.map((productStock) => (
               <Col xs={24} md={12} lg={8} xl={6} key={productStock.id}>
-                <ProductStockRow productStock={productStock} productDescription={product.product.description} productReference={product.product.reference}/>
+                <ProductStockRow productStock={productStock} productDescription={product.product.description} productId={product.product.id} productReference={product.product.reference}/>
               </Col>
             ))}
           </Row>

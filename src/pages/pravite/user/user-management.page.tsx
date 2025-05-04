@@ -126,16 +126,16 @@ const columns = [
         key: "secondName",
     },
     {
-        title: t("profile.status"),
+        title: t("profile.statusLabel"),
         key: "isDisabled",
         render: (_: any, record: UserSafeDto) => (
             <Tag color={!record.disabled ? "success" : "error"}>
-                {!record.disabled ? t("user.active") : t("user.disabled")}
+                {!record.disabled ? t("profile.statusActive") : t("profile.statusDisabled")}
             </Tag>
         ),
     },
     {
-        title: t("table.actions"),
+        title: t("profile.actionsLabel"),
         key: "actions",
         width: 180,
         render: (_: any, record: UserSafeDto) => (
@@ -187,7 +187,7 @@ const columns = [
           <div style={{ display: "flex", alignItems: "center" }}>
             <UserSwitchOutlined style={{ marginRight: 8, color: "#1890ff" }} />
             <Title level={4} style={{ margin: 0 }}>
-              {t("user.management")}
+              {t("profile.managementLabel")}
             </Title>
           </div>
         }
@@ -202,7 +202,7 @@ const columns = [
             icon={<PlusOutlined />}
             onClick={handleAddUser}
           >
-            {t("user.addUser")}
+            {t("profile.addUser")}
           </Button>
         }
       >

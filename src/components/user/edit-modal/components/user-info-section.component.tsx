@@ -25,7 +25,7 @@ const UserInfoSection: React.FC<UserInfoSectionProps> = ({ detailedUser }) => {
 
   return (
     <UserInfoContainer>
-      <UserAvatar icon={<UserOutlined />} size={64}>
+      <UserAvatar isDisabled={detailedUser.disabled} icon={<UserOutlined />} size={64}>
         {getUserInitial()}
       </UserAvatar>
       <div>
@@ -43,7 +43,7 @@ const UserInfoSection: React.FC<UserInfoSectionProps> = ({ detailedUser }) => {
             </Tag>
           ))}
           {detailedUser.disabled && (
-            <Tag color="red">{t("profile.disabled")}</Tag>
+            <Tag color="red">{t("profile.isDisabledLabel")}</Tag>
           )}
         </TagGroup>
       </div>

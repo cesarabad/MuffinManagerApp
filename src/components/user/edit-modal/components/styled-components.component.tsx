@@ -1,37 +1,38 @@
 import styled from 'styled-components';
 import { Card, Modal, Avatar } from 'antd';
 
-export const StyledModal = styled(Modal)`
-  .ant-modal-content {
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  }
-  
-  .ant-modal-header {
-    border-radius: 12px 12px 0 0;
-    padding: 20px 24px;
-    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-    border-bottom: none;
-  }
-  
-  .ant-modal-title {
-    color: white;
-    font-weight: 600;
-    font-size: 18px;
-  }
-  
-  .ant-modal-body {
-    padding: 24px;
-  }
-  
-  .ant-tabs-nav {
-    margin-bottom: 20px;
-  }
-  
-  .ant-form-item-label > label {
-    font-weight: 500;
-    color: #222;
-  }
+export const StyledModal = styled(Modal)<{ isDisabled?: boolean }>`
+    .ant-modal-content {
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    .ant-modal-header {
+        border-radius: 12px 12px 0 0;
+        padding: 20px 24px;
+        background: ${({ isDisabled }) =>
+            isDisabled ? 'linear-gradient(135deg, #ff4d4f 0%, #d9363e 100%)' : 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)'};
+        border-bottom: none;
+    }
+    
+    .ant-modal-title {
+        color: ${({ isDisabled }) => (isDisabled ? '#fff5f5' : 'white')};
+        font-weight: 600;
+        font-size: 18px;
+    }
+    
+    .ant-modal-body {
+        padding: 24px;
+    }
+    
+    .ant-tabs-nav {
+        margin-bottom: 20px;
+    }
+    
+    .ant-form-item-label > label {
+        font-weight: 500;
+        color: '#222';
+    }
 `;
 
 export const PermissionCard = styled(Card)`
@@ -64,19 +65,22 @@ export const UserInfoContainer = styled.div`
   }
 `;
 
-export const UserAvatar = styled(Avatar)`
-  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-  font-size: 24px;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 16px;
-  
-  @media (max-width: 576px) {
-    margin-bottom: 12px;
-  }
+export const UserAvatar = styled(Avatar)<{ isDisabled?: boolean }>`
+    background: ${({ isDisabled }) =>
+        isDisabled
+            ? 'linear-gradient(135deg, #ff4d4f 0%, #d9363e 100%)'
+            : 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)'};
+    font-size: 24px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    
+    @media (max-width: 576px) {
+        margin-bottom: 12px;
+    }
 `;
 
 export const TagGroup = styled.div`

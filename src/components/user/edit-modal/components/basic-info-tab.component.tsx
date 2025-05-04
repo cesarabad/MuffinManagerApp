@@ -26,11 +26,36 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({ form, isEdit, onFinish }) =
             name="disabled" 
             valuePropName="checked"
             style={{ marginBottom: 24 }}
-          >
-            <Checkbox>
-              <Tag color="red">{t("profile.isDisabledLabel")}</Tag>
-            </Checkbox>
-          </Form.Item>
+            label={
+                <Space>
+                  <UserOutlined />
+                  {t("profile.activateUserLabel")}
+                </Space>
+              }
+            >
+                <Checkbox style={{ display: 'none' }}>
+                </Checkbox>
+
+                <Form.Item 
+                    noStyle 
+                    shouldUpdate={(prevValues, currentValues) => prevValues.disabled !== currentValues.disabled}
+                >
+                    {({ getFieldValue, setFieldsValue }) => {
+                    const disabled = getFieldValue('disabled');
+
+                    return (
+                        <Tag
+                        color={disabled ? "red" : "green"}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setFieldsValue({ disabled: !disabled })}
+                        >
+                        {t(disabled ? "profile.isDisabledLabel" : "profile.isEnabledLabel")}
+                        </Tag>
+                    );
+                    }}
+                </Form.Item>
+            </Form.Item>
+
         </>
       )}
 

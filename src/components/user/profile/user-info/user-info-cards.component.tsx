@@ -1,99 +1,275 @@
-import { Card, Row, Col } from "antd";
-import { UserOutlined, IdcardOutlined, CrownOutlined } from "@ant-design/icons";
-import styled from "styled-components";
+import { Row, Col, Typography, Space, Popconfirm, Badge, Avatar, Tooltip } from "antd";
+import { IdcardOutlined, FormOutlined, StopOutlined, CheckOutlined } from "@ant-design/icons";
 import { UserDetailedDto } from "../../../../models/auth/user-detailed-dto.model";
+import styled from "styled-components";
 
-const InfoCardContainer = styled.div`
+const { Title, Text } = Typography;
+
+// Contenedor principal con un diseño más moderno y sutil
+const HeaderContainer = styled.div`
+  background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+  
+  @media (max-width: 768px) {
+    padding: 24px 16px;
+  }
+`;
+
+// Barra superior de acento de color
+const AccentBar = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #1890ff 0%, #36cfc9 100%);
+`;
+
+// Botones con diseño más moderno
+const ActionButton = styled.button<{ variant?: 'primary' | 'danger' | 'success' }>`
   background-color: white;
-  border-radius: 10px;
-  padding: 16px;
-  height: 100%;
+  color: ${props => {
+    if (props.variant === 'danger') return '#ff4d4f';
+    if (props.variant === 'success') return '#52c41a';
+    return '#1890ff';
+  }};
+  border: 1px solid ${props => {
+    if (props.variant === 'danger') return '#ff4d4f';
+    if (props.variant === 'success') return '#52c41a';
+    return '#1890ff';
+  }};
+  border-radius: 6px;
+  padding: 0 16px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: ${props => {
+      if (props.variant === 'danger') return '#ff4d4f';
+      if (props.variant === 'success') return '#52c41a';
+      return '#1890ff';
+    }};
+    color: white;
+  }
+  
+  &:disabled {
+    background-color: #f5f5f5;
+    color: #d9d9d9;
+    border-color: #d9d9d9;
+    cursor: not-allowed;
+  }
+`;
+
+// Avatar circular mejorado
+const UserAvatar = styled(Avatar)<{ $isDisabled?: boolean }>`
+  width: 110px;
+  height: 110px;
+  font-size: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${props => props.$isDisabled ? '#f5f5f5' : 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)'};
+  color: ${props => props.$isDisabled ? '#bfbfbf' : 'white'};
+  border: 4px solid white;
+  box-shadow: ${props => props.$isDisabled ? '0 2px 8px rgba(0, 0, 0, 0.06)' : '0 8px 24px rgba(24, 144, 255, 0.25)'};
+`;
+
+// Contenedor para el avatar y detalles relacionados
+const AvatarSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+`;
+
+// Badge de estado con mejor diseño
+const StatusBadge = styled(Badge)`
+  .ant-badge-count {
+    box-shadow: 0 0 0 2px white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+`;
+
+// Etiqueta de rol con diseño que coincide con UserInfoCard
+const RoleTag = styled.div`
+  margin-top: 16px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: white;
+  color: #722ed1;
+  font-size: 14px;
+  font-weight: 500;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #722ed1;
+  display: inline-block;
   transition: all 0.3s;
-  border-left: 4px solid transparent;
   
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+`;
+
+// Contenedor de información del usuario
+const UserInfoContainer = styled.div`
+  padding-left: 16px;
   
-  .info-label {
-    color: #8c8c8c;
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-  
-  .info-value {
-    font-size: 16px;
-    font-weight: 500;
+  @media (max-width: 768px) {
+    padding-left: 0;
+    margin-top: 16px;
   }
 `;
 
-interface UserInfoCardProps {
+// Línea divisoria para la información
+const InfoDivider = styled.div`
+  height: 1px;
+  background: #f0f0f0;
+  margin: 16px 0;
+`;
+
+// Contenedor de información
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+  
+  .info-icon {
+    color: #8c8c8c;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+  
+  .info-text {
+    color: #262626;
+    font-size: 15px;
+  }
+`;
+
+interface ProfileHeaderProps {
   detailedUser: UserDetailedDto;
+  canEdit: boolean;
+  canDisable: boolean;
+  isOwnProfile: boolean;
   t: (key: string) => string;
+  onEdit: () => void;
+  onToggleStatus: () => void;
   userRole: React.ReactNode;
 }
 
-const UserInfoCard: React.FC<UserInfoCardProps> = ({ detailedUser, t, userRole }) => {
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+  detailedUser,
+  canEdit,
+  canDisable,
+  isOwnProfile,
+  t,
+  onEdit,
+  onToggleStatus,
+  userRole
+}) => {
+  const getUserInitial = () => {
+    return detailedUser.name.charAt(0).toUpperCase();
+  };
+
   return (
-    <Card 
-      title={
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <UserOutlined style={{ marginRight: 12, color: "#1890ff", fontSize: 20 }} />
-          <span style={{ fontSize: 18 }}>{t("profile.personalInfo")}</span>
-        </div>
-      }
-      style={{ 
-        borderRadius: 12, 
-        marginBottom: 24,
-        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-        overflow: "hidden"
-      }}
-      headStyle={{ padding: "16px 24px" }}
-      bodyStyle={{ padding: 24 }}
-    >
-      <Row gutter={[24, 24]}>
-        <Col xs={24} sm={12} md={6}>
-          <InfoCardContainer style={{ borderLeftColor: "#1890ff" }}>
-            <div className="info-label">
-              <IdcardOutlined style={{ marginRight: 8 }} />
-              {t("profile.dniLabel")}
-            </div>
-            <div className="info-value">{detailedUser.dni}</div>
-          </InfoCardContainer>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <InfoCardContainer style={{ borderLeftColor: "#52c41a" }}>
-            <div className="info-label">
-              <UserOutlined style={{ marginRight: 8 }} />
-              {t("profile.nameLabel")}
-            </div>
-            <div className="info-value">{detailedUser.name}</div>
-          </InfoCardContainer>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <InfoCardContainer style={{ borderLeftColor: "#fa8c16" }}>
-            <div className="info-label">
-              <UserOutlined style={{ marginRight: 8 }} />
-              {t("profile.secondNameLabel")}
-            </div>
-            <div className="info-value">{detailedUser.secondName}</div>
-          </InfoCardContainer>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <InfoCardContainer style={{ borderLeftColor: "#722ed1" }}>
-            <div className="info-label">
-              <CrownOutlined style={{ marginRight: 8 }} />
-              {t("profile.roleLabel")}
-            </div>
-            <div className="info-value">
+    <HeaderContainer>
+      <AccentBar />
+      <Row gutter={[24, 24]} align="middle">
+        <Col xs={24} sm={8} md={6} style={{ textAlign: "center" }}>
+          <AvatarSection>
+            <UserAvatar 
+              $isDisabled={detailedUser.disabled}
+              size={110}
+            >
+              {getUserInitial()}
+            </UserAvatar>
+            
+            {detailedUser.disabled && (
+              <StatusBadge 
+                count={
+                  <Tooltip title={t("user.disabled")}>
+                    <StopOutlined style={{ color: "white" }} />
+                  </Tooltip>
+                } 
+                style={{ backgroundColor: "#ff4d4f" }}
+              />
+            )}
+            
+            <RoleTag>
               {userRole}
+            </RoleTag>
+          </AvatarSection>
+        </Col>
+        
+        <Col xs={24} sm={16} md={18}>
+          <UserInfoContainer>
+            <Title level={3} style={{ margin: 0, fontWeight: 600, color: "#262626" }}>
+              {detailedUser.name} {detailedUser.secondName}
+              {detailedUser.disabled && (
+                <Text type="secondary" style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 12 }}>
+                  ({t("user.inactive")})
+                </Text>
+              )}
+            </Title>
+            
+            <InfoItem>
+              <IdcardOutlined className="info-icon" />
+              <Text className="info-text">{detailedUser.dni}</Text>
+            </InfoItem>
+            
+            <InfoDivider />
+            
+            <div style={{ margin: "16px 0 8px" }}>
+              <Space size="middle">
+                {canEdit && (
+                  <ActionButton
+                    onClick={onEdit}
+                    disabled={detailedUser.disabled && !isOwnProfile}
+                    variant="primary"
+                  >
+                    <FormOutlined /> {t("button.edit")}
+                  </ActionButton>
+                )}
+                
+                {canDisable && (
+                  <Popconfirm
+                    title={t(!detailedUser.disabled ? "user.confirmDisable" : "user.confirmEnable")}
+                    onConfirm={onToggleStatus}
+                    okText={t("button.yes")}
+                    cancelText={t("button.no")}
+                    placement="top"
+                  >
+                    <ActionButton 
+                      variant={!detailedUser.disabled ? "danger" : "success"}
+                    >
+                      {!detailedUser.disabled ? <StopOutlined /> : <CheckOutlined />}
+                      {!detailedUser.disabled ? t("button.disable") : t("button.enable")}
+                    </ActionButton>
+                  </Popconfirm>
+                )}
+              </Space>
             </div>
-          </InfoCardContainer>
+          </UserInfoContainer>
         </Col>
       </Row>
-    </Card>
+    </HeaderContainer>
   );
 };
 
-export default UserInfoCard;
+export default ProfileHeader;
