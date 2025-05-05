@@ -1,6 +1,7 @@
 export enum Permission {
     Dev = 'dev',
     SuperAdmin = 'super_admin',
+    Employee = 'employee',
     ManageUsers = 'manage_users',
     ManageData = 'manage_data',
     ManageStock = 'manage_stock',
@@ -39,5 +40,5 @@ export const GroupedPermissions: Record<
     Permission.ManageStock,
   ],
   users: [Permission.CreateUsers, Permission.ManageUsers],
-  role: [Permission.Dev, Permission.SuperAdmin],
+  role: [Permission.Dev, Permission.SuperAdmin, Permission.Employee],
 };
