@@ -4,19 +4,9 @@ export enum Permission {
     ManageUsers = 'manage_users',
     ManageData = 'manage_data',
     ManageStock = 'manage_stock',
-    ManageMovementStock = 'manage_movement_stock',
     GetData = 'get_data',
     GetStock = 'get_stock',
-    GetProductsData = 'get_products_data',
-    GetProducts = 'get_products',
-    GetProductItems = 'get_product_items',
-    GetBaseProductItems = 'get_base_product_items',
-    GetBrands = 'get_brands',
-    GetBoxes = 'get_box',
-    GetMuffinShapes = 'get_muffin_shapes',
-    GetPackagePrints = 'get_package_print',
-    CreateUsers = 'create_users',
-    DisableUsers = 'disable_users'
+    CreateUsers = 'create_users'
   }
 
 export interface PermissionEntity {
@@ -40,27 +30,14 @@ export const GroupedPermissions: Record<
   string,
   PermissionList | Record<string, PermissionList>
 > = {
-  data: {
-    general: [
+  data: [
       Permission.GetData,
       Permission.ManageData,
-      Permission.GetBrands,
-      Permission.GetBoxes,
-      Permission.GetMuffinShapes,
-      Permission.GetPackagePrints,
-    ],
-    products: [
-      Permission.GetProductsData,
-      Permission.GetProducts,
-      Permission.GetProductItems,
-      Permission.GetBaseProductItems,
-    ],
-  },
+  ],
   stock: [
     Permission.GetStock,
     Permission.ManageStock,
-    Permission.ManageMovementStock,
   ],
-  users: [Permission.CreateUsers, Permission.DisableUsers, Permission.ManageUsers],
+  users: [Permission.CreateUsers, Permission.ManageUsers],
   admin: [Permission.Dev, Permission.SuperAdmin],
 };

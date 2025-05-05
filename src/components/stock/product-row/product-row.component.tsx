@@ -5,8 +5,6 @@ import './product-row.style.css';
 import { useTranslation } from 'react-i18next';
 import StockHistoryModal from '../movement-stock/movement-stock-history-modal.component';
 import { useState } from 'react';
-import { useAuth } from '../../../contexts/auth/auth.context';
-import { Permission } from '../../../models/index.model';
 
 const { Title, Text } = Typography;
 
@@ -18,7 +16,6 @@ export function ProductRow({ product }: ProductRowProps) {
   const totalStock = product.stockDetails.reduce((sum, item) => sum + item.stock, 0);
   const { t } = useTranslation();
   const [historicModalVisible, setHistoricModalVisible] = useState(false);
-  const { hasPermission } = useAuth();
 
   const openHistoricModal = () => setHistoricModalVisible(true);
   const closeHistoricModal = () => setHistoricModalVisible(false);
@@ -39,7 +36,6 @@ export function ProductRow({ product }: ProductRowProps) {
               type="primary"
               onClick={() => openHistoricModal()}
               className="primary-button"
-              disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock) && !hasPermission(Permission.GetStock)}
             >
               {t('stock.historic')}
             </Button>

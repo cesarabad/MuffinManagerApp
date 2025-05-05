@@ -197,7 +197,7 @@ export function ProductStockRow({ productStock, productDescription, productRefer
             <Button
             className="action-button reserves-button"
             onClick={() => setReservesModalVisible(true)}
-            disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
+            disabled={!hasPermission(Permission.ManageStock)}
             >
             {t('stock.reserves')}
             </Button>

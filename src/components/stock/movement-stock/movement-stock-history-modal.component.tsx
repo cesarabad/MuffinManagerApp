@@ -212,7 +212,7 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
             )}
             type="primary"
             style={{ marginRight: 8 }}
-            disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
+            disabled={!hasPermission(Permission.ManageStock)}
           >
             {t('stock.actions.endReserve')}
           </Button>
@@ -225,7 +225,7 @@ const StockHistoryModal: React.FC<StockHistoryModalProps> = ({ visible, onClose,
             )}
             type="default"
             style={{ whiteSpace: "normal", wordBreak: "break-word", maxWidth: 150, padding: 3 }}
-            disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
+            disabled={!hasPermission(Permission.ManageStock)}
           >
             {t('stock.actions.undoMovement')}
           </Button>)}

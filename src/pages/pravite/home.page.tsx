@@ -49,7 +49,7 @@ const HomePage = () => {
             title={t('home.cards.stock.title')}
             description={t('home.cards.stock.description')}
             onClick={() => handleCardClick('manageStock')}
-            disabled={!hasPermission(Permission.ManageStock)}
+            disabled={!hasPermission(Permission.ManageStock) && !hasPermission(Permission.GetStock)}
           />
         </Col>
 

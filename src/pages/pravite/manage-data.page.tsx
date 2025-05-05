@@ -24,19 +24,19 @@ const ManageDataPage = () => {
 
   const handleSelect = (key: string) => {
     switch (key) {
-      case Permission.GetProductsData:
+      case 'productData':
         navigate(`/private/${PrivateRoutes.MANAGE_PRODUCTS_DATA}`);
         break;
-      case Permission.GetBoxes:
+      case 'boxes':
         navigate(`/private/${PrivateRoutes.MANAGE_BOX}`);
         break;
-      case Permission.GetMuffinShapes:
+      case 'muffinShapes':
         navigate(`/private/${PrivateRoutes.MANAGE_MUFFIN_SHAPE}`);
         break;
-      case Permission.GetPackagePrints:
+      case 'packagePrints':
         navigate(`/private/${PrivateRoutes.MANAGE_PACKAGE_PRINT}`);
         break;
-      case Permission.GetBrands:
+      case 'brands':
         navigate(`/private/${PrivateRoutes.MANAGE_BRANDS}`);
         break;
       default:
@@ -48,35 +48,35 @@ const ManageDataPage = () => {
   }
   const options = [
     {
-      key: Permission.GetProductsData,
+      key: 'productData',
       title: t('manageData.product.title'),
       description: t('manageData.product.description'),
       icon: faCubes,
       color: '#FF8A65',
     },
     {
-      key: Permission.GetBrands,
+      key: 'brands',
       title: t('manageData.brand.title'),
       description: t('manageData.brand.description'),
       icon: faTags,
       color: '#FFD54F',
     },
     {
-      key: Permission.GetBoxes,
+      key: 'boxes',
       title: t('manageData.box.title'),
       description: t('manageData.box.description'),
       icon: faBoxOpen,
       color: '#FFB74D',
     },
     {
-      key: Permission.GetMuffinShapes,
+      key: 'muffinShapes',
       title: t('manageData.muffinShape.title'),
       description: t('manageData.muffinShape.description'),
       icon: faShapes,
       color: '#BA68C8',
     },
     {
-      key: Permission.GetPackagePrints,
+      key: 'packagePrints',
       title: t('manageData.packagePrint.title'),
       description: t('manageData.packagePrint.description'),
       icon: faPrint,
@@ -107,7 +107,7 @@ const ManageDataPage = () => {
               title={opt.title}
               description={opt.description}
               onClick={() => handleSelect(opt.key)}
-              disabled={!hasPermission(opt.key)}
+              disabled={!hasPermission(Permission.ManageData) && !hasPermission(Permission.GetData)}
             />
           </Col>
         ))}

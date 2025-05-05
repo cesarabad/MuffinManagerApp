@@ -9,9 +9,9 @@ import { useTranslation } from "react-i18next";
 import PageContainer from "../../../../components/app/generic-page-container/PageContainer.component";
 import ActionCard from "../../../../components/app/generic-action-card/ActionCard.component";
 import { useAuth } from "../../../../contexts/auth/auth.context";
-import { Permission } from "../../../../models/index.model";
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes } from "../../../../models/routes";
+import { Permission } from "../../../../models/index.model";
 
 const { Title } = Typography;
 
@@ -22,13 +22,13 @@ const ManageProductDataPage = () => {
 
   const handleSelect = (key: string) => {
     switch (key) {
-      case Permission.GetBaseProductItems:
+      case 'baseProductItems':
         navigate(`/private/${PrivateRoutes.MANAGE_BASE_PRODUCT_ITEM}`);
         break;
-      case Permission.GetProductItems:
+      case 'productItems':
         navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT_ITEM}`);
         break;
-      case Permission.GetProducts:
+      case 'products':
         navigate(`/private/${PrivateRoutes.MANAGE_PRODUCT}`);
         break;
       default:
@@ -42,21 +42,21 @@ const ManageProductDataPage = () => {
 
   const options = [
     {
-      key: Permission.GetProducts,
+      key: 'products',
       title: t("manageData.productData.product.title"),
       description: t("manageData.productData.product.description"),
       icon: faBox,
       color: "#FFCC80",
     },
     {
-      key: Permission.GetProductItems,
+      key: 'productItems',
       title: t("manageData.productData.productItem.title"),
       description: t("manageData.productData.productItem.description"),
       icon: faPuzzlePiece,
       color: "#A5D6A7",
     },
     {
-      key: Permission.GetBaseProductItems,
+      key: 'baseProductItems',
       title: t("manageData.productData.baseProductItem.title"),
       description: t("manageData.productData.baseProductItem.description"),
       icon: faLayerGroup,
@@ -88,7 +88,7 @@ const ManageProductDataPage = () => {
               title={opt.title}
               description={opt.description}
               onClick={() => handleSelect(opt.key)}
-              disabled={!hasPermission(opt.key)}
+              disabled={!hasPermission(Permission.GetData) && !hasPermission(Permission.ManageData)}
             />
           </Col>
         ))}

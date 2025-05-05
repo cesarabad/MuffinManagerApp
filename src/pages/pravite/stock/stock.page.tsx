@@ -142,7 +142,7 @@ const StockPage = () => {
               type="primary"
               onClick={() => setIsCreateProductStockModalVisible(true)}
               className="primary-button"
-              disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock)}
+              disabled={!hasPermission(Permission.ManageStock)}
             >
               {t('stock.createProductStock')}
             </Button>
@@ -157,7 +157,6 @@ const StockPage = () => {
             <Button
               onClick={() => openHistoricModal()}
               className="secondary-button"
-              disabled={!hasPermission(Permission.ManageMovementStock) && !hasPermission(Permission.ManageStock) && !hasPermission(Permission.GetStock)}
             >
               {t('stock.historic')}
             </Button>
