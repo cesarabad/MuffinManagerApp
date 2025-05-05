@@ -126,7 +126,7 @@ const ProfilePage: React.FC = () => {
       products: "cyan",
       stock: "green",
       users: "orange",
-      admin: "red",
+      role: "red",
       general: "purple",
     };
     return colors[groupName] || "default";

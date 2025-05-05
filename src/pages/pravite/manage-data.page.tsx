@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import PageContainer from '../../components/app/generic-page-container/PageContainer.component';
 import ActionCard from '../../components/app/generic-action-card/ActionCard.component';
 import { useAuth } from '../../contexts/auth/auth.context';
-import { Permission } from '../../models/auth/permisos.model';
+import { Permission } from '../../models/auth/permission.model';
 import { useNavigate } from 'react-router-dom';
 import { PrivateRoutes } from '../../models/routes';
 

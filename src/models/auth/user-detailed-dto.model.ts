@@ -1,4 +1,4 @@
-import { GroupEntity, PermissionEntity } from "./permisos.model";
+import { GroupEntity, PermissionEntity } from "./permission.model";
 
 export interface UserDetailedDto {
     id: number;

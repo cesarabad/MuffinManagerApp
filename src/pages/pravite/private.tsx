@@ -3,7 +3,7 @@ import { PrivateRoutes, PublicRoutes } from "../../models/routes";
 import RoutesWithNotFound from "../../helpers/routes-with-not-found";
 import { lazy, useEffect } from "react";
 import { useAuth } from "../../contexts/auth/auth.context";
-import { Permission } from "../../models/auth/permisos.model";
+import { Permission } from "../../models/auth/permission.model";
 import { connectWebSocket, useWebSocketListener } from "../../services/web-socket-listenner.service";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";

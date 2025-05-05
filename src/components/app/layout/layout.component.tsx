@@ -6,7 +6,7 @@ import LogoutButton from '../buttons/logout/LogoutButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../../contexts/auth/auth.context';
-import { Permission } from '../../../models/auth/permisos.model';
+import { Permission } from '../../../models/auth/permission.model';
 import { PrivateRoutes } from '../../../models/routes';
 
 const { Header, Content, Footer } = AntLayout;

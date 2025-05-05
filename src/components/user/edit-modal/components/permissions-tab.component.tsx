@@ -51,7 +51,7 @@ const PermissionsTab: React.FC<PermissionsTabProps> = ({
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
               <SafetyOutlined style={{ marginRight: 8, color: getPermissionColor(groupKey) }} />
-              <Text strong>{t(`permissionGroup.${groupKey}`)}</Text>
+              <Text strong>{t(`permission.category.${groupKey}`)}</Text>
             </div>
           }
           size="small"

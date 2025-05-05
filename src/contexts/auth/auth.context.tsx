@@ -2,7 +2,7 @@ import { createContext, useContext, ReactNode } from "react";
 import Cookies from "js-cookie";
 import { LoginRequest } from "../../models/auth/login-request.model";
 import { User } from "../../models/auth/user.model";
-import { Permission } from "../../models/auth/permisos.model";
+import { Permission } from "../../models/auth/permission.model";
 import { httpCrudService } from "../../services/http-crud.service";
 import { RegisterRequest } from "../../models/auth/register-request.model";
 import { toast } from "react-toastify";

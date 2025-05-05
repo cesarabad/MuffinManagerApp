@@ -467,43 +467,24 @@
         }
     },
     "permission": {
-        "get_products": "Ver productos",
         "manage_stock": "Modificar stock",
-        "get_brands": "Ver marcas",
-        "get_products_data": "Ver datos de productos",
-        "get_product_items": "Ver items de productos",
-        "get_box": "Ver cajas",
-        "get_base_product_items": "Ver productos base",
         "get_stock": "Ver stock",
         "manage_data": "Modificar datos",
-        "get_package_print": "Ver impresión de paquetes",
         "manage_users": "Modificar usuarios",
         "get_data": "Ver datos",
-        "get_muffin_shapes": "Ver formas de magdalenas",
-        "manage_movement_stock": "Realizar movimientos de stock",
         "create_users": "Crear usuarios",
         "disable_users": "Deshabilitar usuarios",
         "dev" : "Desarrollador",
         "super_admin" : "Super admin",
         "employee" : "Empleado",
-        "selectAll" : "Seleccionar todos",
+        "selectAllLabel" : "Seleccionar todos",
         "noPermissionsAvailable" : "No hay permisos disponibles.",
         "category" : {
             "data" : "Datos",
             "stock" : "Stock",
             "users" : "Usuarios",
-            "products" : "Productos",
-            "admin" : "Admin",
-            "general" : ""
+            "role" : "Rol"
         }
-    },
-    "permissionGroup" : {
-        "data" : "Datos",
-        "stock" : "Stock",
-        "users" : "Usuarios",
-        "products" : "Productos",
-        "admin" : "Admin",
-        "general" : ""
     },
     "profile" : {
         "editTitle" : "Modificar usuario",

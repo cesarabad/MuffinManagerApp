@@ -91,7 +91,7 @@ const UserPermissionsCard: React.FC<UserPermissionsCardProps> = ({
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <SafetyOutlined style={{ marginRight: 12, color: getPermissionColor(groupKey), fontSize: 20 }} />
-                <Text strong style={{ fontSize: 16 }}>{t(`permissionGroup.${groupKey}`)}</Text>
+                <Text strong style={{ fontSize: 16 }}>{t(`permission.category.${groupKey}`)}</Text>
               </div>
               <Badge 
                 count={permissionCount} 

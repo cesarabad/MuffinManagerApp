@@ -13,7 +13,7 @@ import { useAuth } from "../../../contexts/auth/auth.context";
 import { 
   GroupEntity, 
   PermissionEntity 
-} from "../../../models/auth/permisos.model";
+} from "../../../models/auth/permission.model";
 import { 
   KeyOutlined,
   CheckCircleOutlined,
@@ -109,7 +109,7 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({
       products: "cyan",
       stock: "green",
       users: "orange",
-      admin: "red",
+      role: "red",
       general: "purple",
     };
     return colors[groupName] || "default";
