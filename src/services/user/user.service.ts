@@ -34,6 +34,9 @@ export const userService = {
 
     deleteGroupEntity: async (groupId: number) => {
         return await httpCrudService<void>(PATH).delete(`/deleteGroup/${groupId}`);
-    }
+    },
 
+    deleteUser: async (userId: number) => {
+        return await httpCrudService<void>(PATH).delete(`/deleteUser/${userId}`);
+    }
 }

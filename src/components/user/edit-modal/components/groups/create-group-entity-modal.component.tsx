@@ -550,7 +550,7 @@ const CreateGroupEntityModal: React.FC<CreateGroupEntityModalProps> = ({
           <Divider style={{ margin: '24px 0 20px', width: '100%' }}>
             <Space size="small">
               <LockOutlined style={{ fontSize: 18 }} />
-              <Text type="secondary" style={{ fontSize: 16 }}>{t("profile.permissions")}</Text>
+              <Text type="secondary" style={{ fontSize: 16 }}>{t("profile.permissionsLabel")}</Text>
             </Space>
           </Divider>
 

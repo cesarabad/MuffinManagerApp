@@ -539,6 +539,7 @@
         "permissionCountLabel" : "Número de permisos",
         "confirmDeleteGroup" : "¿Estás seguro de que deseas eliminar este grupo?",
         "permissionNameLabel" : "Nombre del permiso",
+        "confirmDelete" : "¿Estás seguro de que deseas eliminar este usuario?",
         "stats" : {
             "title" : "Estadísticas", 
             "totalEntries" : "Entradas realizadas",

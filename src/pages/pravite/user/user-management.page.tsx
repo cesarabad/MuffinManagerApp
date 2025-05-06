@@ -38,6 +38,7 @@ import { userService } from "../../../services/user/user.service";
 import CreateGroupEntityModal from "../../../components/user/edit-modal/components/groups/create-group-entity-modal.component";
 import GroupManagement from "../../../components/user/edit-modal/components/groups/group-management.component";
 import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
+import { FaTrash } from "react-icons/fa";
 
 const { Title } = Typography;
 
@@ -106,6 +107,15 @@ const UserManagementPage: React.FC = () => {
         toast.error(t("error.deletingGroup"));
       }
     };
+
+    const handleDeleteUser = async (userId: number) => {
+      try {
+        await userService.deleteUser(userId); 
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        toast.error(t("error.deletingUser"));
+      }
+    }
 
   const loadUsers = async () => {
     try {
@@ -232,6 +242,22 @@ const columns = [
                             disabled={!(hasPermission(Permission.ManageUsers) && currentUser?.id !== record.id)}
                         />
                     </Popconfirm>
+                </Tooltip>
+                <Tooltip title={t("button.delete")}>
+                  <Popconfirm
+                    title={t("profile.confirmDelete")}
+                    onConfirm={() => handleDeleteUser(record.id)}
+                    okText={t("button.yes")}
+                    cancelText={t("button.no")}
+                    disabled={!hasPermission(Permission.ManageUsers)}
+                  >
+                    <Button
+                      danger
+                      icon={<FaTrash />}
+                      size="small"
+                      disabled={!(hasPermission(Permission.ManageUsers) && currentUser?.id !== record.id)}
+                    />
+                  </Popconfirm>
                 </Tooltip>
             </Space>
         ),
