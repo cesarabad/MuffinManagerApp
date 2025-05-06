@@ -34,6 +34,7 @@ import PermissionsTab from "./components/permissions-tab.component";
 
 // Styled components
 import { StyledModal } from "./components/styled-components.component";
+import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
 
 const { TabPane } = Tabs;
 const { Title } = Typography;
@@ -62,46 +63,48 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({
   const [availablePermissions, setAvailablePermissions] = useState<PermissionEntity[]>([]);
   const [availableGroups, setAvailableGroups] = useState<GroupEntity[]>([]);
 
+  const fetchAvailablePermissions = async () => {
+    setLoading(true);
+    try {
+      const { permissions, groups } = await userService.getAvailableUserPermissions();
+      
+      // Create a set of all permissions including those from groups
+      const allPermissionsSet = new Set<PermissionEntity>();
+      
+      // Add direct permissions
+      permissions.forEach(p => allPermissionsSet.add(p));
+      
+      // Add permissions from groups
+      groups.forEach(group => {
+        group.permissions.forEach(p => {
+          // Check if we already have this permission by ID
+          const existingPerm = Array.from(allPermissionsSet).find(existing => existing.id === p.id);
+          if (!existingPerm) {
+            allPermissionsSet.add(p);
+          }
+        });
+      });
+      
+      setAvailablePermissions(Array.from(allPermissionsSet));
+      setAvailableGroups(groups);
+    } catch (error) {
+      console.error("Error fetching available permissions and groups", error);
+      message.error(t("errors.fetchPermissionsFailed"));
+      setAvailablePermissions([]);
+      setAvailableGroups([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAvailablePermissions = async () => {
-      setLoading(true);
-      try {
-        const { permissions, groups } = await userService.getAvailableUserPermissions();
-        
-        // Create a set of all permissions including those from groups
-        const allPermissionsSet = new Set<PermissionEntity>();
-        
-        // Add direct permissions
-        permissions.forEach(p => allPermissionsSet.add(p));
-        
-        // Add permissions from groups
-        groups.forEach(group => {
-          group.permissions.forEach(p => {
-            // Check if we already have this permission by ID
-            const existingPerm = Array.from(allPermissionsSet).find(existing => existing.id === p.id);
-            if (!existingPerm) {
-              allPermissionsSet.add(p);
-            }
-          });
-        });
-        
-        setAvailablePermissions(Array.from(allPermissionsSet));
-        setAvailableGroups(groups);
-      } catch (error) {
-        console.error("Error fetching available permissions and groups", error);
-        message.error(t("errors.fetchPermissionsFailed"));
-        setAvailablePermissions([]);
-        setAvailableGroups([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
 
     if (open) {
       fetchAvailablePermissions();
     }
   }, [open, t]);
+  useWebSocketListener("/topic/group", fetchAvailablePermissions);
 
   const getPermissionColor = (groupName: string): string => {
     const colors: Record<string, string> = {
@@ -139,7 +142,6 @@ const ProfileDataManagerModal: React.FC<ProfileDataManagerModalProps> = ({
           permissions: availablePermissions.filter(p => manuallySelectedPermissions.includes(p.id)),
           groups: availableGroups.filter(g => selectedGroups.includes(g.id)),
         };
-        console.log("Submitting user data:", formData);
         await updateUser(formData);
         message.success(t("profile.updateSuccess"));
       } else {

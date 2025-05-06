@@ -37,6 +37,7 @@ import { PrivateRoutes } from "../../../models/routes";
 import { userService } from "../../../services/user/user.service";
 import CreateGroupEntityModal from "../../../components/user/edit-modal/components/groups/create-group-entity-modal.component";
 import GroupManagement from "../../../components/user/edit-modal/components/groups/group-management.component";
+import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
 
 const { Title } = Typography;
 
@@ -120,6 +121,9 @@ const UserManagementPage: React.FC = () => {
       setLoading(false);
     }
   };
+  
+  useWebSocketListener("/topic/group", fetchGroups)
+  useWebSocketListener("/topic/user", loadUsers);
 
   const handleViewProfile = (userId: number) => {
     navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.PROFILE}/${userId}`);
@@ -297,7 +301,7 @@ const columns = [
       <ProfileDataManagerModal
         open={isManageUserDataModalOpen}
         onClose={handleManageUserDataModalClose}
-        detailedUser={selectedUser || undefined}
+        detailedUser={selectedUser ?? undefined}
       />
       <GroupManagement
         groups={groups}

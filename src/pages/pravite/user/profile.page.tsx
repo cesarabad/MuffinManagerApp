@@ -21,6 +21,7 @@ import {
   UserPermissionsCard,
   UserRoleHelper
 } from "../../../components/user/index";
+import { useWebSocketListener } from "../../../services/web-socket-listenner.service";
 
 const { Text } = Typography;
 
@@ -38,68 +39,66 @@ const ProfilePage: React.FC = () => {
   // Estados para manejar expansiones
   const [expandedGroups, setExpandedGroups] = useState<Record<number, boolean>>({});
   const [expandedPermissionGroups, setExpandedPermissionGroups] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!currentUser && isAuthenticated()) {
-        location.reload();
-      }
-      // If userId is provided and the user has permission to manage users, fetch that user
-      if (userId && hasPermission(Permission.ManageUsers)) {
-        try {
-          setLoadingProfile(true);
-          const userDetailed = await userService.getDetailedUser(parseInt(userId));
-          setDetailedUser(userDetailed);
-          
-          // Create a User object from UserDetailedDto for compatibility
-          const userObj: User = {
-            id: userDetailed.id,
-            dni: userDetailed.dni,
-            name: userDetailed.name,
-            secondName: userDetailed.secondName,
-            permissions: userDetailed.permissions.map(p => p.name as Permission),
-            token: ''
-          };
-          
-          setProfileUser(userObj);
-          setIsOwnProfile(userId === currentUser?.id.toString());
-          
-          fetchUserStats(parseInt(userId));
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          toast.error(t("error.fetchingUser"));
-          setProfileUser(currentUser);
-          setIsOwnProfile(true);
-          
-          if (currentUser) {
-            fetchUserStats(currentUser.id);
-          }
-        } finally {
-          setLoadingProfile(false);
-        }
-      } else {
-        // Use the current logged-in user
+  const fetchUserData = async () => {
+    if (!currentUser && isAuthenticated()) {
+      location.reload();
+    }
+    // If userId is provided and the user has permission to manage users, fetch that user
+    if (userId && hasPermission(Permission.ManageUsers)) {
+      try {
+        setLoadingProfile(true);
+        const userDetailed = await userService.getDetailedUser(parseInt(userId));
+        setDetailedUser(userDetailed);
+        
+        // Create a User object from UserDetailedDto for compatibility
+        const userObj: User = {
+          id: userDetailed.id,
+          dni: userDetailed.dni,
+          name: userDetailed.name,
+          secondName: userDetailed.secondName,
+          permissions: userDetailed.permissions.map(p => p.name as Permission),
+          token: ''
+        };
+        
+        setProfileUser(userObj);
+        setIsOwnProfile(userId === currentUser?.id.toString());
+        
+        fetchUserStats(parseInt(userId));
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        toast.error(t("error.fetchingUser"));
         setProfileUser(currentUser);
         setIsOwnProfile(true);
         
-        // Get detailed user data for current user
         if (currentUser) {
-          try {
-            const userDetailed = await userService.getDetailedUser(currentUser.id);
-            setDetailedUser(userDetailed);
-            fetchUserStats(currentUser.id);
-          } catch (error) {
-            console.error("Error fetching detailed user data:", error);
-            fetchUserStats(currentUser.id);
-          }
+          fetchUserStats(currentUser.id);
+        }
+      } finally {
+        setLoadingProfile(false);
+      }
+    } else {
+      // Use the current logged-in user
+      setProfileUser(currentUser);
+      setIsOwnProfile(true);
+      
+      // Get detailed user data for current user
+      if (currentUser) {
+        try {
+          const userDetailed = await userService.getDetailedUser(currentUser.id);
+          setDetailedUser(userDetailed);
+          fetchUserStats(currentUser.id);
+        } catch (error) {
+          console.error("Error fetching detailed user data:", error);
+          fetchUserStats(currentUser.id);
         }
       }
-    };
-
+    }
+  };
+  useEffect(() => {
     fetchUserData();
   }, [userId, currentUser, hasPermission, t]);
 
-  
+  useWebSocketListener(["/topic/user/" + (userId ?? currentUser?.id), "/topic/group"], fetchUserData);
   
   const fetchUserStats = (id: number) => {
     setLoadingStats(true);
