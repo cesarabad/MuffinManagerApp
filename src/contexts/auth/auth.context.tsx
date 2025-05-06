@@ -18,6 +18,7 @@ interface AuthContextType {
   createUser: (userDto: RegisterRequest) => Promise<void>;
   saveUser: (user: User) => void;
   updateUser: (updatedUserDto: UpdateUserDto) => Promise<void>;
+  refreshToken: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -105,6 +106,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const refreshToken = async () => {
+    await httpCrudService<User>("/user").post("/refreshToken", {}).then((response) => {
+      if (response.token) {
+        saveUser(response);
+      } else {
+        throw new Error("Token refresh failed: No token received");
+      }
+    }
+  )};
+
   const logout = async () => {
     Cookies.remove("user");
     location.reload();
@@ -136,7 +147,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, createUser, saveUser, updateUser }}>
+    <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, createUser, saveUser, updateUser, refreshToken }}>
       {children}
     </AuthContext.Provider>
   );

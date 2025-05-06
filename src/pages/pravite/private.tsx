@@ -25,8 +25,15 @@ const BrandPage = lazy(() => import("./manage-data/brand-management/brand-manage
 const ManageProductDataPage = lazy(() => import("./manage-data/product-data-management/product-data-management.page"));
 
 function Private() {
-  const { hasPermission, isAuthenticated, saveUser, user, logout} = useAuth();
+  const { hasPermission, isAuthenticated, saveUser, user, logout, refreshToken} = useAuth();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    refreshToken();
+    connectWebSocket().catch((err) => {
+      console.error("Error connecting websocket in Private:", err);
+    });
+  }, []);
 
   const handleMessage = (message: string) => {
     try {
@@ -40,11 +47,7 @@ function Private() {
   useWebSocketListener(`/topic/global`, handleMessage);
   useWebSocketListener(`/topic/user/update/${user ? user.id : -1}`, (updatedUserJson: string) => {updatedUserJson === "deleted" ? logout() : saveUser(JSON.parse(updatedUserJson) as User)});
 
-  useEffect(() => {
-    connectWebSocket().catch((err) => {
-      console.error("Error connecting websocket in Private:", err);
-    });
-  }, []);
+  
     
   return (
     <RoutesWithNotFound>
