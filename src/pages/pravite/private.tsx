@@ -8,6 +8,7 @@ import { connectWebSocket, useWebSocketListener } from "../../services/web-socke
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { WebSocketMessage } from "../../models/web-socket-message/web-socket-message.model";
+import { User } from "../../models/index.model";
 
 const HomePage = lazy(() => import("./home.page"));
 const ManageDataPage = lazy(() => import("./manage-data.page"));
@@ -24,7 +25,7 @@ const BrandPage = lazy(() => import("./manage-data/brand-management/brand-manage
 const ManageProductDataPage = lazy(() => import("./manage-data/product-data-management/product-data-management.page"));
 
 function Private() {
-  const { hasPermission, isAuthenticated } = useAuth();
+  const { hasPermission, isAuthenticated, saveUser, user, logout} = useAuth();
   const { t } = useTranslation();
 
   const handleMessage = (message: string) => {
@@ -37,6 +38,7 @@ function Private() {
   };
 
   useWebSocketListener(`/topic/global`, handleMessage);
+  useWebSocketListener(`/topic/user/update/${user ? user.id : -1}`, (updatedUserJson: string) => {updatedUserJson === "deleted" ? logout() : saveUser(JSON.parse(updatedUserJson) as User)});
 
   useEffect(() => {
     connectWebSocket().catch((err) => {

@@ -7,7 +7,8 @@ export enum Permission {
     ManageStock = 'manage_stock',
     GetData = 'get_data',
     GetStock = 'get_stock',
-    CreateUsers = 'create_users'
+    CreateUsers = 'create_users',
+    DisableUsers = 'disable_users',
   }
 
 export interface PermissionEntity {
@@ -39,6 +40,6 @@ export const GroupedPermissions: Record<
     Permission.GetStock,
     Permission.ManageStock,
   ],
-  users: [Permission.CreateUsers, Permission.ManageUsers],
+  users: [Permission.CreateUsers, Permission.ManageUsers, Permission.DisableUsers],
   role: [Permission.Dev, Permission.SuperAdmin, Permission.Employee],
 };

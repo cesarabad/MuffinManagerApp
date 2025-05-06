@@ -52,10 +52,10 @@ const UserManagementPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [isCreateGroupEntityModalVisible, setIsCreateGroupEntityModalVisible] = useState(false);
-    const [groups, setGroups] = useState<GroupEntity[]>([]);
-    const [loadingGroups, setLoadingGroups] = useState(false);
-    const [selectedGroup, setSelectedGroup] = useState<GroupEntity | null>(null);
-    const [availablePermissions, setAvailablePermissions] = useState<PermissionEntity[]>([]);
+  const [groups, setGroups] = useState<GroupEntity[]>([]);
+  const [loadingGroups, setLoadingGroups] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<GroupEntity | null>(null);
+  const [availablePermissions, setAvailablePermissions] = useState<PermissionEntity[]>([]);
 
   useEffect(() => {
     loadUsers();
@@ -216,7 +216,7 @@ const columns = [
                         onClick={() => handleViewProfile(record.id)}
                     />
                 </Tooltip>
-                
+                {hasPermission(Permission.CreateUsers) && (
                 <Tooltip title={t("button.edit")}>
                     <Button
                         type="default"
@@ -225,15 +225,14 @@ const columns = [
                         onClick={() => handleEditUser(record.id)}
                         disabled={!hasPermission(Permission.ManageUsers)}
                     />
-                </Tooltip>
-                
+                </Tooltip>)}
+                {hasPermission(Permission.DisableUsers) && currentUser?.id !== record.id && (
                 <Tooltip title={!record.disabled ? t("button.disable") : t("button.enable")}>
                     <Popconfirm
                         title={t(!record.disabled ? "profile.confirmDisable" : "profile.confirmEnable")}
                         onConfirm={() => handleToggleUserStatus(record.id)}
                         okText={t("button.yes")}
                         cancelText={t("button.no")}
-                        disabled={!hasPermission(Permission.ManageUsers)}
                     >
                         <Button
                             danger={!record.disabled}
@@ -242,8 +241,9 @@ const columns = [
                             disabled={!(hasPermission(Permission.ManageUsers) && currentUser?.id !== record.id)}
                         />
                     </Popconfirm>
-                </Tooltip>
-                <Tooltip title={t("button.delete")}>
+                </Tooltip>)}
+                {hasPermission(Permission.Dev) || hasPermission(Permission.SuperAdmin) && 
+                (<Tooltip title={t("button.delete")}>
                   <Popconfirm
                     title={t("profile.confirmDelete")}
                     onConfirm={() => handleDeleteUser(record.id)}
@@ -258,7 +258,7 @@ const columns = [
                       disabled={!(hasPermission(Permission.ManageUsers) && currentUser?.id !== record.id)}
                     />
                   </Popconfirm>
-                </Tooltip>
+                </Tooltip>)}
             </Space>
         ),
     },
@@ -280,14 +280,14 @@ const columns = [
           marginBottom: 24,
           boxShadow: "0 2px 8px rgba(0,0,0,0.09)",
         }}
-        extra={
+        extra={ hasPermission(Permission.CreateUsers) ?
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={handleAddUser}
           >
             {t("profile.addUser")}
-          </Button>
+          </Button> : <></>
         }
       >
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
@@ -329,6 +329,7 @@ const columns = [
         onClose={handleManageUserDataModalClose}
         detailedUser={selectedUser ?? undefined}
       />
+      {(hasPermission(Permission.Dev) || hasPermission(Permission.SuperAdmin)) && (<>
       <GroupManagement
         groups={groups}
         loading={loadingGroups}
@@ -347,7 +348,7 @@ const columns = [
         groupToEdit={selectedGroup}
         loading={loadingGroups}
         availablePermissions={availablePermissions}
-        />
+        /></>)}
     </PageContainer>
   );
 };

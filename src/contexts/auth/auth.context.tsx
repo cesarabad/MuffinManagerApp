@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useMemo, useState } from "react";
 import Cookies from "js-cookie";
 import { LoginRequest } from "../../models/auth/login-request.model";
 import { User } from "../../models/auth/user.model";
@@ -25,7 +25,8 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 const PATH = "/user";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-
+  
+  const [user, setUser] = useState<User | null>(null);
   const saveUser = (user: User) => {
     try {
       const expirationDate = new Date(decodeToken(user.token).exp * 1000);
@@ -34,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         secure: true,
         sameSite: "Strict",
       });
+      setUser(user);
     } catch (error) {
       console.error("Error saving user:", error);
     }
@@ -123,10 +125,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return !!getUser();
   };
 
-  const hasPermission = (permission: Permission): boolean => {
+  const hasPermission = useMemo(() => {
     const user = getUser();
-    return (user?.permissions.includes(permission) || user?.permissions.includes(Permission.Dev) || user?.permissions.includes(Permission.SuperAdmin)) ?? false;
-  };
+    const permissionSet = new Set(user?.permissions ?? []);
+  
+    return (permission: Permission): boolean =>
+      permissionSet.has(permission) ||
+      permissionSet.has(Permission.Dev) ||
+      permissionSet.has(Permission.SuperAdmin);
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user: getUser(), isAuthenticated, login, logout, hasPermission, createUser, saveUser, updateUser }}>

@@ -196,18 +196,17 @@ const ProfilePage: React.FC = () => {
 
   // Determine if current user can edit this profile
   const canEdit = isOwnProfile || 
-    (hasPermission(Permission.ManageUsers) && 
-     (currentUser?.id !== profileUser.id));
+    hasPermission(Permission.SuperAdmin);
   
   // Determine if current user can disable this user
   const canDisable = !isOwnProfile && 
-    hasPermission(Permission.ManageUsers) && 
+    hasPermission(Permission.SuperAdmin) && 
     !profileUser.permissions.includes(Permission.Dev);
 
   return (
     <PageContainer>
       {/* Back Button */}
-      {!isOwnProfile && <BackButton t={t} />}
+      {userId && <BackButton t={t} />}
       
       {/* Profile Header */}
       <ProfileHeader
@@ -223,22 +222,22 @@ const ProfilePage: React.FC = () => {
 
      
       
-      {/* Statistics */}
-      <UserStatsCard 
+      {stats && (<UserStatsCard 
         stats={stats} 
         loading={loadingStats} 
         t={t} 
-      />
+      />)}
 
       {/* Groups */}
+      {detailedUser.groups?.length > 0 && (
       <UserGroupsCard 
         detailedUser={detailedUser} 
         t={t} 
         expandedGroups={expandedGroups} 
         toggleGroup={toggleGroup} 
-      />
+      />)}
 
-      {/* Permissions */}
+      {detailedUser.permissions?.length > 0 && (
       <UserPermissionsCard
         profileUser={profileUser}
         detailedUser={detailedUser}
@@ -246,7 +245,7 @@ const ProfilePage: React.FC = () => {
         togglePermissionGroup={togglePermissionGroup}
         getPermissionColor={getPermissionColor}
         getUserPermissionMap={getUserPermissionMap}
-      />
+      />)}
 
       {/* Edit Modal */}
       <ProfileDataManagerModal

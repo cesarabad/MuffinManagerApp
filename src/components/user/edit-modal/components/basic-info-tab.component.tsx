@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Checkbox, Row, Col, Space, Tag, FormInstance } from 'antd';
 import { IdcardOutlined, UserOutlined, KeyOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { validateDni } from '../../../../utils/validate-dni';
 
 interface BasicInfoTabProps {
   form: FormInstance;
@@ -63,12 +64,22 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({ form, isEdit, onFinish }) =
           <Form.Item
             label={
               <Space>
-                <IdcardOutlined />
-                {t("profile.dniLabel")}
+          <IdcardOutlined />
+          {t("profile.dniLabel")}
               </Space>
             }
             name="dni"
-            rules={[{ required: true, message: t("validation.required") }]}
+            rules={[
+              { required: true, message: t("validation.required") },
+              () => ({
+          validator(_, value) {
+            if (!value || validateDni(value)) {
+              return Promise.resolve();
+            }
+            return Promise.reject(new Error(t("validation.dni")));
+          },
+              }),
+            ]}
           >
             <Input placeholder={t('profile.dniPlaceholder')} />
           </Form.Item>
