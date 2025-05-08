@@ -32,13 +32,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const expirationDate = new Date(decodeToken(user.token).exp * 1000);
       Cookies.set("user", JSON.stringify(user), {
-        expires: expirationDate,
-        secure: true,
-        sameSite: "Strict",
+        expires: expirationDate
       });
       setUser(user);
     } catch (error) {
       console.error("Error saving user:", error);
+      alert(error);
     }
   };
 
@@ -84,20 +83,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (request: LoginRequest) => {
     try {
-      const response = await fetch("http://localhost:8080/user/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(request),
-      });
+      const response: User = await httpCrudService<User>(PATH).post("/login", request);
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const responseBody: User = await response.json();
-
-      if (responseBody.token) {
-        saveUser(responseBody);
+      if (response.token) {
+        saveUser(response);
       } else {
         throw new Error("Login failed: No token received");
       }
